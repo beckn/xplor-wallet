@@ -1,11 +1,16 @@
-version: "3"
+version: '3.8'
 services:
   backend:
     container_name: Wallet-nest-backend
     build: .
     ports:
-     - 1078:3000
+      - 1078:3000
     restart: always
+    env_file:
+      - .env
+    networks:
+      - xplor-network
 
-
-    
+networks:
+  xplor-network:
+    external: true
