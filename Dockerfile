@@ -4,7 +4,9 @@ WORKDIR /job
 COPY package*.json ./
 COPY tsconfig.json ./
 COPY . .
-RUN npm ci
+# RUN npm ci 
+RUN npm install --save @nestjs/config
+RUN npm install
 RUN npx prisma generate
-RUN npm run build
 CMD ["npm" , "run", "start:prod"]
+EXPOSE 3000
