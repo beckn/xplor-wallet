@@ -1,6 +1,6 @@
 version: "3"
 services:
-  backend:
+  wallet_backend:
     container_name: Wallet-nest-backend
     build: .
     ports:
