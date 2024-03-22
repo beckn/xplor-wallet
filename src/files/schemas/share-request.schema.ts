@@ -1,10 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
+<<<<<<< HEAD
+import { FileType, ShareRequestAction } from 'src/common/constants/enums'
+=======
 
 export enum FileType {
   public = 'public',
   private = 'private',
 }
+>>>>>>> develop
 
 class Restrictions {
   @Prop({ required: true })
@@ -37,7 +41,11 @@ export class ShareRequest {
   @Prop({ required: true })
   fileId: string
 
+<<<<<<< HEAD
+  @Prop({ required: true, enum: ShareRequestAction })
+=======
   @Prop({ required: true, enum: ['PENDING', 'ACCEPTED', 'REJECTED'] })
+>>>>>>> develop
   status: string
 
   @Prop({ required: true })
