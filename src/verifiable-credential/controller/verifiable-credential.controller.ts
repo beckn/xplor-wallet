@@ -52,7 +52,10 @@ export class VerifiableCredentialController {
     @Headers('templateId') templateId: string,
     @Res() res,
   ) {
+<<<<<<< HEAD
+=======
     console.log(outputType)
+>>>>>>> develop
     let vcResult = {}
     if (outputType == 'application/pdf' || outputType == 'text/html') {
       // Returns pdf/html

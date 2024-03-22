@@ -1,7 +1,9 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
+import { WalletErrors } from 'src/common/constants/error-messages'
 import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
+import { StandardWalletRequestDto } from 'src/files/dto/standard-wallet-request.dto'
 import { Wallet } from '../schemas/wallet.schema'
 
 @Injectable()
@@ -10,6 +12,10 @@ export class WalletService {
 
   async findWalletByUserId(userId: string): Promise<Wallet> {
     return this.walletModel.findOne({ userId }).exec()
+  }
+
+  async findWalletByWalletId(walletId: string): Promise<Wallet> {
+    return this.walletModel.findOne({ _id: walletId }).exec()
   }
 
   async getWalletDetails(userId: string): Promise<StandardMessageResponse> {
@@ -29,7 +35,7 @@ export class WalletService {
 
     if (existingWallet !== null) {
       // Throw an exception if the wallet already exists
-      throw new ConflictException('Wallet with this user already exists.')
+      throw new ConflictException(WalletErrors.WALLET_ALREADY_EXIST)
     }
 
     // Create a new wallet if it doesn't exist
@@ -40,19 +46,29 @@ export class WalletService {
     }
   }
 
-  async deleteWallet(userId: string): Promise<StandardMessageResponse> {
+  async deleteWallet(queryParams: StandardWalletRequestDto): Promise<StandardMessageResponse | any> {
     // Check if the wallet exists for the specified user
-    const existingWallet = await this.findWalletByUserId(userId)
+    let existingWallet
+    if (queryParams.walletId != null) {
+      existingWallet = await this.findWalletByWalletId(queryParams.walletId)
+    } else {
+      existingWallet = await this.findWalletByUserId(queryParams.userId)
+    }
+
     if (!existingWallet) {
       // Throw an exception if the wallet doesn't exist
-      throw new NotFoundException('Wallet not found for this user.')
+      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }
 
     // If the wallet exists, delete it
-    const result = await this.walletModel.findOneAndDelete({ userId })
-
-    return {
-      data: result,
+    if (queryParams.walletId != null) {
+      const result = await this.walletModel.findOneAndDelete({ _id: queryParams.walletId })
+      return result
+    } else {
+      const result = await this.walletModel.findOneAndDelete({ userId: queryParams.userId })
+      return {
+        data: result,
+      }
     }
   }
 }
