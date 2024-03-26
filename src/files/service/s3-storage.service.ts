@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-import { ConsoleLogger, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import * as AWS from 'aws-sdk'
 import { AWSError } from 'aws-sdk'
@@ -18,31 +17,16 @@ export class S3StorageService {
     })
   }
 
+  /**
+   * Uploads a file from Multer to AWS S3 bucket and returns the stored files details
+   */
   async uploadFile(file: Express.Multer.File | any) {
-    ConsoleLogger
     return await this.s3_upload(file.buffer, new Date().getTime() + file.originalname, file.mimetype)
-=======
-import * as AWS from 'aws-sdk'
-import { AWSError } from 'aws-sdk'
-import * as fs from 'fs'
-export class S3StorageService {
-  AWS_S3_BUCKET = process.env.STORAGE_BUCKET_NAME
-
-  s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
-    signatureVersion: 'v4',
-    region: process.env.STORAGE_REGION,
-  })
-
-  async uploadFile(file) {
-    console.log(file)
-    const { filename } = file
-    const fileStream = fs.createReadStream(file.path)
-    return await this.s3_upload(fileStream, filename, file.mimetype)
->>>>>>> develop
   }
 
+  /**
+   * Signs the uploaded File for given expiration hours and fileKey
+   */
   async getSignedFileUrl(expiresIn: number, fileKey: string): Promise<string> {
     try {
       // Define the parameters for generating the pre-signed URL
@@ -55,10 +39,6 @@ export class S3StorageService {
       // Generate the pre-signed URL using getSignedUrlPromise method
       const signedUrl = await this.s3.getSignedUrlPromise('getObject', params)
 
-<<<<<<< HEAD
-=======
-      console.log('Signed URL:', signedUrl)
->>>>>>> develop
       return signedUrl
     } catch (e) {
       console.error('Error generating signed URL:', e as AWSError)
@@ -66,6 +46,9 @@ export class S3StorageService {
     }
   }
 
+  /**
+   * Internal implementation to upload the file to bucket
+   */
   private async s3_upload(file, name, mimetype) {
     const params = {
       Bucket: this.AWS_S3_BUCKET,
@@ -74,23 +57,10 @@ export class S3StorageService {
       ContentType: mimetype,
       ContentDisposition: 'inline',
       CreateBucketConfiguration: {
-<<<<<<< HEAD
         LocationConstraint: this.configService.get('STORAGE_REGION'),
       },
     }
     const s3Response = await this.s3.upload(params).promise()
     return s3Response
-=======
-        LocationConstraint: process.env.STORAGE_REGION,
-      },
-    }
-
-    try {
-      const s3Response = await this.s3.upload(params).promise()
-      return s3Response
-    } catch (e) {
-      console.log(e)
-    }
->>>>>>> develop
   }
 }

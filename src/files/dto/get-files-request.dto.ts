@@ -2,10 +2,6 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsInt, IsOptional, IsString, Min } from 'class-validator'
 
 export class GetFilesRequestDto {
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
   @ApiProperty()
   @IsString()
   userId: string

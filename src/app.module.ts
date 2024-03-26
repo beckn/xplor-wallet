@@ -7,28 +7,18 @@ import { multerFileUploadConfig } from 'src/config/multer-file.config'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ApiClient } from './common/api-client'
-<<<<<<< HEAD
 import configuration from './config/env/env.config'
-=======
->>>>>>> develop
 import { FileAccessControlModule } from './files/module/file-access-control.module'
 import { FilesModule } from './files/module/files.module'
 import { S3StorageModule } from './files/module/s3-storage.module'
 import { VerifiableCredentialModule } from './verifiable-credential/module/verifiable-credential.module'
 import { WalletModule } from './wallet/module/wallet.module'
-<<<<<<< HEAD
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
     }),
-=======
-
-@Module({
-  imports: [
-    ConfigModule.forRoot(),
->>>>>>> develop
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

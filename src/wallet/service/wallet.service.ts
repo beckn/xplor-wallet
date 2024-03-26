@@ -10,26 +10,43 @@ import { Wallet } from '../schemas/wallet.schema'
 export class WalletService {
   constructor(@InjectModel('Wallet') private readonly walletModel: Model<Wallet>) {}
 
+  /**
+   * Returns Wallet details by userId
+   */
   async findWalletByUserId(userId: string): Promise<Wallet> {
     return this.walletModel.findOne({ userId }).exec()
   }
 
+  /**
+   * Returns Wallet details by walletId
+   */
   async findWalletByWalletId(walletId: string): Promise<Wallet> {
     return this.walletModel.findOne({ _id: walletId }).exec()
   }
 
-  async getWalletDetails(userId: string): Promise<StandardMessageResponse> {
-    const walletDetails = await this.findWalletByUserId(userId)
-    // Check if the wallet does not exist with the userId
-    if (walletDetails == null) {
-      throw new NotFoundException('Wallet with this user does not exists.')
+  /**
+   * Returns Wallet details by either with userId or walletId
+   */
+  async getWalletDetails(queryParams: StandardWalletRequestDto): Promise<StandardMessageResponse | any> {
+    let walletDetails
+    if (queryParams.walletId != null) {
+      walletDetails = await this.findWalletByWalletId(queryParams.walletId)
+    } else {
+      walletDetails = await this.findWalletByUserId(queryParams.userId)
     }
 
-    return {
-      data: walletDetails,
+    // Check if the wallet does not exist with the userId
+    if (walletDetails == null) {
+      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }
+
+    return walletDetails
   }
-  async createWallet(userId: string): Promise<StandardMessageResponse> {
+
+  /**
+   * Creates a wallet with userId
+   */
+  async createWallet(userId: string): Promise<StandardMessageResponse | any> {
     // Check if a wallet with the given userId already exists
     const existingWallet = await this.findWalletByUserId(userId)
 
@@ -46,6 +63,9 @@ export class WalletService {
     }
   }
 
+  /**
+   * Deletes a wallet with userId or walletId
+   */
   async deleteWallet(queryParams: StandardWalletRequestDto): Promise<StandardMessageResponse | any> {
     // Check if the wallet exists for the specified user
     let existingWallet

@@ -22,11 +22,6 @@ export function matchFilters(metadata: any, filters: any): boolean {
 export function getFutureTimeStamp(hoursFromNow: number): number {
   const currentTimestamp = Date.now() // Get current timestamp in milliseconds
   const futureTimestamp = currentTimestamp + hoursFromNow * 60 * 60 * 1000 // Add 20 hours in milliseconds
-<<<<<<< HEAD
-=======
-
-  console.log(futureTimestamp) // Display the future timestamp
->>>>>>> develop
   return futureTimestamp
 }
 

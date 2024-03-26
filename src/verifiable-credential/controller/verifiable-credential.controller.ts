@@ -13,6 +13,11 @@ export class VerifiableCredentialController {
     private readonly vcService: VerifiableCredentialService,
   ) {}
 
+  /**
+   * Generates a new user DID.
+   * @param didRequest The request body containing data required to generate the DID.
+   * @returns The generated user DID if successful.
+   */
   @Post('/did')
   @ApiOperation({ summary: 'Generate User DID', description: 'Generates a new user DID.' })
   @ApiBody({ type: CreateUserDIDRequestDto })
@@ -22,6 +27,11 @@ export class VerifiableCredentialController {
     return generateDid
   }
 
+  /**
+   * Issues a new verifiable credential.
+   * @param didRequest The request body containing data required to issue the credential.
+   * @returns The result of issuing the verifiable credential if successful.
+   */
   @Post('/issue-vc')
   @ApiOperation({ summary: 'Issue Credential', description: 'Issues a new verifiable credential.' })
   @ApiBody({ type: IssueCredentialRequestDto })
@@ -31,6 +41,11 @@ export class VerifiableCredentialController {
     return vcResult
   }
 
+  /**
+   * Verifies a verifiable credential by its Id/QrCode.
+   * @param vcId The ID or QR code of the verifiable credential to verify.
+   * @returns The result of verifying the verifiable credential if successful.
+   */
   @Get('/:vcId/verify')
   @ApiOperation({ summary: 'Verify Credential', description: 'Verifies a verifiable credential by its Id/QrCode' })
   @ApiResponse({ status: 200, description: 'Verifiable credential verified successfully.' })
@@ -39,6 +54,13 @@ export class VerifiableCredentialController {
     return vcResult
   }
 
+  /**
+   * Retrieves details of a verifiable credential by its ID.
+   * @param vcId The ID of the verifiable credential to retrieve details for.
+   * @param outputType The desired output type for the response (e.g., application/pdf, text/html).
+   * @param templateId The ID of the template to use for generating the response.
+   * @param res The response object used to send the response.
+   */
   @Get('/:vcId')
   @ApiOperation({
     summary: 'Get Verifiable Credential Details',
@@ -52,10 +74,6 @@ export class VerifiableCredentialController {
     @Headers('templateId') templateId: string,
     @Res() res,
   ) {
-<<<<<<< HEAD
-=======
-    console.log(outputType)
->>>>>>> develop
     let vcResult = {}
     if (outputType == 'application/pdf' || outputType == 'text/html') {
       // Returns pdf/html

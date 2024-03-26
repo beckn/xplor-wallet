@@ -1,9 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsInt, IsOptional, IsString, Min } from 'class-validator'
-<<<<<<< HEAD
 import { ShareRequestAction } from 'src/common/constants/enums'
-=======
->>>>>>> develop
 
 export class GetShareFileRequestsDto {
   @ApiProperty()
@@ -12,7 +9,6 @@ export class GetShareFileRequestsDto {
   documentType?: string
 
   @ApiProperty()
-<<<<<<< HEAD
   @IsString()
   userId: string
 
@@ -20,11 +16,6 @@ export class GetShareFileRequestsDto {
   @IsOptional()
   @IsString()
   status?: ShareRequestAction
-=======
-  @IsOptional()
-  @IsString()
-  status?: ['ACCEPTED', 'REJECTED', 'PENDING']
->>>>>>> develop
 
   @ApiProperty()
   @IsOptional()

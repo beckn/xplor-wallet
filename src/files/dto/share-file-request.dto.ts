@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsPositive, Min, ValidateNested } from 'class-validator'
 
 class Restrictions {
-  
   @ApiProperty()
   @IsNumber()
   @IsPositive()

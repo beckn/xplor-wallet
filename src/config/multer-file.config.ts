@@ -1,9 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { MulterModuleOptions } from '@nestjs/platform-express'
-<<<<<<< HEAD
-=======
-import { diskStorage } from 'multer'
->>>>>>> develop
 import { extname } from 'path'
 
 export const multerFileUploadConfig: MulterModuleOptions = {
@@ -13,10 +9,6 @@ export const multerFileUploadConfig: MulterModuleOptions = {
   fileFilter: (req: any, file: any, cb: any) => {
     try {
       // Synchronous validation logic
-<<<<<<< HEAD
-=======
-      console.log(file.mimetype)
->>>>>>> develop
       if (file.mimetype.match(/\/(jpg|jpeg|png|pdf|doc|json|xml|)$/) || file.mimetype == 'application/octet-stream') {
         // Allow storage of file
         cb(null, true)
@@ -29,7 +21,6 @@ export const multerFileUploadConfig: MulterModuleOptions = {
       cb(error, false)
     }
   },
-<<<<<<< HEAD
   // storage: diskStorage({
   //   destination: './file-uploads',
   //   filename: (req, file, cb) => {
@@ -38,14 +29,4 @@ export const multerFileUploadConfig: MulterModuleOptions = {
   //     cb(null, file.fieldname + '-' + uniqueSuffix + extension)
   //   },
   // }),
-=======
-  storage: diskStorage({
-    destination: './file-uploads',
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-      const extension = extname(file.originalname)
-      cb(null, file.fieldname + '-' + uniqueSuffix + extension)
-    },
-  }),
->>>>>>> develop
 }
