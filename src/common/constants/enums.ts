@@ -1,6 +1,7 @@
 export enum FileAction {
   DELETE = 'DELETE',
   RECOVER = 'RECOVER',
+  PERMANENT_DELETE = 'PERMANENT_DELETE',
 }
 
 export enum ShareRequestAction {
