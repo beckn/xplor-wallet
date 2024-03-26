@@ -72,7 +72,6 @@ export class FilesService {
 
     // By Default -1 means unlimited view Hits
     const allowedViewCount = -1
-    console.log(uploadFile)
     // Generating Aws signed file url
     const signedFileUrl = await this.s3Service.getSignedFileUrl(expiresIn, uploadFile.Key)
     const restrictedFile = await this.accessService.createFileAccessControl(
@@ -268,6 +267,24 @@ export class FilesService {
   }
 
   /**
+   * Permanently deletes a file
+   */
+  async hardDeleteFile(userId, fileId: string): Promise<StandardMessageResponse | any> {
+    const fileDetails = await this.getFileByFileIdAndUserId(userId, fileId)
+
+    if (fileDetails != null) {
+      if (fileDetails['userId'] != userId) {
+        throw new UnauthorizedException(FilesErrors.DELETE_PERMISSION_ERROR)
+      }
+    }
+
+    const result = await this.fileModel.findByIdAndDelete(fileId)
+    if (result) {
+      return result
+    }
+  }
+
+  /**
    * Recovers the temporarily deleted file
    */
   async recoverFile(userId, fileId: string): Promise<StandardMessageResponse | any> {
@@ -301,6 +318,10 @@ export class FilesService {
     const fileDetails = await this.getFileByFileId(aclDetails['fileId'])
 
     const currentTimestamp = Date.now()
+
+    if (fileDetails == null) {
+      throw new NotFoundException(FilesErrors.FILE_NOT_EXIST)
+    }
 
     if (fileDetails['softDeleted'] == true) {
       throw new ForbiddenException(FilesErrors.FILE_DELETED_ERROR)

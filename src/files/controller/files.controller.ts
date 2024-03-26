@@ -65,7 +65,6 @@ export class FilesController {
       JSON.parse(body.metadata == null ? '{}' : body.metadata),
     )
     const walletDetails = await this.walletService.getWalletDetails(new StandardWalletRequestDto(body.userId, null))
-    console.log(walletDetails)
     if (walletDetails['userId'] == null) {
       throw new Error(WalletErrors.WALLET_NOT_FOUND)
     }
@@ -167,23 +166,26 @@ export class FilesController {
 
   /**
    * Deletes a file by its ID.
-   * @param queryParams The query parameters containing user ID, file ID, and action (DELETE or RECOVER).
+   * @param queryParams The query parameters containing user ID, file ID, and action (DELETE, PERMANENT_DELETE, RECOVER).
    * @returns The deleted file or recovered file if the action is RECOVER.
    * @throws NotFoundException If the action provided is not DELETE or RECOVER.
    */
   @Delete()
-  @ApiOperation({ summary: 'Delete File', description: 'Deletes a file by its ID' })
+  @ApiOperation({ summary: 'Delete File', description: 'Deletes/recovers a file by its ID' })
   @ApiResponse({ status: 200, description: 'File deleted successfully.', type: FileEntity })
   @ApiResponse({ status: 404, description: 'File not found.' })
-  async deleteFile(@Query() queryParams: DeleteFileRequestDto) {
+  async softDeleteFile(@Query() queryParams: DeleteFileRequestDto) {
     if (queryParams.action == FileAction.DELETE) {
       const result = await this.fileService.softDeleteFile(queryParams.userId, queryParams.fileId)
+      return result
+    } else if (queryParams.action == FileAction.PERMANENT_DELETE) {
+      const result = await this.fileService.hardDeleteFile(queryParams.userId, queryParams.fileId)
       return result
     } else if (queryParams.action == FileAction.RECOVER) {
       const result = await this.fileService.recoverFile(queryParams.userId, queryParams.fileId)
       return result
     } else {
-      throw new NotFoundException('Incorrect action, please enter one of these [DELETE,RECOVER].')
+      throw new NotFoundException(FilesErrors.INVALID_DELETE_ACTION)
     }
   }
 
