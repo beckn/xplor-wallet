@@ -31,4 +31,5 @@ export const FilesErrors = {
   INVALID_ACTION: 'Please enter a valid action [ACCEPTED, REJECTED, PENDING]',
   SHARE_ACTION_PERMISSION_ERROR: 'You cannot respond to this share request as you are not the file owner.',
   FILE_MISSING_ERROR: 'Please attach a file document.',
+  INVALID_DELETE_ACTION: 'Incorrect action, please enter one of these [DELETE, RECOVER, PERMANENT_DELETE].',
 }
