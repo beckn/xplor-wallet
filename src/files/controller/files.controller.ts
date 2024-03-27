@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
@@ -185,7 +184,7 @@ export class FilesController {
       const result = await this.fileService.recoverFile(queryParams.userId, queryParams.fileId)
       return result
     } else {
-      throw new NotFoundException(FilesErrors.INVALID_DELETE_ACTION)
+      throw new BadRequestException(FilesErrors.INVALID_DELETE_ACTION)
     }
   }
 
