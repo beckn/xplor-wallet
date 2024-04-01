@@ -1,7 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsDateString, IsNotEmpty, IsString, ValidateNested } from 'class-validator'
 
-export class CredentialReceiverDto {
+export class SampleCredentialSubject {
+  @IsString()
+  @ApiProperty()
+  FullName: string
+
+  @IsString()
+  @ApiProperty()
+  CourseName: string
+
+  @IsString()
+  @ApiProperty()
+  Skill: string
+}
+
+export class CredentialReceiverEntity {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
@@ -18,7 +32,7 @@ export class CredentialReceiverDto {
   documentName: string
 }
 
-class CredentialDto {
+class CredentialDtoEntity {
   @IsArray()
   @ApiProperty()
   context: any[]
@@ -46,7 +60,7 @@ class CredentialDto {
   @IsNotEmpty()
   @ValidateNested()
   @ApiProperty()
-  credentialSubject: Record<string, any>
+  credentialSubject: SampleCredentialSubject
 
   @IsArray()
   @ApiProperty()
@@ -63,7 +77,7 @@ class CredentialDto {
     schemaVersion: string,
     expirationDate: string,
     organization: string,
-    credentialSubject: Record<string, any>,
+    credentialSubject: SampleCredentialSubject,
     type: string[],
     tags: string[],
   ) {
@@ -79,7 +93,7 @@ class CredentialDto {
   }
 }
 
-export class IssueCredentialRequestDto {
+export class IssueCredentialRequestEntityDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
@@ -87,9 +101,9 @@ export class IssueCredentialRequestDto {
 
   @ValidateNested()
   @ApiProperty()
-  credentialReceiver: CredentialReceiverDto
+  credentialReceiver: CredentialReceiverEntity
 
   @ValidateNested()
   @ApiProperty()
-  credential: CredentialDto
+  credential: CredentialDtoEntity
 }

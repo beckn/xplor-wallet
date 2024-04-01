@@ -6,22 +6,22 @@ export class GetFilesRequestDto {
   @IsString()
   userId: string
 
-  @ApiProperty()
+  @ApiProperty({ example: '10th Class Result' })
   @IsOptional()
   @IsString()
   fileType?: string
 
-  @ApiProperty()
+  @ApiProperty({ example: '10th result' })
   @IsOptional()
   @IsString()
   searchQuery?: string
 
-  @ApiProperty()
+  @ApiProperty({ example: true })
   @IsOptional()
   @IsString()
   softDeleted?: string
 
-  @ApiProperty()
+  @ApiProperty({ example: ['10th Class Result'] })
   @IsOptional()
   @IsArray()
   fileTags?: string[]
