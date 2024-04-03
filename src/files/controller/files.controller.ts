@@ -17,7 +17,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import 'multer'
 import { FileAction } from 'src/common/constants/enums'
 import { FilesErrors, WalletErrors } from 'src/common/constants/error-messages'
-import { WalletService } from 'src/wallet/service/wallet.service'
+import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { CreateFileRequestDto } from '../dto/create-file-request.dto'
 import { CreateFileDto } from '../dto/create-file.dto'
 import { DeleteFileRequestDto } from '../dto/delete-file-request.dto'
@@ -35,7 +35,7 @@ import { FilesService } from '../service/files.service'
 @ApiTags('Files')
 @Controller('wallet/files')
 export class FilesController {
-  constructor(private readonly fileService: FilesService, private readonly walletService: WalletService) {}
+  constructor(private readonly fileService: FilesService, private readonly walletService: WalletReadService) {}
 
   /**
    * Creates a new file with the provided data.

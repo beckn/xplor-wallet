@@ -5,4 +5,5 @@ export default () => ({
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
   SECRET_ACCESS_KEY: process.env.SECRET_ACCESS_KEY,
   STORAGE_REGION: process.env.STORAGE_REGION,
+  REGISTRY_SERVICE_URL: process.env.REGISTRY_SERVICE_URL,
 })

@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty, IsString } from 'class-validator'
-
-export class CreateWalletRequestDto {
+export class CreateWalletModelDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
@@ -10,15 +9,10 @@ export class CreateWalletRequestDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  readonly fullName: string
+  readonly userDid: string
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  readonly email: string
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  readonly organization: string
+  constructor(userId: string, userDid: string) {
+    this.userId = userId
+    this.userDid = userDid
+  }
 }

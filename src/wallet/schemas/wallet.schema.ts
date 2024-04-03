@@ -5,6 +5,9 @@ import { Document } from 'mongoose'
 export class Wallet {
   @Prop({ required: true })
   userId: string
+
+  @Prop({ required: true })
+  userDid: string
 }
 
 export const WalletModel = Wallet.name

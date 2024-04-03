@@ -3,15 +3,10 @@ export const FileAccessControlErrors = {
   ACL_NOT_FOUND: 'Access control document not found for the provided restrictedKey.',
 }
 
-export const VerifiableCredentialErrors = {
-  CREDENTIAL_NOT_FOUND: 'Credentials not found.',
-  INVALID_CREDENTIAL: 'Credential is not valid.',
-  BAD_REQUEST: 'Please enter accept format and templateId in header',
-}
-
 export const WalletErrors = {
   WALLET_NOT_FOUND: 'Wallet with this user does not exists.',
   WALLET_ALREADY_EXIST: 'Wallet with this user already exists',
+  WALLET_BAD_REQUEST: 'There was an error in creating wallet',
 }
 export const FilesErrors = {
   INTERNAL_ERROR: 'There was an error in completing your request.',

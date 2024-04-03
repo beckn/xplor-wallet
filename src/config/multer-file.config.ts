@@ -21,12 +21,4 @@ export const multerFileUploadConfig: MulterModuleOptions = {
       cb(error, false)
     }
   },
-  // storage: diskStorage({
-  //   destination: './file-uploads',
-  //   filename: (req, file, cb) => {
-  //     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-  //     const extension = extname(file.originalname)
-  //     cb(null, file.fieldname + '-' + uniqueSuffix + extension)
-  //   },
-  // }),
 }

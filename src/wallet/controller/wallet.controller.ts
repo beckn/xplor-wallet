@@ -1,14 +1,21 @@
 import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { CREATE_WALLET_API, DELETE_WALLET_API, GET_WALLET_DETAILS_API } from 'src/common/constants/api-documentation'
 import { StandardWalletRequestDto } from 'src/files/dto/standard-wallet-request.dto'
 import { CreateWalletRequestDto } from '../dto/create-wallet-request.dto'
-import { WalletService } from '../service/wallet.service'
+import { WalletCreateService } from '../service/wallet-create.service'
+import { WalletDeleteService } from '../service/wallet-delete.service'
+import { WalletReadService } from '../service/wallet-read.service'
 import { WalletEntity } from '../wallet.entity'
 
 @ApiTags('Wallet')
 @Controller('wallet')
 export class WalletController {
-  constructor(private readonly walletService: WalletService) {}
+  constructor(
+    private readonly walletCreateService: WalletCreateService,
+    private readonly walletReadService: WalletReadService,
+    private readonly walletDeleteService: WalletDeleteService,
+  ) {}
 
   /**
    * Creates a wallet with the given userId.
@@ -16,10 +23,14 @@ export class WalletController {
    * @returns The wallet entity representing the newly created wallet.
    */
   @Post()
-  @ApiOperation({ summary: 'Create wallet', description: 'Creates a wallet with given userId.' })
-  @ApiResponse({ status: 201, description: 'Wallet created with the User Id.', type: WalletEntity })
+  @ApiOperation({ summary: CREATE_WALLET_API.summary, description: CREATE_WALLET_API.description })
+  @ApiResponse({
+    status: CREATE_WALLET_API.successResponseCode,
+    description: CREATE_WALLET_API.successResponseMessage,
+    type: WalletEntity,
+  })
   async createWallet(@Body() requestBody: CreateWalletRequestDto) {
-    const wallet = await this.walletService.createWallet(requestBody.userId)
+    const wallet = await this.walletCreateService.createWallet(requestBody)
     return wallet
   }
 
@@ -30,12 +41,12 @@ export class WalletController {
    */
   @Delete()
   @ApiOperation({
-    summary: 'Delete wallet',
-    description: 'Deletes the wallet associated with the given userId or walletId',
+    summary: DELETE_WALLET_API.summary,
+    description: DELETE_WALLET_API.description,
   })
-  @ApiResponse({ status: 200, description: 'Wallet deleted successfully.' })
+  @ApiResponse({ status: DELETE_WALLET_API.successResponseCode, description: DELETE_WALLET_API.successResponseMessage })
   async deleteWallet(@Query() queryParams: StandardWalletRequestDto) {
-    const wallet = await this.walletService.deleteWallet(queryParams)
+    const wallet = await this.walletDeleteService.deleteWallet(queryParams)
     return wallet
   }
 
@@ -46,12 +57,16 @@ export class WalletController {
    */
   @Get()
   @ApiOperation({
-    summary: 'Get wallet details',
-    description: 'Retrieves the details of the wallet for the given userId or walletId',
+    summary: GET_WALLET_DETAILS_API.summary,
+    description: GET_WALLET_DETAILS_API.description,
   })
-  @ApiResponse({ status: 200, description: 'Retrieved wallet details successfully.', type: WalletEntity })
+  @ApiResponse({
+    status: GET_WALLET_DETAILS_API.successResponseCode,
+    description: GET_WALLET_DETAILS_API.successResponseMessage,
+    type: WalletEntity,
+  })
   async getWalletdetails(@Query() queryParams: StandardWalletRequestDto) {
-    const wallet = await this.walletService.getWalletDetails(queryParams)
+    const wallet = await this.walletReadService.getWalletDetails(queryParams)
     return wallet
   }
 }
