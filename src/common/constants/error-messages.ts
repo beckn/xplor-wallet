@@ -8,6 +8,7 @@ export const WalletErrors = {
   WALLET_ALREADY_EXIST: 'Wallet with this user already exists',
   WALLET_BAD_REQUEST: 'There was an error in creating wallet',
 }
+
 export const FilesErrors = {
   INTERNAL_ERROR: 'There was an error in completing your request.',
   ACL_GENERATION_ERROR: 'There was an error in generating access control for the file. Try again',
@@ -27,4 +28,9 @@ export const FilesErrors = {
   SHARE_ACTION_PERMISSION_ERROR: 'You cannot respond to this share request as you are not the file owner.',
   FILE_MISSING_ERROR: 'Please attach a file document.',
   INVALID_DELETE_ACTION: 'Incorrect action, please enter one of these [DELETE, RECOVER, PERMANENT_DELETE].',
+}
+
+export const VcErrors = {
+  VCs_NOT_FOUND: 'VCs not found',
+  VC_NOT_EXIST: 'VC does not exist with the VcId!',
 }

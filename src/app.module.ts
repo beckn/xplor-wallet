@@ -11,6 +11,7 @@ import configuration from './config/env/env.config'
 import { FileAccessControlModule } from './files/module/file-access-control.module'
 import { FilesModule } from './files/module/files.module'
 import { S3StorageModule } from './files/module/s3-storage.module'
+import { VerifiableCredentialModule } from './verifiable-credential/module/verifiable-credential.module'
 import { WalletModule } from './wallet/module/wallet.module'
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { WalletModule } from './wallet/module/wallet.module'
     FileAccessControlModule,
     WalletModule,
     FilesModule,
+    VerifiableCredentialModule,
   ],
   controllers: [AppController],
   providers: [AppService],

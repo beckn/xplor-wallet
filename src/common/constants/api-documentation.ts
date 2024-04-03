@@ -18,3 +18,19 @@ export const GET_WALLET_DETAILS_API = {
   successResponseCode: 200,
   successResponseMessage: 'Retrieved wallet details successfully.',
 }
+
+export const STORE_CREDENTIAL_API = {
+  summary: 'Create/Store Verifiable Credential to wallet',
+  description:
+    'Creates a VC record and stores it in the user wallet, it contains information of both Sunbird VC and Stored File',
+  successResponseCode: 201,
+  successResponseMessage: 'Created/Stored VC successfully.',
+}
+
+export const GET_CREDENTIAL_LIST_API = {
+  summary: 'Get All VCs',
+  description:
+    'Fetches all VC that a user owns. The VCs which were stored by user or issued by someone appear in this.',
+  successResponseCode: 200,
+  successResponseMessage: 'VCs retrieved successfully.',
+}

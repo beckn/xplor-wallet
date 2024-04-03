@@ -10,7 +10,15 @@ export enum ShareRequestAction {
   REJECTED = 'REJECTED',
 }
 
-export enum FileType {
-  public = 'public',
-  private = 'private',
+export enum VcType {
+  SELF_ISSUED = 'SELF_ISSUED',
+  RECEIVED = 'RECEIVED',
+}
+
+export enum VcCategory {
+  EDUCATION = 'EducationCertificate',
+  SKILL = 'SkillCertificate',
+  PROOF_OF_ADDRESS = 'AddressProofCertificate',
+  AADHAR = 'AadharCertificate',
+  MISCELLANEOUS = 'MISCELLANEOUS',
 }
