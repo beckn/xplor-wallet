@@ -48,3 +48,10 @@ export const DELETE_CREDENTIAL_API = {
   successResponseCode: 200,
   successResponseMessage: 'VC deleted successfully.',
 }
+
+export const VIEW_CREDENTIAL_API = {
+  summary: 'View VC Document',
+  description: 'View/Render the VC document via the restrictedUrl',
+  successResponseCode: 200,
+  successResponseMessage: 'VC Document rendered successfully.',
+}

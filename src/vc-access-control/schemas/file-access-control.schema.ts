@@ -2,9 +2,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 
 @Schema({ timestamps: true })
-export class FileAccessControl {
+export class VCAccessControl {
   @Prop({ required: true })
-  fileId: string
+  vcId: string
 
   @Prop({ required: false })
   shareRequestId: string
@@ -19,11 +19,11 @@ export class FileAccessControl {
   fileSignedUrl: string // AWS signed Url
 
   @Prop({ required: true })
-  expireTimeStamp: number
+  expireTimeStamp: string
 
   @Prop({ required: true })
-  allowedViewCount: number
+  viewAllowed: boolean
 }
-export const FileAccessControlModel = FileAccessControl.name
-export type FileAccessControlDocument = FileAccessControl & Document
-export const FileAccessControlSchema = SchemaFactory.createForClass(FileAccessControl)
+export const VCAccessControlModel = VCAccessControl.name
+export type VCAccessControlDocument = VCAccessControl & Document
+export const VCAccessControlSchema = SchemaFactory.createForClass(VCAccessControl)

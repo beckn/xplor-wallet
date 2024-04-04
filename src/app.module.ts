@@ -8,9 +8,9 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ApiClient } from './common/api-client'
 import configuration from './config/env/env.config'
-import { FileAccessControlModule } from './files/module/file-access-control.module'
 import { FilesModule } from './files/module/files.module'
 import { S3StorageModule } from './files/module/s3-storage.module'
+import { VCAccessControlModule } from './vc-access-control/module/vc-access-control.module'
 import { VerifiableCredentialModule } from './verifiable-credential/module/verifiable-credential.module'
 import { WalletModule } from './wallet/module/wallet.module'
 @Module({
@@ -29,10 +29,10 @@ import { WalletModule } from './wallet/module/wallet.module'
     ApiClient,
     MulterModule.register(multerFileUploadConfig),
     S3StorageModule,
-    FileAccessControlModule,
+    VerifiableCredentialModule,
     WalletModule,
     FilesModule,
-    VerifiableCredentialModule,
+    VCAccessControlModule,
   ],
   controllers: [AppController],
   providers: [AppService],

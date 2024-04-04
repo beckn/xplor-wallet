@@ -1,18 +1,31 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import 'multer'
+import { VcType } from 'src/common/constants/enums'
 import { VcErrors } from 'src/common/constants/error-messages'
+import { FilesReadService } from 'src/files/service/files-read.service'
+import { renderFileToResponse } from 'src/utils/file.utils'
+import {
+  generateCurrentIsoTime,
+  generateVCAccessControlExpirationTimestamp,
+  renderVCDocumentToResponse,
+} from 'src/utils/vc.utils'
+import { VCAccessControlReadService } from 'src/vc-access-control/service/verifiable-credential-access-control-read.service'
+import { VCAccessControlUpdateService } from 'src/vc-access-control/service/verifiable-credential-access-control-update.service'
+import { MaxVCShareHours } from '../../common/constants/vc-constants'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import { GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
-
 @Injectable()
 export class VerifiableCredentialReadService {
   constructor(
     @InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>,
     private readonly configService: ConfigService,
+    private readonly vcAclReadService: VCAccessControlReadService,
+    private readonly vcAclUpdateService: VCAccessControlUpdateService,
+    private readonly filesReadService: FilesReadService,
   ) {}
 
   /*
@@ -55,10 +68,98 @@ export class VerifiableCredentialReadService {
     const query: any = { walletId: queryParams.walletId, _id: queryParams.vcId }
     const vcDetails = await this.vcModel.findOne(query)
 
-    if (vcDetails == null) {
+    if (!vcDetails) {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
     return vcDetails
+  }
+
+  async renderVCDocument(restrictionKey: string, res): Promise<any> {
+    // Fetch Access control details by restrictedKey
+
+    const aclDetails = await this.vcAclReadService.findByRestrictedKey(restrictionKey)
+    const vcDetails = await this.getVCById(aclDetails['vcId'])
+
+    if (!vcDetails) {
+      throw new NotFoundException(VcErrors.VC_NOT_EXIST)
+    }
+
+    const fileDetails = await this.filesReadService.getFileById(vcDetails['fileId'])
+
+    if (!vcDetails) {
+      throw new NotFoundException(VcErrors.VC_NOT_EXIST)
+    }
+
+    // Checking whether the allowedViewCount reached limit for the shareRequest
+    if (aclDetails['viewOnce'] === false && aclDetails['shareRequestId']) {
+      throw new UnauthorizedException(VcErrors.VC_VIEW_ONCE_ERROR)
+    } else if (aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
+      // Update viewAllowed of Access Control
+      await this.vcAclUpdateService.updateViewAllowedByRestrictionKey(aclDetails['restrictedKey'], false)
+    }
+
+    if (aclDetails['shareRequestId'] != null && aclDetails['shareRequestId'] != '') {
+      // const requestDetails = await this.shareRequestModel.findById(aclDetails['shareRequestId'])
+
+      // if (requestDetails.status != ShareRequestAction.ACCEPTED) {
+      throw new UnauthorizedException(VcErrors.SHARE_REJECTED_ERROR)
+    }
+
+    const currentIsoTime = generateCurrentIsoTime()
+    const expirationTimestamp = aclDetails['expireTimeStamp']
+
+    if (currentIsoTime < expirationTimestamp) {
+      // The expiration timestamp has not yet been reached
+
+      // TODO: Do vcType checks to render fileAccordingly
+      if (vcDetails['type'] === VcType.SELF_ISSUED) {
+        await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+      } else {
+        // Hit the Registry layer to Render VC
+        await renderVCDocumentToResponse(
+          res,
+          this.configService.get('REGISTRY_SERVICE_URL') + '/credentials/' + vcDetails['did'],
+          vcDetails['templateId'],
+          restrictionKey,
+        )
+      }
+    } else {
+      // The expiration timestamp has passed
+
+      // Checking if the Access is for a share request
+      if (aclDetails['shareRequestId'] != null) {
+        if (aclDetails['shareRequestId']) {
+          throw new UnauthorizedException(VcErrors.VC_EXPIRED_ERROR)
+        }
+
+        // Regenerate new accessControl Restriction Details
+        const updatedAcl = await this.vcAclUpdateService.renewAccessControl(
+          restrictionKey,
+          generateVCAccessControlExpirationTimestamp(MaxVCShareHours),
+        )
+
+        // Update the fileUrl inside File to new ACL restrictedUrl
+        await this.vcModel
+          .findOneAndUpdate(
+            { _id: vcDetails['_id'].toString() },
+            { fileUrl: updatedAcl['restrictedUrl'] },
+            { new: true },
+          )
+          .exec()
+
+        if (vcDetails['type'] === VcType.SELF_ISSUED) {
+          await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+        } else {
+          // Hit the Registry layer to Render VC
+          await renderVCDocumentToResponse(
+            res,
+            this.configService.get('REGISTRY_SERVICE_URL') + '/credentials/' + vcDetails['did'],
+            vcDetails['templateId'],
+            restrictionKey,
+          )
+        }
+      }
+    }
   }
 }

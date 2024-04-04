@@ -7,6 +7,7 @@ import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { FilesController } from '../controller/files.controller'
 import { FileModel, FileSchema } from '../schemas/files.schema'
 import { FilesCreateService } from '../service/files-create.service'
+import { FilesReadService } from '../service/files-read.service'
 import { S3StorageModule } from './s3-storage.module'
 
 @Module({
@@ -18,7 +19,7 @@ import { S3StorageModule } from './s3-storage.module'
     ApiClient,
   ],
   controllers: [FilesController],
-  providers: [FilesCreateService, WalletReadService, ApiClient],
-  exports: [MongooseModule, FilesCreateService],
+  providers: [FilesCreateService, WalletReadService, FilesReadService, ApiClient],
+  exports: [MongooseModule, FilesCreateService, FilesReadService],
 })
 export class FilesModule {}

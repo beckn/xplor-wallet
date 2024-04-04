@@ -8,15 +8,23 @@ import { ErrorCodes } from 'src/common/constants/error-codes'
 import { FilesErrors } from 'src/common/constants/error-messages'
 import { FILE_LOCAL_CONFIG, FileMimeType } from 'src/common/constants/file-constants'
 
-export function getCurrentTimeStamp(): number {
-  return Date.now()
-}
-
 export function generateVCExpirationDate(years: number) {
   const currentDate = new Date()
   const futureDate = addYears(currentDate, years)
   const formattedFutureDate = formatISO(futureDate)
   return formattedFutureDate
+}
+
+export function generateVCAccessControlExpirationTimestamp(hours): string {
+  const currentDate = new Date()
+  const futureDate = new Date(currentDate.getTime() + hours * 60 * 60 * 1000)
+  return futureDate.toISOString()
+}
+
+export function generateCurrentIsoTime(): string {
+  const currentDate = new Date()
+  const futureDate = new Date(currentDate.getTime() + 1 * 60 * 60 * 1000)
+  return futureDate.toISOString()
 }
 
 export function generateUrlUUID(): string {
@@ -31,9 +39,10 @@ export function generateUrlUUID(): string {
   return encryptedUUID
 }
 
-export async function renderFileToResponse(res, fileUrl: string, restrictionKey: string) {
+export async function renderVCDocumentToResponse(res, fileUrl: string, templateId: string, restrictionKey: string) {
   const headers = {
-    Accept: FileMimeType.ALL,
+    Accept: FileMimeType.PDF,
+    templateId: templateId,
   }
   const config: AxiosRequestConfig = {
     responseType: 'arraybuffer',

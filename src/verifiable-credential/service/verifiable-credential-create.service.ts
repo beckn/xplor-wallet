@@ -1,21 +1,57 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import 'multer'
-import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
+import { VcErrors } from 'src/common/constants/error-messages'
+import { MaxVCShareHours } from 'src/common/constants/vc-constants'
+import { generateVCAccessControlExpirationTimestamp } from 'src/utils/vc.utils'
+import { VCAccessControlUpdateService } from 'src/vc-access-control/service/verifiable-credential-access-control-update.service'
+import { VCAccessControlCreateService } from '../../vc-access-control/service/verifiable-credential-access-control.service'
 import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
+import { CreateVCRequestModelDto } from '../dto/create-vc-request-model.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
 
 @Injectable()
 export class VerifiableCredentialCreateService {
-  constructor(@InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>) {}
+  constructor(
+    @InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>,
+    private readonly vcAclCreateService: VCAccessControlCreateService,
+    private readonly vcAclUpdateService: VCAccessControlUpdateService,
+  ) {}
 
   /*
   This function takes all the details of the VC & Stores them
    **/
-  async createVerifiableCredential(vcRequest: CreateVCRequestBodyDto): Promise<StandardMessageResponse | any> {
-    const createdVc = new this.vcModel(vcRequest)
+  async createVerifiableCredential(vcRequest: CreateVCRequestBodyDto, fileStoredUrl): Promise<any> {
+    // Generate an ACL For this vc
+    const vcAclDetails = await this.vcAclCreateService.createVcAccessControl(
+      'vcId', // Need to update this once the fileId is made,
+      '',
+      fileStoredUrl,
+      generateVCAccessControlExpirationTimestamp(MaxVCShareHours),
+      false,
+    )
+    if (vcAclDetails == null) {
+      throw new InternalServerErrorException(VcErrors.ACL_GENERATION_ERROR)
+    }
+
+    const vcSaveRequest = new CreateVCRequestModelDto(
+      vcRequest.did,
+      vcRequest.fileId,
+      vcRequest.walletId,
+      vcRequest.type,
+      vcRequest.category,
+      vcRequest.templateId,
+      vcRequest.tags,
+      vcRequest.name,
+      vcAclDetails['restrictedUrl'],
+    )
+
+    const createdVc = new this.vcModel(vcSaveRequest)
     const fileResult = await createdVc.save()
+
+    // Updated VcId in ACL Document
+    await this.vcAclUpdateService.updateVcIdByRestrictedKey(vcAclDetails['restrictedKey'], fileResult['_id'].toString())
     return fileResult
   }
 }

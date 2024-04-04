@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Query, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import {
   DELETE_CREDENTIAL_API,
   GET_CREDENTIAL_LIST_API,
   GET_SINGLE_CREDENTIAL_API,
   STORE_CREDENTIAL_API,
+  VIEW_CREDENTIAL_API,
 } from 'src/common/constants/api-documentation'
 import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
@@ -40,7 +41,7 @@ export class VerifiableCredentialController {
     type: CreateVCRequestBodyEntity,
   })
   async storeCredential(@Body() body: CreateVCRequestBodyDto) {
-    const storeCredentialResult = await this.vcCreateService.createVerifiableCredential(body)
+    const storeCredentialResult = await this.vcCreateService.createVerifiableCredential(body, null)
     return storeCredentialResult
   }
 
@@ -56,6 +57,21 @@ export class VerifiableCredentialController {
   })
   async getVCById(@Query() queryParams: GetVCRequestDto) {
     const vcResult = await this.vcReadService.getVCById(queryParams)
+    return vcResult
+  }
+
+  @Get('/view')
+  @ApiOperation({
+    summary: VIEW_CREDENTIAL_API.summary,
+    description: VIEW_CREDENTIAL_API.description,
+  })
+  @ApiResponse({
+    status: VIEW_CREDENTIAL_API.successResponseCode,
+    description: VIEW_CREDENTIAL_API.successResponseMessage,
+    type: VCEntityList,
+  })
+  async viewVCDocument(@Param('restrictedKey') keyParam: string, @Res() res) {
+    const vcResult = await this.vcReadService.renderVCDocument(keyParam, res)
     return vcResult
   }
 

@@ -1,0 +1,126 @@
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import { ViewAccessControlErrors } from 'src/common/constants/error-messages'
+import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
+import { generateUrlUUID } from 'src/utils/file.utils'
+import { VCAccessControl } from '../schemas/file-access-control.schema'
+
+@Injectable()
+export class VCAccessControlUpdateService {
+  constructor(
+    @InjectModel('VCAccessControl') private readonly vcAccessControlModel: Model<VCAccessControl>,
+    private readonly configService: ConfigService,
+  ) {}
+
+  /**
+   * Finds and updates signedUrl of the File and the expiration time using restrictedKey
+   */
+  async updateRestrictionsByRestrictionKey(
+    resKey: string,
+    signedUrl: string,
+    expiresTimeStamp: number,
+  ): Promise<StandardMessageResponse | any> {
+    // Generating unique restricted key and restrictedUrl
+    const restrictedKey = generateUrlUUID()
+    const restrictedUrl = this.configService.get('SERVICE_BASE_URL') + 'files/view/' + restrictedKey
+
+    // Update the document with the given restriction key
+    const updatedDocument = await this.vcAccessControlModel
+      .findOneAndUpdate(
+        { restrictedKey: resKey }, // Find the document with the matching restriction key
+        {
+          $set: {
+            restrictedKey: restrictedKey, // Update the restriction key
+            restrictedUrl: restrictedUrl, // Update the restriction URL
+            expireTimeStamp: expiresTimeStamp, // Update the expiration timestamp
+            fileSignedUrl: signedUrl, // Update the signed URL
+          },
+        },
+        { new: true }, // Return the updated document
+      )
+      .exec()
+
+    if (!updatedDocument) {
+      throw new NotFoundException(ViewAccessControlErrors.DOCUMENT_NOT_FOUND)
+    }
+
+    return updatedDocument
+  }
+
+  /**
+   * Finds and updates viewAllowed of the File and the expiration time using restrictedKey
+   */
+  async updateViewAllowedByRestrictionKey(
+    resKey: string,
+    viewAllowed: boolean,
+  ): Promise<StandardMessageResponse | any> {
+    // Update the document with the given restriction key
+    const updatedDocument = await this.vcAccessControlModel
+      .findOneAndUpdate(
+        { restrictedKey: resKey }, // Find the document with the matching restriction key
+        {
+          $set: {
+            viewAllowed: viewAllowed, // Update the signed URL
+          },
+        },
+        { new: true }, // Return the updated document
+      )
+      .exec()
+
+    if (!updatedDocument) {
+      throw new NotFoundException(ViewAccessControlErrors.DOCUMENT_NOT_FOUND)
+    }
+
+    return updatedDocument
+  }
+
+  /**
+   * Finds and updates shareRequestId of the File using restrictedKey
+   */
+  async updateShareRequestIdByRestrictedKey(
+    restrictedKey: string,
+    shareRequestId: string,
+  ): Promise<StandardMessageResponse | any> {
+    const updatedAcl = await this.vcAccessControlModel
+      .findOneAndUpdate({ restrictedKey }, { $set: { shareRequestId: shareRequestId } }, { new: true })
+      .exec()
+
+    if (!updatedAcl) {
+      throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
+    }
+
+    return updatedAcl
+  }
+
+  /**
+   * Finds and updates FileId of the File using restrictedKey
+   */
+  async updateVcIdByRestrictedKey(restrictedKey: string, vcId: string): Promise<StandardMessageResponse | any> {
+    const updatedAcl = await this.vcAccessControlModel
+      .findOneAndUpdate({ restrictedKey }, { $set: { vcId: vcId } }, { new: true })
+      .exec()
+
+    if (!updatedAcl) {
+      throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
+    }
+
+    return updatedAcl
+  }
+
+  async renewAccessControl(restrictedKey: string, expiryTimeStamp: string) {
+    const updatedDocument = await this.vcAccessControlModel
+      .findOneAndUpdate(
+        { restrictedKey: restrictedKey }, // Find the document with the matching restriction key
+        {
+          $set: {
+            expireTimeStamp: expiryTimeStamp, // Update the expiration timestamp
+          },
+        },
+        { new: true }, // Return the updated document
+      )
+      .exec()
+    return updatedDocument
+  }
+}

@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import * as AWS from 'aws-sdk'
 import { AWSError } from 'aws-sdk'
+import { IStorageService } from 'src/common/constants/interface-storage-service'
+import { MaxVCShareHours } from 'src/common/constants/vc-constants'
 
 @Injectable()
-export class S3StorageService {
+export class S3StorageService implements IStorageService {
   AWS_S3_BUCKET
   s3
   constructor(private readonly configService: ConfigService) {
@@ -20,8 +22,12 @@ export class S3StorageService {
   /**
    * Uploads a file from Multer to AWS S3 bucket and returns the stored files details
    */
-  async uploadFile(file: Express.Multer.File | any) {
-    return await this.s3_upload(file.buffer, new Date().getTime() + file.originalname, file.mimetype)
+  async uploadFile(file: Express.Multer.File | any): Promise<any> {
+    const fileResult = {}
+    const uploadedFile = await this.s3_upload(file.buffer, new Date().getTime() + file.originalname, file.mimetype)
+    fileResult['uploadedFile'] = uploadedFile
+    fileResult['signedUrl'] = this.getSignedFileUrl(MaxVCShareHours, uploadedFile['key'])
+    return fileResult
   }
 
   /**
@@ -61,6 +67,6 @@ export class S3StorageService {
       },
     }
     const s3Response = await this.s3.upload(params).promise()
-    return s3Response['Location']
+    return s3Response
   }
 }

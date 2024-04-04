@@ -27,6 +27,9 @@ export class VerifiableCredential {
 
   @Prop({ required: false })
   templateId: string
+
+  @Prop({ required: true })
+  restrictedUrl: string
 }
 export const VerifiableCredentialModel = VerifiableCredential.name
 export type VerifiableCredentialDocument = VerifiableCredential & Document
