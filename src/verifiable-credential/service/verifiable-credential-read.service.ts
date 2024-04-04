@@ -4,7 +4,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import 'multer'
 import { VcErrors } from 'src/common/constants/error-messages'
-import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import { GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
@@ -19,7 +18,7 @@ export class VerifiableCredentialReadService {
   /*
   This function returns list of VCs in the document and also applys search queries.
    **/
-  async getAllWalletVc(queryParams: GetVCListRequestDto, skip: number): Promise<StandardMessageResponse | any> {
+  async getAllWalletVc(queryParams: GetVCListRequestDto, skip: number): Promise<any> {
     const query: any = { walletId: queryParams.walletId }
 
     if (queryParams.category) {
@@ -50,7 +49,10 @@ export class VerifiableCredentialReadService {
     return filesResult
   }
 
-  async getVCById(queryParams: GetVCRequestDto): Promise<StandardMessageResponse | any> {
+  /*
+  This function returns VC with the vcId and walletId
+   **/
+  async getVCById(queryParams: GetVCRequestDto): Promise<any> {
     const query: any = { walletId: queryParams.walletId, _id: queryParams.vcId }
     const vcDetails = await this.vcModel.find(query)
 

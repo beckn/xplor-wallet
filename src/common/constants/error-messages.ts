@@ -11,6 +11,7 @@ export const WalletErrors = {
 
 export const FilesErrors = {
   INTERNAL_ERROR: 'There was an error in completing your request.',
+  FILE_CREATE_ERROR: 'There was an error in completing your request.',
   ACL_GENERATION_ERROR: 'There was an error in generating access control for the file. Try again',
   FILES_NOT_FOUND: 'Files not found',
   FILE_NOT_EXIST: 'File does not exist with the fileId!',

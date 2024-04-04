@@ -28,9 +28,8 @@ export class CreateVCRequestBodyDto {
   category: VcCategory | string
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty()
-  templateId: string
+  templateId?: string
 
   @IsNotEmpty()
   @ApiProperty()
@@ -40,4 +39,24 @@ export class CreateVCRequestBodyDto {
   @IsNotEmpty()
   @ApiProperty()
   name: string
+
+  constructor(
+    did: string,
+    fileId: string,
+    walletId: string,
+    type: VcType,
+    category: string,
+    templateId: string,
+    tags: string[],
+    name: string,
+  ) {
+    this.did = did
+    this.fileId = fileId
+    this.walletId = walletId
+    this.type = type
+    this.category = category
+    this.templateId = templateId
+    this.tags = tags
+    this.name = name
+  }
 }

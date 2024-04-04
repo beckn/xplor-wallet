@@ -4,27 +4,22 @@ import { ArrayNotEmpty, ArrayUnique, IsArray, IsNotEmpty, IsString } from 'class
 export class CreateFileRequestDto {
   @ApiProperty()
   @IsNotEmpty()
-  readonly userId: string
+  readonly walletId: string
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  readonly fileType: string
+  readonly category: string
 
   @ApiProperty()
   @IsArray()
   @ArrayNotEmpty()
   @ArrayUnique()
   @IsString({ each: true })
-  readonly fileTags: string[]
+  readonly tags: string[]
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  readonly fileName: string
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  readonly metadata: string
+  readonly name: string
 }

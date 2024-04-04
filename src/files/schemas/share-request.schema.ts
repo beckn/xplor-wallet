@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
-import { FileType, ShareRequestAction } from 'src/common/constants/enums'
+import { ShareRequestAction } from 'src/common/constants/enums'
 
 class Restrictions {
   @Prop({ required: true })
@@ -18,7 +18,7 @@ class Restrictions {
 }
 
 class FileShareDetails {
-  @Prop({ required: true, enum: FileType })
+  @Prop({ required: true })
   type: string
 
   @Prop({ required: true })

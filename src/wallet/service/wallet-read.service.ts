@@ -29,6 +29,7 @@ export class WalletReadService {
    */
   async getWalletDetails(queryParams: StandardWalletRequestDto): Promise<StandardMessageResponse | any> {
     let walletDetails
+    console.log(queryParams)
     if (queryParams.walletId != null) {
       walletDetails = await this.findWalletByWalletId(queryParams.walletId)
     } else {

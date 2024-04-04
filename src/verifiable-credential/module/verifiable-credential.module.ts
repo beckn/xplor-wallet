@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ApiClient } from 'src/common/api-client'
-import { FilesService } from 'src/files/service/files.service'
+import { S3StorageModule } from 'src/files/module/s3-storage.module'
+import { FileModel, FileSchema } from 'src/files/schemas/files.schema'
+import { FilesCreateService } from 'src/files/service/files-create.service'
 import { WalletModule } from 'src/wallet/module/wallet.module'
 import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { VerifiableCredentialController } from '../controller/verifiable-credental.controller'
@@ -12,17 +14,19 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: VerifiableCredentialModel, schema: VerifiableCredentialSchema }]),
+    MongooseModule.forFeature([{ name: FileModel, schema: FileSchema }]),
     WalletModule,
+    S3StorageModule,
     ApiClient,
   ],
   controllers: [VerifiableCredentialController],
   providers: [
-    FilesService,
+    FilesCreateService,
     WalletReadService,
     ApiClient,
     VerifiableCredentialCreateService,
     VerifiableCredentialReadService,
   ],
-  exports: [MongooseModule],
+  exports: [MongooseModule, VerifiableCredentialCreateService],
 })
 export class VerifiableCredentialModule {}

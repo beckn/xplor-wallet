@@ -61,6 +61,6 @@ export class S3StorageService {
       },
     }
     const s3Response = await this.s3.upload(params).promise()
-    return s3Response
+    return s3Response['Location']
   }
 }

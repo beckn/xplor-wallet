@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { GET_CREDENTIAL_LIST_API, STORE_CREDENTIAL_API } from 'src/common/constants/api-documentation'
-import { FilesService } from 'src/files/service/files.service'
+import { FilesCreateService } from 'src/files/service/files-create.service'
 import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
@@ -17,7 +17,7 @@ export class VerifiableCredentialController {
   constructor(
     private readonly vcCreateService: VerifiableCredentialCreateService,
     private readonly vcReadService: VerifiableCredentialReadService,
-    private readonly fileService: FilesService,
+    private readonly fileService: FilesCreateService,
     private readonly walletService: WalletReadService,
   ) {}
 

@@ -5,7 +5,7 @@ import { FileAccessControl, FileAccessControlSchema } from '../schemas/file-acce
 import { FileModel, FileSchema } from '../schemas/files.schema'
 import { ShareRequestModel, ShareRequestSchema } from '../schemas/share-request.schema'
 import { FileAccessControlService } from '../service/file-access-control.service'
-import { FilesService } from '../service/files.service'
+import { FilesModule } from './files.module'
 import { S3StorageModule } from './s3-storage.module'
 
 @Module({
@@ -16,7 +16,7 @@ import { S3StorageModule } from './s3-storage.module'
     ApiClient,
     S3StorageModule,
   ],
-  providers: [FileAccessControlService, FilesService, ApiClient],
+  providers: [FileAccessControlService, ApiClient, FilesModule],
   exports: [FileAccessControlService, FileAccessControlService], // Export the service to be available in other modules
 })
 export class FileAccessControlModule {}
