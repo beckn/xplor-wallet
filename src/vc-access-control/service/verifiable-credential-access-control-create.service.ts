@@ -37,6 +37,7 @@ export class VCAccessControlCreateService {
       signedUrl,
       expiresTimeStamp,
       viewOnce,
+      true,
     )
 
     const createdAcl = new this.vcAccessControlModel(accessModelDto)

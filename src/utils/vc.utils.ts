@@ -3,7 +3,8 @@ import { createHash } from 'crypto'
 import { addYears, formatISO } from 'date-fns'
 import * as fs from 'fs'
 import { promises as fsPromises } from 'fs'
-import path from 'path'
+import * as path from 'path'
+import { ApiClient } from 'src/common/api-client'
 import { ErrorCodes } from 'src/common/constants/error-codes'
 import { FilesErrors } from 'src/common/constants/error-messages'
 import { FILE_LOCAL_CONFIG, FileMimeType } from 'src/common/constants/file-constants'
@@ -40,6 +41,7 @@ export function generateUrlUUID(): string {
 }
 
 export async function renderVCDocumentToResponse(res, fileUrl: string, templateId: string, restrictionKey: string) {
+  const apiClient = new ApiClient()
   const headers = {
     Accept: FileMimeType.PDF,
     templateId: templateId,
@@ -52,16 +54,16 @@ export async function renderVCDocumentToResponse(res, fileUrl: string, templateI
 
   const fileDirectory = FILE_LOCAL_CONFIG.STORE_PATH
   const filePath = path.join(__dirname, '..', fileDirectory)
-  const visualResult = await this.apiClient.get(fileUrl, config)
+  const visualResult = await apiClient.get(fileUrl, config)
 
-  const fileResponse = await this.apiClient.get(fileUrl, {
+  const fileResponse = await apiClient.get(fileUrl, {
     responseType: 'stream',
   })
 
   const contentType = fileResponse.headers['content-type']
   const fileExtension = contentType.split('/').pop()
-  if (!(await fsPromises.stat(filePath))) {
-    await fsPromises.mkdir(filePath, { recursive: true })
+  if (!fsPromises.access(filePath)) {
+    await fsPromises.mkdir(filePath, { recursive: true }) // Create directory recursively
   }
 
   // Save the file
@@ -71,12 +73,12 @@ export async function renderVCDocumentToResponse(res, fileUrl: string, templateI
   // Write PDF data to the file
   await fsPromises.writeFile(fullPath, visualResult, { encoding: 'binary' })
   if (fs.existsSync(fullPath)) {
-    res.set('Content-Type', `${FileMimeType.APPLICATION}${fileExtension}`)
+    res.set('Content-Type', FileMimeType.PDF)
     res.download(fullPath, fileName)
     // Clear the file!
     setTimeout(async function () {
       if (fs.existsSync(fullPath)) {
-        await fsPromises.unlink(fullPath)
+        await fsPromises.unlink(fullPath).catch((err) => console.error(err))
       }
     }, 3000)
   } else {

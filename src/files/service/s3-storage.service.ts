@@ -26,7 +26,7 @@ export class S3StorageService implements IStorageService {
     const fileResult = {}
     const uploadedFile = await this.s3_upload(file.buffer, new Date().getTime() + file.originalname, file.mimetype)
     fileResult['uploadedFile'] = uploadedFile
-    fileResult['signedUrl'] = this.getSignedFileUrl(MaxVCShareHours, uploadedFile['key'])
+    fileResult['signedUrl'] = await this.getSignedFileUrl(MaxVCShareHours, uploadedFile['key'])
     return fileResult
   }
 

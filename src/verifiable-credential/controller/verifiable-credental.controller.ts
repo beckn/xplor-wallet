@@ -45,22 +45,7 @@ export class VerifiableCredentialController {
     return storeCredentialResult
   }
 
-  @Get('/single')
-  @ApiOperation({
-    summary: GET_SINGLE_CREDENTIAL_API.summary,
-    description: GET_SINGLE_CREDENTIAL_API.description,
-  })
-  @ApiResponse({
-    status: GET_SINGLE_CREDENTIAL_API.successResponseCode,
-    description: GET_SINGLE_CREDENTIAL_API.successResponseMessage,
-    type: VCEntityList,
-  })
-  async getVCById(@Query() queryParams: GetVCRequestDto) {
-    const vcResult = await this.vcReadService.getVCById(queryParams)
-    return vcResult
-  }
-
-  @Get('/view')
+  @Get('/view/:restrictedKey')
   @ApiOperation({
     summary: VIEW_CREDENTIAL_API.summary,
     description: VIEW_CREDENTIAL_API.description,
@@ -72,6 +57,21 @@ export class VerifiableCredentialController {
   })
   async viewVCDocument(@Param('restrictedKey') keyParam: string, @Res() res) {
     const vcResult = await this.vcReadService.renderVCDocument(keyParam, res)
+    return vcResult
+  }
+
+  @Get('/single')
+  @ApiOperation({
+    summary: GET_SINGLE_CREDENTIAL_API.summary,
+    description: GET_SINGLE_CREDENTIAL_API.description,
+  })
+  @ApiResponse({
+    status: GET_SINGLE_CREDENTIAL_API.successResponseCode,
+    description: GET_SINGLE_CREDENTIAL_API.successResponseMessage,
+    type: VCEntityList,
+  })
+  async getVCById(@Query() queryParams: GetVCRequestDto) {
+    const vcResult = await this.vcReadService.getVCByIdAndWalletId(queryParams)
     return vcResult
   }
 

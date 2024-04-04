@@ -23,6 +23,9 @@ export class VCAccessControl {
 
   @Prop({ required: true })
   viewAllowed: boolean
+
+  @Prop({ required: true })
+  viewOnce: boolean
 }
 export const VCAccessControlModel = VCAccessControl.name
 export type VCAccessControlDocument = VCAccessControl & Document

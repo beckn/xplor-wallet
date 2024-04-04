@@ -5,5 +5,5 @@ export const FileMimeType = {
 }
 
 export const FILE_LOCAL_CONFIG = {
-  STORE_PATH: '/file-uploads',
+  STORE_PATH: '/file-uploads/',
 }

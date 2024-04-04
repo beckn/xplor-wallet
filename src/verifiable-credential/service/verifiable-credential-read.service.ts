@@ -64,8 +64,19 @@ export class VerifiableCredentialReadService {
   /*
   This function returns VC with the vcId and walletId
    **/
-  async getVCById(queryParams: GetVCRequestDto): Promise<any> {
+  async getVCByIdAndWalletId(queryParams: GetVCRequestDto): Promise<any> {
     const query: any = { walletId: queryParams.walletId, _id: queryParams.vcId }
+    const vcDetails = await this.vcModel.findOne(query)
+
+    if (!vcDetails) {
+      throw new NotFoundException(VcErrors.VC_NOT_EXIST)
+    }
+
+    return vcDetails
+  }
+
+  async getVCById(vcId: string): Promise<any> {
+    const query: any = { _id: vcId }
     const vcDetails = await this.vcModel.findOne(query)
 
     if (!vcDetails) {
@@ -80,30 +91,20 @@ export class VerifiableCredentialReadService {
 
     const aclDetails = await this.vcAclReadService.findByRestrictedKey(restrictionKey)
     const vcDetails = await this.getVCById(aclDetails['vcId'])
-
-    if (!vcDetails) {
-      throw new NotFoundException(VcErrors.VC_NOT_EXIST)
-    }
-
     const fileDetails = await this.filesReadService.getFileById(vcDetails['fileId'])
 
-    if (!vcDetails) {
-      throw new NotFoundException(VcErrors.VC_NOT_EXIST)
-    }
-
     // Checking whether the allowedViewCount reached limit for the shareRequest
-    if (aclDetails['viewOnce'] === false && aclDetails['shareRequestId']) {
+    if (aclDetails['viewAllowed'] === false && aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
       throw new UnauthorizedException(VcErrors.VC_VIEW_ONCE_ERROR)
-    } else if (aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
+    } else if (aclDetails['viewAllowed'] === true && aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
       // Update viewAllowed of Access Control
       await this.vcAclUpdateService.updateViewAllowedByRestrictionKey(aclDetails['restrictedKey'], false)
     }
 
-    if (aclDetails['shareRequestId'] != null && aclDetails['shareRequestId'] != '') {
+    if (!aclDetails['shareRequestId'] && aclDetails['shareRequestId'] != '') {
       // const requestDetails = await this.shareRequestModel.findById(aclDetails['shareRequestId'])
-
       // if (requestDetails.status != ShareRequestAction.ACCEPTED) {
-      throw new UnauthorizedException(VcErrors.SHARE_REJECTED_ERROR)
+      // throw new UnauthorizedException(VcErrors.SHARE_REJECTED_ERROR)
     }
 
     const currentIsoTime = generateCurrentIsoTime()
@@ -126,7 +127,6 @@ export class VerifiableCredentialReadService {
       }
     } else {
       // The expiration timestamp has passed
-
       // Checking if the Access is for a share request
       if (aclDetails['shareRequestId'] != null) {
         if (aclDetails['shareRequestId']) {

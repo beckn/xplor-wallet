@@ -8,6 +8,7 @@ export class CreateAccessControlDto {
     restrictedUrl: string,
     fileSignedUrl: string,
     expireTimeStamp: string,
+    viewOnce: boolean,
     viewAllowed: boolean,
   ) {
     this.vcId = vcId
@@ -17,6 +18,7 @@ export class CreateAccessControlDto {
     this.fileSignedUrl = fileSignedUrl
     this.expireTimeStamp = expireTimeStamp
     this.viewAllowed = viewAllowed
+    this.viewOnce = viewOnce
   }
 
   @IsNotEmpty()
@@ -42,7 +44,9 @@ export class CreateAccessControlDto {
   @IsNumber()
   readonly expireTimeStamp: string
 
-  @IsNumber()
   @IsPositive()
   readonly viewAllowed: boolean
+
+  @IsPositive()
+  readonly viewOnce: boolean
 }
