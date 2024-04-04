@@ -9,6 +9,7 @@ import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { VerifiableCredentialController } from '../controller/verifiable-credental.controller'
 import { VerifiableCredentialModel, VerifiableCredentialSchema } from '../schemas/verifiable-credential.schema'
 import { VerifiableCredentialCreateService } from '../service/verifiable-credential-create.service'
+import { VerifiableCredentialDeleteService } from '../service/verifiable-credential-delete.service'
 import { VerifiableCredentialReadService } from '../service/verifiable-credential-read.service'
 
 @Module({
@@ -26,7 +27,8 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     ApiClient,
     VerifiableCredentialCreateService,
     VerifiableCredentialReadService,
+    VerifiableCredentialDeleteService,
   ],
-  exports: [MongooseModule, VerifiableCredentialCreateService],
+  exports: [MongooseModule, VerifiableCredentialCreateService, VerifiableCredentialReadService],
 })
 export class VerifiableCredentialModule {}

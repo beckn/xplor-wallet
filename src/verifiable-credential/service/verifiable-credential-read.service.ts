@@ -20,7 +20,6 @@ export class VerifiableCredentialReadService {
    **/
   async getAllWalletVc(queryParams: GetVCListRequestDto, skip: number): Promise<any> {
     const query: any = { walletId: queryParams.walletId }
-
     if (queryParams.category) {
       query.category = queryParams.category
     }
@@ -33,8 +32,8 @@ export class VerifiableCredentialReadService {
     if (queryParams.searchQuery) {
       const regex = new RegExp(queryParams.searchQuery, 'i') // Case-insensitive regex pattern
       query.$or = [
-        { fileName: { $regex: regex } },
-        { fileType: { $regex: regex } },
+        { name: { $regex: regex } },
+        { category: { $regex: regex } },
         // Add more fields if needed
       ]
     }
@@ -54,7 +53,7 @@ export class VerifiableCredentialReadService {
    **/
   async getVCById(queryParams: GetVCRequestDto): Promise<any> {
     const query: any = { walletId: queryParams.walletId, _id: queryParams.vcId }
-    const vcDetails = await this.vcModel.find(query)
+    const vcDetails = await this.vcModel.findOne(query)
 
     if (vcDetails == null) {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)

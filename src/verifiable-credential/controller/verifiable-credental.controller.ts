@@ -1,14 +1,18 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { GET_CREDENTIAL_LIST_API, STORE_CREDENTIAL_API } from 'src/common/constants/api-documentation'
-import { FilesCreateService } from 'src/files/service/files-create.service'
-import { WalletReadService } from 'src/wallet/service/wallet-read.service'
+import {
+  DELETE_CREDENTIAL_API,
+  GET_CREDENTIAL_LIST_API,
+  GET_SINGLE_CREDENTIAL_API,
+  STORE_CREDENTIAL_API,
+} from 'src/common/constants/api-documentation'
 import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import { GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { CreateVCRequestBodyEntity } from '../entities/create-vc-request-body.entity'
 import { VCEntityList } from '../entities/vc.entity'
 import { VerifiableCredentialCreateService } from '../service/verifiable-credential-create.service'
+import { VerifiableCredentialDeleteService } from '../service/verifiable-credential-delete.service'
 import { VerifiableCredentialReadService } from '../service/verifiable-credential-read.service'
 
 @ApiTags('Verifiable Credential (VC)')
@@ -17,8 +21,7 @@ export class VerifiableCredentialController {
   constructor(
     private readonly vcCreateService: VerifiableCredentialCreateService,
     private readonly vcReadService: VerifiableCredentialReadService,
-    private readonly fileService: FilesCreateService,
-    private readonly walletService: WalletReadService,
+    private readonly vcDeleteService: VerifiableCredentialDeleteService,
   ) {}
 
   /**
@@ -41,6 +44,21 @@ export class VerifiableCredentialController {
     return storeCredentialResult
   }
 
+  @Get('/single')
+  @ApiOperation({
+    summary: GET_SINGLE_CREDENTIAL_API.summary,
+    description: GET_SINGLE_CREDENTIAL_API.description,
+  })
+  @ApiResponse({
+    status: GET_SINGLE_CREDENTIAL_API.successResponseCode,
+    description: GET_SINGLE_CREDENTIAL_API.successResponseMessage,
+    type: VCEntityList,
+  })
+  async getVCById(@Query() queryParams: GetVCRequestDto) {
+    const vcResult = await this.vcReadService.getVCById(queryParams)
+    return vcResult
+  }
+
   @Get()
   @ApiOperation({
     summary: GET_CREDENTIAL_LIST_API.summary,
@@ -57,18 +75,18 @@ export class VerifiableCredentialController {
     return vcListResult
   }
 
-  @Get()
+  @Delete()
   @ApiOperation({
-    summary: GET_CREDENTIAL_LIST_API.summary,
-    description: GET_CREDENTIAL_LIST_API.description,
+    summary: DELETE_CREDENTIAL_API.summary,
+    description: DELETE_CREDENTIAL_API.description,
   })
   @ApiResponse({
-    status: GET_CREDENTIAL_LIST_API.successResponseCode,
-    description: GET_CREDENTIAL_LIST_API.successResponseMessage,
+    status: DELETE_CREDENTIAL_API.successResponseCode,
+    description: DELETE_CREDENTIAL_API.successResponseMessage,
     type: VCEntityList,
   })
-  async getVCById(@Query() queryParams: GetVCRequestDto) {
-    const vcResult = await this.vcReadService.getVCById(queryParams)
+  async deleteVC(@Query() queryParams: GetVCRequestDto) {
+    const vcResult = await this.vcDeleteService.deleteVc(queryParams)
     return vcResult
   }
 }

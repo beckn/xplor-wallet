@@ -34,3 +34,17 @@ export const GET_CREDENTIAL_LIST_API = {
   successResponseCode: 200,
   successResponseMessage: 'VCs retrieved successfully.',
 }
+
+export const GET_SINGLE_CREDENTIAL_API = {
+  summary: 'Get VC by Id',
+  description: 'Returns the VC by its id. The VCs which was stored by user or issued by someone appear in this.',
+  successResponseCode: 200,
+  successResponseMessage: 'VC retrieved successfully.',
+}
+
+export const DELETE_CREDENTIAL_API = {
+  summary: 'Deletes VC by Id',
+  description: 'Deletes the VC by its id from the wallet permanently',
+  successResponseCode: 200,
+  successResponseMessage: 'VC deleted successfully.',
+}
