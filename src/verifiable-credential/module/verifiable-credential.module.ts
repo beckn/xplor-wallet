@@ -8,10 +8,15 @@ import { FilesReadService } from 'src/files/service/files-read.service'
 import { VCAccessControlModule } from 'src/vc-access-control/module/vc-access-control.module'
 import { VCAccessControl, VCAccessControlSchema } from 'src/vc-access-control/schemas/file-access-control.schema'
 import { VCAccessControlReadService } from 'src/vc-access-control/service/verifiable-credential-access-control-read.service'
+import { VCAccessControlUpdateService } from 'src/vc-access-control/service/verifiable-credential-access-control-update.service'
 import { WalletModule } from 'src/wallet/module/wallet.module'
 import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { VerifiableCredentialController } from '../controller/verifiable-credental.controller'
+import { ShareRequest, ShareRequestSchema } from '../schemas/share-request.schema'
 import { VerifiableCredentialModel, VerifiableCredentialSchema } from '../schemas/verifiable-credential.schema'
+import { ShareRequestCreateService } from '../service/share-request-create.service'
+import { ShareRequestReadService } from '../service/share-request-read.service'
+import { ShareRequestUpdateService } from '../service/share-request-update.service'
 import { VerifiableCredentialCreateService } from '../service/verifiable-credential-create.service'
 import { VerifiableCredentialDeleteService } from '../service/verifiable-credential-delete.service'
 import { VerifiableCredentialReadService } from '../service/verifiable-credential-read.service'
@@ -21,6 +26,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     MongooseModule.forFeature([{ name: VerifiableCredentialModel, schema: VerifiableCredentialSchema }]),
     MongooseModule.forFeature([{ name: FileModel, schema: FileSchema }]),
     MongooseModule.forFeature([{ name: VCAccessControl.name, schema: VCAccessControlSchema }]),
+    MongooseModule.forFeature([{ name: ShareRequest.name, schema: ShareRequestSchema }]),
     WalletModule,
     VCAccessControlModule,
     ApiClient,
@@ -36,7 +42,22 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     VerifiableCredentialDeleteService,
     VCAccessControlReadService,
     FilesReadService,
+    VCAccessControlUpdateService,
+    ShareRequestReadService,
+    ShareRequestUpdateService,
+    ShareRequestCreateService,
   ],
-  exports: [MongooseModule, VerifiableCredentialCreateService, VerifiableCredentialReadService],
+  exports: [
+    MongooseModule,
+    VerifiableCredentialCreateService,
+    VerifiableCredentialReadService,
+    ShareRequestReadService,
+    ShareRequestCreateService,
+    ShareRequestUpdateService,
+    VerifiableCredentialCreateService,
+    VerifiableCredentialDeleteService,
+    VCAccessControlReadService,
+    FilesReadService,
+  ],
 })
 export class VerifiableCredentialModule {}

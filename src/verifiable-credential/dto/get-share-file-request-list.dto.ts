@@ -10,7 +10,7 @@ export class GetShareFileRequestsDto {
 
   @ApiProperty()
   @IsString()
-  userId: string
+  walletId: string
 
   @ApiProperty()
   @IsOptional()

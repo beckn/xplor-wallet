@@ -5,24 +5,17 @@ import { ShareRequestAction } from 'src/common/constants/enums'
 class Restrictions {
   @Prop({ required: true })
   expireTimeStamp: number
-  viewCount?: number
-  downloadEnabled?: boolean
-  sharedWithUsers?: string[]
+  viewOnce?: boolean
 
-  constructor(expireTimeStamp: number, viewCount?: number, downloadEnabled?: boolean, sharedWithUsers?: string[]) {
+  constructor(expireTimeStamp: number, viewOnce?: boolean) {
     this.expireTimeStamp = expireTimeStamp
-    this.viewCount = viewCount
-    this.downloadEnabled = downloadEnabled
-    this.sharedWithUsers = sharedWithUsers
+    this.viewOnce = viewOnce
   }
 }
 
-class FileShareDetails {
+class VcShareDetails {
   @Prop({ required: true })
-  type: string
-
-  @Prop({ required: true })
-  documentType: string //10th board result, skill certificate etc..
+  certificateType: string //10th board result, skill certificate etc..
 
   @Prop({ required: true })
   restrictions: Restrictions
@@ -31,22 +24,22 @@ class FileShareDetails {
 @Schema({ timestamps: true })
 export class ShareRequest {
   @Prop({ required: true })
-  fileId: string
+  vcId: string
 
   @Prop({ required: true, enum: ShareRequestAction })
   status: string
 
   @Prop({ required: true })
-  fileShareUrl: string
+  restrictedUrl: string
 
   @Prop({ required: true })
-  raisedByUser: string
+  raisedByWallet: string
 
   @Prop({ required: true })
-  fileOwnerUser: string
+  vcOwnerWallet: string
 
   @Prop({ required: true })
-  fileShareDetails: FileShareDetails
+  vcShareDetails: VcShareDetails
 }
 export const ShareRequestModel = ShareRequest.name
 export type ShareRequestDocument = ShareRequest & Document

@@ -1,3 +1,4 @@
+import { InternalServerErrorException } from '@nestjs/common'
 import { AxiosRequestConfig } from 'axios'
 import { createHash } from 'crypto'
 import { addYears, formatISO } from 'date-fns'
@@ -59,12 +60,20 @@ export async function renderVCDocumentToResponse(res, fileUrl: string, templateI
   const fileResponse = await apiClient.get(fileUrl, {
     responseType: 'stream',
   })
+  if (!fileResponse) {
+    throw new InternalServerErrorException(FilesErrors.INTERNAL_ERROR)
+  }
 
   const contentType = fileResponse.headers['content-type']
   const fileExtension = contentType.split('/').pop()
-  if (!fsPromises.access(filePath)) {
-    await fsPromises.mkdir(filePath, { recursive: true }) // Create directory recursively
-  }
+  await fsPromises
+    .access(filePath)
+    .then(async (_) => {
+      await fsPromises.mkdir(filePath, { recursive: true }) // Create directory recursively
+    })
+    .catch(async (err) => {
+      await fsPromises.mkdir(filePath, { recursive: true })
+    })
 
   // Save the file
   const fileName = `${restrictionKey}.${fileExtension}`

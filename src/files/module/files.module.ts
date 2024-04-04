@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ApiClient } from 'src/common/api-client'
+import { VCAccessControlModule } from 'src/vc-access-control/module/vc-access-control.module'
 import { VerifiableCredentialModule } from 'src/verifiable-credential/module/verifiable-credential.module'
 import { WalletModule } from 'src/wallet/module/wallet.module'
 import { WalletReadService } from 'src/wallet/service/wallet-read.service'
@@ -17,6 +18,7 @@ import { S3StorageModule } from './s3-storage.module'
     VerifiableCredentialModule,
     WalletModule,
     ApiClient,
+    VCAccessControlModule,
   ],
   controllers: [FilesController],
   providers: [FilesCreateService, WalletReadService, FilesReadService, ApiClient],

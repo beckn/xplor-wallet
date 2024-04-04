@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import 'multer'
-import { VcType } from 'src/common/constants/enums'
+import { ShareRequestAction, VcType } from 'src/common/constants/enums'
 import { VcErrors } from 'src/common/constants/error-messages'
 import { FilesReadService } from 'src/files/service/files-read.service'
 import { renderFileToResponse } from 'src/utils/file.utils'
@@ -18,6 +18,7 @@ import { MaxVCShareHours } from '../../common/constants/vc-constants'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import { GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
+import { ShareRequestReadService } from './share-request-read.service'
 @Injectable()
 export class VerifiableCredentialReadService {
   constructor(
@@ -26,6 +27,7 @@ export class VerifiableCredentialReadService {
     private readonly vcAclReadService: VCAccessControlReadService,
     private readonly vcAclUpdateService: VCAccessControlUpdateService,
     private readonly filesReadService: FilesReadService,
+    private readonly shareRequestReadService: ShareRequestReadService,
   ) {}
 
   /*
@@ -94,17 +96,21 @@ export class VerifiableCredentialReadService {
     const fileDetails = await this.filesReadService.getFileById(vcDetails['fileId'])
 
     // Checking whether the allowedViewCount reached limit for the shareRequest
+
     if (aclDetails['viewAllowed'] === false && aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
       throw new UnauthorizedException(VcErrors.VC_VIEW_ONCE_ERROR)
     } else if (aclDetails['viewAllowed'] === true && aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
       // Update viewAllowed of Access Control
       await this.vcAclUpdateService.updateViewAllowedByRestrictionKey(aclDetails['restrictedKey'], false)
+    } else if (aclDetails['viewAllowed'] === false) {
+      throw new UnauthorizedException(VcErrors.VC_VIEW_ONCE_ERROR)
     }
 
     if (!aclDetails['shareRequestId'] && aclDetails['shareRequestId'] != '') {
-      // const requestDetails = await this.shareRequestModel.findById(aclDetails['shareRequestId'])
-      // if (requestDetails.status != ShareRequestAction.ACCEPTED) {
-      // throw new UnauthorizedException(VcErrors.SHARE_REJECTED_ERROR)
+      const requestDetails = await this.shareRequestReadService.getShareRequestsById(aclDetails['shareRequestId'])
+      if (requestDetails.status != ShareRequestAction.ACCEPTED) {
+        throw new UnauthorizedException(VcErrors.SHARE_REJECTED_ERROR)
+      }
     }
 
     const currentIsoTime = generateCurrentIsoTime()
