@@ -2,7 +2,6 @@ import { InternalServerErrorException } from '@nestjs/common'
 import { AxiosRequestConfig } from 'axios'
 import { createHash } from 'crypto'
 import { addYears, formatISO } from 'date-fns'
-import * as fs from 'fs'
 import { promises as fsPromises } from 'fs'
 import * as path from 'path'
 import { ApiClient } from 'src/common/api-client'
@@ -81,12 +80,12 @@ export async function renderVCDocumentToResponse(res, fileUrl: string, templateI
 
   // Write PDF data to the file
   await fsPromises.writeFile(fullPath, visualResult, { encoding: 'binary' })
-  if (fs.existsSync(fullPath)) {
+  if (await fsPromises.stat(fullPath)) {
     res.set('Content-Type', FileMimeType.PDF)
     res.download(fullPath, fileName)
     // Clear the file!
     setTimeout(async function () {
-      if (fs.existsSync(fullPath)) {
+      if (await fsPromises.stat(fullPath)) {
         await fsPromises.unlink(fullPath).catch((err) => console.error(err))
       }
     }, 3000)

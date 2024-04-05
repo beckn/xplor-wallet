@@ -46,9 +46,9 @@ export class S3StorageService implements IStorageService {
       const signedUrl = await this.s3.getSignedUrlPromise('getObject', params)
 
       return signedUrl
-    } catch (e) {
-      console.error('Error generating signed URL:', e as AWSError)
-      throw e
+    } catch (err) {
+      console.error('Error generating signed URL:', err as AWSError)
+      throw err
     }
   }
 
