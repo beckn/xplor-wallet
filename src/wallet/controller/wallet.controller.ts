@@ -30,8 +30,7 @@ export class WalletController {
     type: WalletEntity,
   })
   async createWallet(@Body() requestBody: CreateWalletRequestDto) {
-    const wallet = await this.walletCreateService.createWallet(requestBody)
-    return wallet
+    return await this.walletCreateService.createWallet(requestBody)
   }
 
   /**
@@ -46,8 +45,7 @@ export class WalletController {
   })
   @ApiResponse({ status: DELETE_WALLET_API.successResponseCode, description: DELETE_WALLET_API.successResponseMessage })
   async deleteWallet(@Query() queryParams: StandardWalletRequestDto) {
-    const wallet = await this.walletDeleteService.deleteWallet(queryParams)
-    return wallet
+    return await this.walletDeleteService.deleteWallet(queryParams)
   }
 
   /**
@@ -66,7 +64,6 @@ export class WalletController {
     type: WalletEntity,
   })
   async getWalletdetails(@Query() queryParams: StandardWalletRequestDto) {
-    const wallet = await this.walletReadService.getWalletDetails(queryParams)
-    return wallet
+    return await this.walletReadService.getWalletDetails(queryParams)
   }
 }

@@ -44,7 +44,6 @@ export class FilesController {
       throw new Error(WalletErrors.WALLET_NOT_FOUND)
     }
 
-    const fileResult = this.fileCreateService.createFile(file, body)
-    return fileResult
+    return this.fileCreateService.createFile(file, body)
   }
 }

@@ -58,8 +58,7 @@ export class VerifiableCredentialController {
     type: CreateVCRequestBodyEntity,
   })
   async storeCredential(@Body() body: CreateVCRequestBodyDto) {
-    const storeCredentialResult = await this.vcCreateService.createVerifiableCredential(body)
-    return storeCredentialResult
+    return await this.vcCreateService.createVerifiableCredential(body)
   }
 
   /**
@@ -78,8 +77,7 @@ export class VerifiableCredentialController {
     type: CreateVCRequestBodyEntity,
   })
   async pushCredentialToWallet(@Body() body: PushVCRequestBodyDto) {
-    const storeCredentialResult = await this.vcCreateService.pushVerifiableCredential(body)
-    return storeCredentialResult
+    return await this.vcCreateService.pushVerifiableCredential(body)
   }
 
   @Get('/view/:restrictedKey')
@@ -93,8 +91,7 @@ export class VerifiableCredentialController {
     type: VCEntityList,
   })
   async viewVCDocument(@Param('restrictedKey') keyParam: string, @Res() res) {
-    const vcResult = await this.vcReadService.renderVCDocument(keyParam, res)
-    return vcResult
+    return await this.vcReadService.renderVCDocument(keyParam, res)
   }
 
   @Get('/single')
@@ -108,8 +105,7 @@ export class VerifiableCredentialController {
     type: VCEntityList,
   })
   async getVCById(@Query() queryParams: GetVCRequestDto) {
-    const vcResult = await this.vcReadService.getVCByIdAndWalletId(queryParams)
-    return vcResult
+    return await this.vcReadService.getVCByIdAndWalletId(queryParams)
   }
 
   @Get()
@@ -124,8 +120,7 @@ export class VerifiableCredentialController {
   })
   async getAllVC(@Query() queryParams: GetVCListRequestDto) {
     const skip = (queryParams.page - 1) * queryParams.pageSize
-    const vcListResult = await this.vcReadService.getAllWalletVc(queryParams, skip)
-    return vcListResult
+    return await this.vcReadService.getAllWalletVc(queryParams, skip)
   }
 
   @Delete()
@@ -139,8 +134,7 @@ export class VerifiableCredentialController {
     type: VCEntityList,
   })
   async deleteVC(@Query() queryParams: GetVCRequestDto) {
-    const vcResult = await this.vcDeleteService.deleteVc(queryParams)
-    return vcResult
+    return await this.vcDeleteService.deleteVc(queryParams)
   }
 
   /**
@@ -160,8 +154,7 @@ export class VerifiableCredentialController {
     type: ShareRequestEntity,
   })
   async shareFile(@Query() queryParams: GetVCRequestDto, @Body() body: ShareFileRequestDto) {
-    const shareFile = await this.shareRequestCreateService.shareVc(queryParams.vcId, queryParams.walletId, body)
-    return shareFile
+    return await this.shareRequestCreateService.shareVc(queryParams.vcId, queryParams.walletId, body)
   }
 
   /**
@@ -180,8 +173,7 @@ export class VerifiableCredentialController {
     type: ShareRequestsEntityList,
   })
   async getShareRequests(@Query() queries: GetShareFileRequestsDto) {
-    const shareRequests = await this.shareRequestReadService.getShareRequestsList(queries.walletId, queries)
-    return shareRequests
+    return await this.shareRequestReadService.getShareRequestsList(queries.walletId, queries)
   }
 
   /**
@@ -201,8 +193,7 @@ export class VerifiableCredentialController {
     type: ShareRequestEntity,
   })
   async requestShareFile(@Query('walletId') walletId: string, @Body() body: RequestShareFileRequestDto) {
-    const shareFile = await this.shareRequestCreateService.requestShareFile(walletId, body)
-    return shareFile
+    return await this.shareRequestCreateService.requestShareFile(walletId, body)
   }
 
   /**
@@ -221,11 +212,7 @@ export class VerifiableCredentialController {
     type: ShareRequestEntity,
   })
   async deleteShareRequest(@Query() queryParams: GetShareRequestDto) {
-    const shareFile = await this.shareRequestUpdateService.deleteShareRequest(
-      queryParams.walletId,
-      queryParams.requestId,
-    )
-    return shareFile
+    return await this.shareRequestUpdateService.deleteShareRequest(queryParams.walletId, queryParams.requestId)
   }
 
   /**
@@ -244,12 +231,11 @@ export class VerifiableCredentialController {
     type: ShareRequestEntity,
   })
   async respondToShareRequest(@Query() queryParams: ShareVcRequestDto) {
-    const shareFile = await this.shareRequestUpdateService.respondToShareRequest(
+    return await this.shareRequestUpdateService.respondToShareRequest(
       queryParams.walletId,
       queryParams.requestId,
       queryParams.vcId,
       queryParams.action,
     )
-    return shareFile
   }
 }
