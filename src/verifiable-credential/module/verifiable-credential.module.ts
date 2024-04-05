@@ -4,6 +4,7 @@ import { ApiClient } from 'src/common/api-client'
 import { S3StorageModule } from 'src/files/module/s3-storage.module'
 import { FileModel, FileSchema } from 'src/files/schemas/files.schema'
 import { FilesCreateService } from 'src/files/service/files-create.service'
+import { FilesDeleteService } from 'src/files/service/files-delete.service'
 import { FilesReadService } from 'src/files/service/files-read.service'
 import { VCAccessControlModule } from 'src/vc-access-control/module/vc-access-control.module'
 import { VCAccessControl, VCAccessControlSchema } from 'src/vc-access-control/schemas/file-access-control.schema'
@@ -42,6 +43,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     VerifiableCredentialDeleteService,
     VCAccessControlReadService,
     FilesReadService,
+    FilesDeleteService,
     VCAccessControlUpdateService,
     ShareRequestReadService,
     ShareRequestUpdateService,
@@ -58,6 +60,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     VerifiableCredentialDeleteService,
     VCAccessControlReadService,
     FilesReadService,
+    FilesDeleteService,
   ],
 })
 export class VerifiableCredentialModule {}

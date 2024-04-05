@@ -5,6 +5,7 @@ import { Model } from 'mongoose'
 import 'multer'
 import { ShareRequestAction, VcType } from 'src/common/constants/enums'
 import { VcErrors } from 'src/common/constants/error-messages'
+import { RegistryRequestRoutes } from 'src/common/constants/request-routes'
 import { FilesReadService } from 'src/files/service/files-read.service'
 import { renderFileToResponse } from 'src/utils/file.utils'
 import {
@@ -14,7 +15,7 @@ import {
 } from 'src/utils/vc.utils'
 import { VCAccessControlReadService } from 'src/vc-access-control/service/verifiable-credential-access-control-read.service'
 import { VCAccessControlUpdateService } from 'src/vc-access-control/service/verifiable-credential-access-control-update.service'
-import { MaxVCShareHours } from '../../common/constants/vc-constants'
+import { MaxVCShareHours, REGISTRY_SERVICE_URL } from '../../common/constants/name-constants'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import { GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
@@ -129,7 +130,7 @@ export class VerifiableCredentialReadService {
         // Hit the Registry layer to Render VC
         await renderVCDocumentToResponse(
           res,
-          this.configService.get('REGISTRY_SERVICE_URL') + '/credentials/' + vcDetails['did'],
+          this.configService.get(REGISTRY_SERVICE_URL) + '/credentials/' + vcDetails['did'],
           vcDetails['templateId'],
           restrictionKey,
         )
@@ -148,7 +149,7 @@ export class VerifiableCredentialReadService {
           generateVCAccessControlExpirationTimestamp(MaxVCShareHours),
         )
 
-        // Update the fileUrl inside File to new ACL restrictedUrl
+        // Update the fileUrl inside VC to new ACL restrictedUrl
         await this.vcModel
           .findOneAndUpdate(
             { _id: vcDetails['_id'].toString() },
@@ -163,7 +164,7 @@ export class VerifiableCredentialReadService {
           // Hit the Registry layer to Render VC
           await renderVCDocumentToResponse(
             res,
-            this.configService.get('REGISTRY_SERVICE_URL') + '/credentials/' + vcDetails['did'],
+            this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails['did'],
             vcDetails['templateId'],
             restrictionKey,
           )

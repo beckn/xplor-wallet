@@ -2,12 +2,17 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Res } from '@
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import {
   DELETE_CREDENTIAL_API,
+  DELETE_SHARE_REQUEST_API,
   GET_CREDENTIAL_LIST_API,
+  GET_SHARE_REQUESTS_API,
   GET_SINGLE_CREDENTIAL_API,
+  REQUEST_SHARE_API,
+  RESPONSE_SHARE_REQUEST_API,
   SHARE_CREDENTIAL_API,
   STORE_CREDENTIAL_API,
   VIEW_CREDENTIAL_API,
 } from 'src/common/constants/api-documentation'
+import { VcApiRoutes } from 'src/common/constants/api-routes'
 import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetShareFileRequestsDto } from '../dto/get-share-file-request-list.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
@@ -164,13 +169,16 @@ export class VerifiableCredentialController {
    * @param queries The query parameters containing the userId.
    * @returns The list of share requests.
    */
-  @Get('/share/requests')
+  @Get(VcApiRoutes.GET_SHARE_REQUESTS)
   @ApiOperation({
-    summary: 'Get Share Requests',
-    description: 'Fetches the list of share requests that the user has made or received from someone.',
+    summary: GET_SHARE_REQUESTS_API.summary,
+    description: GET_SHARE_REQUESTS_API.description,
   })
-  @ApiResponse({ status: 200, description: 'Share requests retrieved successfully.', type: ShareRequestsEntityList })
-  @ApiResponse({ status: 404, description: 'Share requests not found' })
+  @ApiResponse({
+    status: GET_SHARE_REQUESTS_API.successResponseCode,
+    description: GET_SHARE_REQUESTS_API.successResponseMessage,
+    type: ShareRequestsEntityList,
+  })
   async getShareRequests(@Query() queries: GetShareFileRequestsDto) {
     const shareRequests = await this.shareRequestReadService.getShareRequestsList(queries.walletId, queries)
     return shareRequests
@@ -182,13 +190,16 @@ export class VerifiableCredentialController {
    * @param body The request body containing information about the file to be shared.
    * @returns The share request entity if the request is sent successfully.
    */
-  @Post('/share/requests')
+  @Post(VcApiRoutes.GET_SHARE_REQUESTS)
   @ApiOperation({
-    summary: 'Request Share File',
-    description:
-      'Requests to share a file from another user. Creates a new File Share Request and shows up in the receiver user wallet to accept or reject the file share request, by default the status is PENDING.',
+    summary: REQUEST_SHARE_API.summary,
+    description: REQUEST_SHARE_API.description,
   })
-  @ApiResponse({ status: 200, description: 'Share request sent successfully.', type: ShareRequestEntity })
+  @ApiResponse({
+    status: REQUEST_SHARE_API.successResponseCode,
+    description: REQUEST_SHARE_API.successResponseMessage,
+    type: ShareRequestEntity,
+  })
   async requestShareFile(@Query('walletId') walletId: string, @Body() body: RequestShareFileRequestDto) {
     const shareFile = await this.shareRequestCreateService.requestShareFile(walletId, body)
     return shareFile
@@ -199,13 +210,16 @@ export class VerifiableCredentialController {
    * @param queryParams The query parameters containing user ID and request ID.
    * @returns The deleted share request entity if successful.
    */
-  @Delete('/share/requests')
+  @Delete(VcApiRoutes.GET_SHARE_REQUESTS)
   @ApiOperation({
-    summary: 'Delete Share Request',
-    description:
-      'Deletes a share request by its id. Only the request owner who made the request can delete this request.',
+    summary: DELETE_SHARE_REQUEST_API.summary,
+    description: DELETE_SHARE_REQUEST_API.description,
   })
-  @ApiResponse({ status: 200, description: 'Share request deleted successfully.', type: ShareRequestEntity })
+  @ApiResponse({
+    status: DELETE_SHARE_REQUEST_API.successResponseCode,
+    description: DELETE_SHARE_REQUEST_API.successResponseMessage,
+    type: ShareRequestEntity,
+  })
   async deleteShareRequest(@Query() queryParams: GetShareRequestDto) {
     const shareFile = await this.shareRequestUpdateService.deleteShareRequest(
       queryParams.walletId,
@@ -219,13 +233,16 @@ export class VerifiableCredentialController {
    * @param queryParams The query parameters containing user ID, request ID, file ID, and action.
    * @returns The updated share request entity if successful.
    */
-  @Patch('/share/requests')
+  @Patch(VcApiRoutes.GET_SHARE_REQUESTS)
   @ApiOperation({
-    summary: 'Respond To Share Request',
-    description:
-      'Responds to a share request. Accept or reject the request raised by the other users. Accepting the request will generate an Access Control link for the expiry Time and generate a file document link to access it.',
+    summary: RESPONSE_SHARE_REQUEST_API.summary,
+    description: RESPONSE_SHARE_REQUEST_API.description,
   })
-  @ApiResponse({ status: 200, description: 'Response sent successfully.', type: ShareRequestEntity })
+  @ApiResponse({
+    status: RESPONSE_SHARE_REQUEST_API.successResponseCode,
+    description: RESPONSE_SHARE_REQUEST_API.successResponseMessage,
+    type: ShareRequestEntity,
+  })
   async respondToShareRequest(@Query() queryParams: ShareVcRequestDto) {
     const shareFile = await this.shareRequestUpdateService.respondToShareRequest(
       queryParams.walletId,

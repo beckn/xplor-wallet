@@ -8,6 +8,7 @@ import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { FilesController } from '../controller/files.controller'
 import { FileModel, FileSchema } from '../schemas/files.schema'
 import { FilesCreateService } from '../service/files-create.service'
+import { FilesDeleteService } from '../service/files-delete.service'
 import { FilesReadService } from '../service/files-read.service'
 import { S3StorageModule } from './s3-storage.module'
 
@@ -21,7 +22,7 @@ import { S3StorageModule } from './s3-storage.module'
     VCAccessControlModule,
   ],
   controllers: [FilesController],
-  providers: [FilesCreateService, WalletReadService, FilesReadService, ApiClient],
-  exports: [MongooseModule, FilesCreateService, FilesReadService],
+  providers: [FilesCreateService, WalletReadService, FilesReadService, FilesDeleteService, ApiClient],
+  exports: [MongooseModule, FilesCreateService, FilesReadService, FilesDeleteService],
 })
 export class FilesModule {}

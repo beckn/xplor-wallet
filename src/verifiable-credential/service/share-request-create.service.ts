@@ -37,10 +37,9 @@ export class ShareRequestCreateService {
   ) {}
 
   /**
-   * Creates a file share record to share with anyone
-   * Signs the fileUrl of the AWS File
+   * Creates a Vc share record to share with anyone
    * Creates ACL Record for it
-   * Updates Acl record with file share request id
+   * Updates Acl record with Vc share request id
    */
   async shareVc(
     vcId: string,
@@ -134,7 +133,7 @@ export class ShareRequestCreateService {
   }
 
   /**
-   * Deletes File share request
+   * Deletes VC share request
    * Only the request owner (who made the request), can deleted it
    */
   async deleteShareRequest(userId: string, requestId: string): Promise<StandardMessageResponse | any> {
@@ -154,10 +153,9 @@ export class ShareRequestCreateService {
   }
 
   /**
-   * ACCEPTS, REJECTS the file ShareRequest
+   * ACCEPTS, REJECTS the VC ShareRequest
    * if ACCEPTED:
-   * Signs the AWS File Url and creates an ACL Record for it
-   * Stores the ACL RestrictedUrl in ShareRequest's fileUrl
+   * Stores the ACL RestrictedUrl in ShareRequest's restrictedUrl property
    */
   async respondToShareRequest(
     walletId: string,
@@ -175,7 +173,6 @@ export class ShareRequestCreateService {
 
     const requestDetails = await this.shareRequestModel.findOne({ _id: requestId })
     const vcDetails = await this.vcReadService.getVCById(vcId)
-    const fileDetails = await this.filesReadService.getFileById(vcDetails['fileId'])
 
     if (requestDetails == null) {
       throw new NotFoundException(FilesErrors.REQUEST_NOT_FOUND)

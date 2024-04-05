@@ -7,6 +7,13 @@ import { ApiClient } from 'src/common/api-client'
 import { VcType } from 'src/common/constants/enums'
 import { FilesErrors } from 'src/common/constants/error-messages'
 import { IStorageService } from 'src/common/constants/interface-storage-service'
+import {
+  REGISTRY_SERVICE_URL,
+  SELF_ISSUED_ORGANIZATION_NAME,
+  SELF_ISSUED_SCHEMA_ID,
+  SELF_ISSUED_SCHEMA_TAG,
+  SELF_ISSUED_SCHEMA_VERSION,
+} from 'src/common/constants/name-constants'
 import { RegistryRequestRoutes } from 'src/common/constants/request-routes'
 import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
 import { SELF_ISSUED_VC_CONTEXT } from 'src/config/vc-schema.config'
@@ -31,6 +38,7 @@ export class FilesCreateService {
     @Inject(S3StorageService) private readonly storageService: IStorageService,
     private readonly configService: ConfigService,
   ) {}
+
   /**
    * Stores the file in Storage
    * Signs the stored file and generates an ACL for it for 7 Days (Max)
@@ -59,22 +67,22 @@ export class FilesCreateService {
       walletDetails['userDid'],
       new CredentialDto(
         SELF_ISSUED_VC_CONTEXT,
-        this.configService.get('SELF_ISSUED_SCHEMA_ID'),
-        this.configService.get('SELF_ISSUED_SCHEMA_VERSION'),
+        this.configService.get(SELF_ISSUED_SCHEMA_ID),
+        this.configService.get(SELF_ISSUED_SCHEMA_VERSION),
         generateVCExpirationDate(100),
-        this.configService.get('SELF_ISSUED_ORGANIZATION_NAME'),
+        this.configService.get(SELF_ISSUED_ORGANIZATION_NAME),
         {
-          id: `did:${this.configService.get('SELF_ISSUED_ORGANIZATION_NAME')}`,
-          type: 'SelfIssuedCredential',
+          id: `did:${this.configService.get(SELF_ISSUED_ORGANIZATION_NAME)}`,
+          type: this.configService.get(SELF_ISSUED_SCHEMA_TAG),
           certificateLink: storeFileDetails['uploadedFile']['key'],
         },
-        ['VerifiableCredential', this.configService.get('SELF_ISSUED_SCHEMA_TAG')],
+        ['VerifiableCredential', this.configService.get(SELF_ISSUED_SCHEMA_TAG)],
         body.tags,
       ),
     )
 
     const vcResult = await this.apiClient.post(
-      this.configService.get('REGISTRY_SERVICE_URL') + RegistryRequestRoutes.CREATE_VC,
+      this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.CREATE_VC,
       registryVCRequest,
     )
     if (!vcResult) {

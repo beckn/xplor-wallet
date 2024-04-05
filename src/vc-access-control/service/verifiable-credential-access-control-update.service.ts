@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
+import { VcApiRoutes } from 'src/common/constants/api-routes'
 import { ViewAccessControlErrors } from 'src/common/constants/error-messages'
 import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
 import { generateUrlUUID } from 'src/utils/file.utils'
@@ -15,16 +16,15 @@ export class VCAccessControlUpdateService {
   ) {}
 
   /**
-   * Finds and updates signedUrl of the File and the expiration time using restrictedKey
+   * Finds and updates signedUrl of the VC and the expiration time using restrictedKey
    */
   async updateRestrictionsByRestrictionKey(
     resKey: string,
-    signedUrl: string,
     expiresTimeStamp: number,
   ): Promise<StandardMessageResponse | any> {
     // Generating unique restricted key and restrictedUrl
     const restrictedKey = generateUrlUUID()
-    const restrictedUrl = this.configService.get('SERVICE_BASE_URL') + 'files/view/' + restrictedKey
+    const restrictedUrl = this.configService.get('SERVICE_BASE_URL') + VcApiRoutes.FILES_VIEW_REQUESTS + restrictedKey
 
     // Update the document with the given restriction key
     const updatedDocument = await this.vcAccessControlModel
@@ -35,7 +35,6 @@ export class VCAccessControlUpdateService {
             restrictedKey: restrictedKey, // Update the restriction key
             restrictedUrl: restrictedUrl, // Update the restriction URL
             expireTimeStamp: expiresTimeStamp, // Update the expiration timestamp
-            fileSignedUrl: signedUrl, // Update the signed URL
           },
         },
         { new: true }, // Return the updated document
@@ -50,7 +49,7 @@ export class VCAccessControlUpdateService {
   }
 
   /**
-   * Finds and updates viewAllowed of the File and the expiration time using restrictedKey
+   * Finds and updates viewAllowed of the VC and the expiration time using restrictedKey
    */
   async updateViewAllowedByRestrictionKey(
     resKey: string,
@@ -77,7 +76,7 @@ export class VCAccessControlUpdateService {
   }
 
   /**
-   * Finds and updates shareRequestId of the File using restrictedKey
+   * Finds and updates shareRequestId of the VC using restrictedKey
    */
   async updateShareRequestIdByRestrictedKey(
     restrictedKey: string,
@@ -95,7 +94,7 @@ export class VCAccessControlUpdateService {
   }
 
   /**
-   * Finds and updates FileId of the File using restrictedKey
+   * Finds and updates VcId of the VC using restrictedKey
    */
   async updateVcIdByRestrictedKey(restrictedKey: string, vcId: string): Promise<StandardMessageResponse | any> {
     const updatedAcl = await this.vcAccessControlModel

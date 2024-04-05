@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import * as AWS from 'aws-sdk'
 import { AWSError } from 'aws-sdk'
 import { IStorageService } from 'src/common/constants/interface-storage-service'
-import { MaxVCShareHours } from 'src/common/constants/vc-constants'
+import { MaxVCShareHours } from 'src/common/constants/name-constants'
 
 @Injectable()
 export class S3StorageService implements IStorageService {

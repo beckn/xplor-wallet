@@ -63,3 +63,42 @@ export const SHARE_CREDENTIAL_API = {
   successResponseCode: 201,
   successResponseMessage: 'File shared successfully.',
 }
+
+export const CREATE_FILE_API = {
+  summary: 'Share VC',
+  description:
+    'Shares a VC with another user. This generates an self ACCEPTED VC share request with the expiry time and allowed view Count entered by the user and generates a publically access file document link of the File Access Control.',
+  successResponseCode: 201,
+  successResponseMessage: 'File shared successfully.',
+}
+
+export const GET_SHARE_REQUESTS_API = {
+  summary: 'Get Share Requests',
+  description: 'Fetches the list of share requests that the user has made or received from someone.',
+  successResponseCode: 200,
+  successResponseMessage: 'VC shared successfully.',
+}
+
+export const REQUEST_SHARE_API = {
+  summary: 'Request Share VC',
+  description:
+    'Requests to share a file from another user. Creates a new VC Share Request and shows up in the receiver user wallet to accept or reject the VC share request, by default the status is PENDING.',
+  successResponseCode: 201,
+  successResponseMessage: 'Share request sent successfully.',
+}
+
+export const DELETE_SHARE_REQUEST_API = {
+  summary: 'Delete VC Share Request',
+  description:
+    'Deletes a share request by its id. Only the request owner who made the request can delete this request.',
+  successResponseCode: 200,
+  successResponseMessage: 'Share request deleted successfully.',
+}
+
+export const RESPONSE_SHARE_REQUEST_API = {
+  summary: 'Respond to VC Share Request',
+  description:
+    'Responds to a share request. Accept or reject the request raised by the other users. Accepting the request will generate an Access Control link for the expiry Time and generate a file document link to access it.',
+  successResponseCode: 200,
+  successResponseMessage: 'Response sent successfully.',
+}

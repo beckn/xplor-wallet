@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, Post, UploadedFile, UseIntercept
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import 'multer'
+import { CREATE_FILE_API } from 'src/common/constants/api-documentation'
 import { FilesErrors, WalletErrors } from 'src/common/constants/error-messages'
 import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { CreateFileRequestDto } from '../dto/create-file-request.dto'
@@ -24,12 +25,14 @@ export class FilesController {
    */
   @Post()
   @ApiOperation({
-    summary: 'Create/Upload File to wallet',
-    description:
-      'Creates/Uploads a new file with the provided data and stores it in user wallet. On creating a file, it generates a File Access Control to access/render the actual file document and it refereshes itself after 7 days on expiration.',
+    summary: CREATE_FILE_API.summary,
+    description: CREATE_FILE_API.description,
   })
-  @ApiResponse({ status: 201, description: 'File created successfully.', type: FileEntity })
-  @ApiResponse({ status: 400, description: 'Bad request. Please provide valid input data.' })
+  @ApiResponse({
+    status: CREATE_FILE_API.successResponseCode,
+    description: CREATE_FILE_API.successResponseMessage,
+    type: FileEntity,
+  })
   @UseInterceptors(FileInterceptor('file'))
   async createFile(@UploadedFile() file: Express.Multer.File, @Body() body: CreateFileRequestDto) {
     if (file == null) {
