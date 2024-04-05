@@ -143,7 +143,7 @@ export class ShareRequestCreateService {
       throw new NotFoundException(FilesErrors.REQUEST_NOT_FOUND)
     }
 
-    if (requestDetails['raisedByUser'] != userId) {
+    if (requestDetails['raisedByWallet'] != userId) {
       throw new UnauthorizedException(FilesErrors.REQUEST_DELETE_PERMISSION_ERROR)
     }
 
