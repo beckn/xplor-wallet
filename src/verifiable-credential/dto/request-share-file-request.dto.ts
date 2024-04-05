@@ -24,6 +24,9 @@ export class RequestShareFileRequestDto {
   @IsNotEmpty()
   readonly certificateType: string
 
+  @IsNotEmpty()
+  readonly remarks?: string
+
   @ValidateNested()
   readonly restrictions: RestrictionsDto
 }

@@ -68,7 +68,6 @@ export class ShareRequestUpdateService {
 
     const requestDetails = await this.shareRequestModel.findOne({ _id: requestId })
     const vcDetails = await this.vcReadService.getVCById(vcId)
-    const fileDetails = await this.filesReadService.getFileById(vcDetails['fileId'])
 
     if (requestDetails == null) {
       throw new NotFoundException(FilesErrors.REQUEST_NOT_FOUND)
@@ -99,7 +98,6 @@ export class ShareRequestUpdateService {
       const restrictedFile = await this.vcAclCreateService.createVcAccessControl(
         vcId,
         requestId,
-        fileDetails['storedUrl'],
         generateVCAccessControlExpirationTimestamp(requestDetails['vcShareDetails']['restrictions']['expiresIn']),
         requestDetails['vcShareDetails']['restrictions']['viewOnce'],
       )

@@ -48,7 +48,6 @@ export class ShareRequestCreateService {
     shareRequest: ShareFileRequestDto,
   ): Promise<StandardMessageResponse | any> {
     const vcDetails = await this.vcReadService.getVCById(vcId)
-    const fileDetails = await this.filesReadService.getFileById(vcDetails['fileId'])
     if (vcDetails == null) {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
@@ -64,7 +63,6 @@ export class ShareRequestCreateService {
     const restrictedFile = await this.vcAclCreateService.createVcAccessControl(
       vcId,
       '',
-      fileDetails['storedUrl'],
       expiryTimeStamp,
       shareRequest.restrictions.viewOnce,
     )
@@ -82,6 +80,7 @@ export class ShareRequestCreateService {
       restrictedFile.restrictedUrl,
       walletId,
       vcDetails['walletId'],
+      shareRequest.remarks,
       fileShareDetails,
     )
     const shareRequestModel = new this.shareRequestModel(createFileShareRequestDto)
@@ -120,6 +119,7 @@ export class ShareRequestCreateService {
       ' ',
       walletId,
       shareRequest.requestedFromWallet,
+      shareRequest.remarks,
       fileShareDetails,
     )
 
@@ -206,9 +206,8 @@ export class ShareRequestCreateService {
       const restrictedFile = await this.vcAclCreateService.createVcAccessControl(
         vcId,
         requestId,
-        fileDetails['storedUrl'],
         generateVCAccessControlExpirationTimestamp(requestDetails['fileShareDetails']['restrictions']['expiresIn']),
-        requestDetails['fileShareDetails']['restrictions']['viewCount'],
+        requestDetails['fileShareDetails']['restrictions']['viewOnce'],
       )
 
       if (!restrictedFile) {

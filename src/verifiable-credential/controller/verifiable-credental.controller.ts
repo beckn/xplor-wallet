@@ -12,6 +12,7 @@ import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetShareFileRequestsDto } from '../dto/get-share-file-request-list.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import { GetShareRequestDto, GetVCRequestDto, ShareVcRequestDto } from '../dto/get-vc-request.dto'
+import { PushVCRequestBodyDto } from '../dto/push-vc-request-body.dto'
 import { RequestShareFileRequestDto } from '../dto/request-share-file-request.dto'
 import { ShareFileRequestDto } from '../dto/share-file-request.dto'
 import { CreateVCRequestBodyEntity } from '../entities/create-vc-request-body.entity'
@@ -52,7 +53,27 @@ export class VerifiableCredentialController {
     type: CreateVCRequestBodyEntity,
   })
   async storeCredential(@Body() body: CreateVCRequestBodyDto) {
-    const storeCredentialResult = await this.vcCreateService.createVerifiableCredential(body, null)
+    const storeCredentialResult = await this.vcCreateService.createVerifiableCredential(body)
+    return storeCredentialResult
+  }
+
+  /**
+   * Creates a new VC for the file with the provided data.
+   * @param body The request body containing VC data.
+   * @returns The stored VC entity.
+   */
+  @Post('/push')
+  @ApiOperation({
+    summary: STORE_CREDENTIAL_API.summary,
+    description: STORE_CREDENTIAL_API.description,
+  })
+  @ApiResponse({
+    status: STORE_CREDENTIAL_API.successResponseCode,
+    description: STORE_CREDENTIAL_API.successResponseMessage,
+    type: CreateVCRequestBodyEntity,
+  })
+  async pushCredentialToWallet(@Body() body: PushVCRequestBodyDto) {
+    const storeCredentialResult = await this.vcCreateService.pushVerifiableCredential(body)
     return storeCredentialResult
   }
 

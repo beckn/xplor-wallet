@@ -39,6 +39,9 @@ export class ShareRequest {
   vcOwnerWallet: string
 
   @Prop({ required: true })
+  remarks: string
+
+  @Prop({ required: true })
   vcShareDetails: VcShareDetails
 }
 export const ShareRequestModel = ShareRequest.name

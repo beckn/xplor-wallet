@@ -93,7 +93,10 @@ export class VerifiableCredentialReadService {
 
     const aclDetails = await this.vcAclReadService.findByRestrictedKey(restrictionKey)
     const vcDetails = await this.getVCById(aclDetails['vcId'])
-    const fileDetails = await this.filesReadService.getFileById(vcDetails['fileId'])
+    let fileDetails
+    if (vcDetails['fileId']) {
+      fileDetails = await this.filesReadService.getFileById(vcDetails['fileId'])
+    }
 
     // Checking whether the allowedViewCount reached limit for the shareRequest
 
@@ -149,7 +152,7 @@ export class VerifiableCredentialReadService {
         await this.vcModel
           .findOneAndUpdate(
             { _id: vcDetails['_id'].toString() },
-            { fileUrl: updatedAcl['restrictedUrl'] },
+            { restrictedUrl: updatedAcl['restrictedUrl'] },
             { new: true },
           )
           .exec()

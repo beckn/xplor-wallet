@@ -44,13 +44,12 @@ export class FilesCreateService {
       body.walletId,
       file.mimetype,
       storeFileDetails['signedUrl'],
-      storeFileDetails['uploadedFile']['fileKey'],
+      storeFileDetails['uploadedFile']['key'],
     )
 
     // Saved file to database
     const createdFileDocument = new this.fileModel(createdFileModel)
     const fileDocumentResult = await createdFileDocument.save()
-
     if (!fileDocumentResult) {
       throw new BadRequestException(FilesErrors.FILE_CREATE_ERROR)
     }
@@ -67,7 +66,7 @@ export class FilesCreateService {
         {
           id: `did:${this.configService.get('SELF_ISSUED_ORGANIZATION_NAME')}`,
           type: 'SelfIssuedCredential',
-          certificateLink: storeFileDetails['signedUrl'],
+          certificateLink: storeFileDetails['uploadedFile']['key'],
         },
         ['VerifiableCredential', this.configService.get('SELF_ISSUED_SCHEMA_TAG')],
         body.tags,
@@ -93,10 +92,7 @@ export class FilesCreateService {
       `${body.name}-${getCurrentTimeStamp()}`,
     )
     // Create a VC for this file!
-    const vcDocumentResult = await this.vcCreateService.createVerifiableCredential(
-      createVcRequest,
-      storeFileDetails['signedUrl'],
-    )
+    const vcDocumentResult = await this.vcCreateService.createVerifiableCredential(createVcRequest)
 
     const result = {
       fileData: fileDocumentResult,

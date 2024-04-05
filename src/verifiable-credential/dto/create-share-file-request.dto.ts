@@ -58,6 +58,10 @@ export class CreateShareFileRequestDto {
   readonly vcOwnerWallet: string
 
   @ApiProperty()
+  @IsString()
+  readonly remarks: string
+
+  @ApiProperty()
   @ValidateNested()
   readonly vcShareDetails: VcShareDetails
 
@@ -66,14 +70,16 @@ export class CreateShareFileRequestDto {
     status: string,
     restrictedUrl: string,
     raisedByWallet: string,
-    fileOwnerUser: string,
+    vcOwnerWallet: string,
+    remarks: string,
     fileShareDetails: VcShareDetails,
   ) {
     this.vcId = vcId
     this.status = status
     this.restrictedUrl = restrictedUrl
     this.raisedByWallet = raisedByWallet
-    this.vcOwnerWallet = fileOwnerUser
+    this.vcOwnerWallet = vcOwnerWallet
+    this.remarks = remarks
     this.vcShareDetails = fileShareDetails
   }
 }

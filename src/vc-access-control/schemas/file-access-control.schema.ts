@@ -16,9 +16,6 @@ export class VCAccessControl {
   restrictedUrl: string // Restricted end user Url that will be hit by the User
 
   @Prop({ required: true })
-  fileSignedUrl: string // AWS signed Url
-
-  @Prop({ required: true })
   expireTimeStamp: string
 
   @Prop({ required: true })

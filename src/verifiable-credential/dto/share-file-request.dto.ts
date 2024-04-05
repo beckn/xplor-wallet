@@ -19,6 +19,10 @@ export class ShareFileRequestDto {
   readonly certificateType: string
 
   @ApiProperty()
+  @IsNotEmpty()
+  readonly remarks?: string
+
+  @ApiProperty()
   @ValidateNested()
   readonly restrictions: Restrictions
 }

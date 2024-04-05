@@ -22,7 +22,6 @@ export class VCAccessControlCreateService {
   async createVcAccessControl(
     vcId: string,
     shareRequestId: string,
-    signedUrl: string,
     expiresTimeStamp: string,
     viewOnce?: boolean,
   ): Promise<StandardMessageResponse | any> {
@@ -34,7 +33,6 @@ export class VCAccessControlCreateService {
       shareRequestId,
       restrictedKey,
       restrictedUrl,
-      signedUrl,
       expiresTimeStamp,
       viewOnce,
       true,
