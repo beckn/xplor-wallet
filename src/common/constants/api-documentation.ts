@@ -65,11 +65,10 @@ export const SHARE_CREDENTIAL_API = {
 }
 
 export const CREATE_FILE_API = {
-  summary: 'Share VC',
-  description:
-    'Shares a VC with another user. This generates an self ACCEPTED VC share request with the expiry time and allowed view Count entered by the user and generates a publically access file document link of the File Access Control.',
+  summary: 'Create/Store a File/VC',
+  description: 'Creates and stores uploaded file and VC to user wallet.',
   successResponseCode: 201,
-  successResponseMessage: 'File shared successfully.',
+  successResponseMessage: 'File created successfully.',
 }
 
 export const GET_SHARE_REQUESTS_API = {
