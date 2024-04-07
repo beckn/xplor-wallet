@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { VcApiRoutes } from 'src/common/constants/api-routes'
+import { VcErrors } from 'src/common/constants/error-messages'
 import { WALLET_SERVICE_URL } from 'src/common/constants/name-constants'
 import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
+import { RedisService } from 'src/redis/service/redis.service'
 import { generateUrlUUID } from 'src/utils/file.utils'
+import { generateCurrentIsoTime, getSecondsDifference } from 'src/utils/vc.utils'
 import { CreateAccessControlDto } from 'src/vc-access-control/dto/create-access-control.dto'
 import { VCAccessControl } from 'src/vc-access-control/schemas/file-access-control.schema'
 
@@ -14,12 +17,12 @@ export class VCAccessControlCreateService {
   constructor(
     @InjectModel('VCAccessControl') private readonly vcAccessControlModel: Model<VCAccessControl>,
     private readonly configService: ConfigService,
+    private readonly redisService: RedisService,
   ) {}
 
   /**
-   * Generates a new File Access control record to access a file share.
-   * Max Duration 7 Days for each File ACL Request
-   * This contains a decorator file restrictedUrl and restrictedKey to show file content
+   * Generates a new VC Access control record to access a VC share.
+   * This contains a decorator VC restrictedUrl and restrictedKey to show VC content
    */
   async createVcAccessControl(
     vcId: string,
@@ -42,6 +45,16 @@ export class VCAccessControlCreateService {
 
     const createdAcl = new this.vcAccessControlModel(accessModelDto)
     const aclResult = await createdAcl.save()
+
+    if (!aclResult) {
+      throw new InternalServerErrorException(VcErrors.ACL_GENERATION_ERROR)
+    }
+
+    await this.redisService.setWithExpiry(
+      restrictedKey,
+      aclResult,
+      getSecondsDifference(generateCurrentIsoTime(), expiresTimeStamp),
+    )
     return aclResult
   }
 }

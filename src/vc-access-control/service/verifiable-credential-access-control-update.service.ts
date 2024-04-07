@@ -111,13 +111,13 @@ export class VCAccessControlUpdateService {
   async renewAccessControl(restrictedKey: string, expiryTimeStamp: string) {
     const updatedDocument = await this.vcAccessControlModel
       .findOneAndUpdate(
-        { restrictedKey: restrictedKey }, // Find the document with the matching restriction key
+        { restrictedKey: restrictedKey },
         {
           $set: {
-            expireTimeStamp: expiryTimeStamp, // Update the expiration timestamp
+            expireTimeStamp: expiryTimeStamp,
           },
         },
-        { new: true }, // Return the updated document
+        { new: true },
       )
       .exec()
     return updatedDocument

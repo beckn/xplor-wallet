@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import 'multer'
 import { ShareRequestAction, VcType } from 'src/common/constants/enums'
-import { VcErrors } from 'src/common/constants/error-messages'
+import { VcErrors, ViewAccessControlErrors } from 'src/common/constants/error-messages'
 import { RegistryRequestRoutes } from 'src/common/constants/request-routes'
 import { FilesReadService } from 'src/files/service/files-read.service'
 import { renderFileToResponse } from 'src/utils/file.utils'
@@ -91,8 +91,13 @@ export class VerifiableCredentialReadService {
 
   async renderVCDocument(restrictionKey: string, res): Promise<any> {
     // Fetch Access control details by restrictedKey
+    // Finding Redis Cache to check if ACL Exists
+    const aclDetails = await this.vcAclReadService.findCachedByRestrictedKey(restrictionKey)
 
-    const aclDetails = await this.vcAclReadService.findByRestrictedKey(restrictionKey)
+    if (!aclDetails) {
+      throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
+    }
+
     const vcDetails = await this.getVCById(aclDetails['vcId'])
     let fileDetails
     if (vcDetails['fileId']) {

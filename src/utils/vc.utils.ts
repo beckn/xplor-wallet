@@ -28,6 +28,13 @@ export function generateCurrentIsoTime(): string {
   return futureDate.toISOString()
 }
 
+export function getSecondsDifference(currentIsoTime: string, futureIsoTime: string): number {
+  const currentTime = new Date(currentIsoTime).getTime()
+  const futureTime = new Date(futureIsoTime).getTime()
+  const differenceMilliseconds = futureTime - currentTime
+  return Math.floor(differenceMilliseconds / 1000)
+}
+
 export function generateUrlUUID(): string {
   // Generate a random string
   const randomString = Math.random().toString(36).substring(2) + Date.now().toString(36)
@@ -70,7 +77,7 @@ export async function renderVCDocumentToResponse(res, fileUrl: string, templateI
     .then(async (_) => {
       await fsPromises.mkdir(filePath, { recursive: true }) // Create directory recursively
     })
-    .catch(async (err) => {
+    .catch(async () => {
       await fsPromises.mkdir(filePath, { recursive: true })
     })
 

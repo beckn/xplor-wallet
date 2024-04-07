@@ -6,6 +6,7 @@ import { FileModel, FileSchema } from 'src/files/schemas/files.schema'
 import { FilesCreateService } from 'src/files/service/files-create.service'
 import { FilesDeleteService } from 'src/files/service/files-delete.service'
 import { FilesReadService } from 'src/files/service/files-read.service'
+import { RedisModule } from 'src/redis/module/redis.module'
 import { VCAccessControlModule } from 'src/vc-access-control/module/vc-access-control.module'
 import { VCAccessControl, VCAccessControlSchema } from 'src/vc-access-control/schemas/file-access-control.schema'
 import { VCAccessControlReadService } from 'src/vc-access-control/service/verifiable-credential-access-control-read.service'
@@ -32,6 +33,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     VCAccessControlModule,
     ApiClient,
     S3StorageModule,
+    RedisModule,
   ],
   controllers: [VerifiableCredentialController],
   providers: [
