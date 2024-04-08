@@ -10,6 +10,9 @@ export class File {
   fileType: string
 
   @Prop({ required: true })
+  fileKey: string
+
+  @Prop({ required: true })
   storedUrl: string
 }
 export const FileModel = File.name

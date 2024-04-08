@@ -4,4 +4,6 @@ export interface IStorageService {
   getSignedFileUrl(expiresIn: number, fileKey: string): Promise<string>
 
   refreshFileUrl(fileKey: string): Promise<string>
+
+  deleteFileUrl(fileKey: string)
 }

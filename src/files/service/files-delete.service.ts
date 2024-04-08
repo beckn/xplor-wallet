@@ -6,8 +6,6 @@ import 'multer'
 import { ApiClient } from 'src/common/api-client'
 import { FilesErrors } from 'src/common/constants/error-messages'
 import { IStorageService } from 'src/common/constants/interface-storage-service'
-import { VerifiableCredentialCreateService } from 'src/verifiable-credential/service/verifiable-credential-create.service'
-import { WalletReadService } from 'src/wallet/service/wallet-read.service'
 import { File } from '../schemas/files.schema'
 import { S3StorageService } from './s3-storage.service'
 
@@ -15,8 +13,6 @@ import { S3StorageService } from './s3-storage.service'
 export class FilesDeleteService {
   constructor(
     @InjectModel('File') private readonly fileModel: Model<File>,
-    private readonly vcCreateService: VerifiableCredentialCreateService,
-    private readonly walletReadService: WalletReadService,
     private readonly apiClient: ApiClient,
     @Inject(S3StorageService) private readonly storageService: IStorageService,
     private readonly configService: ConfigService,
@@ -26,7 +22,7 @@ export class FilesDeleteService {
    */
   async deleteFileById(fileId: string): Promise<any> {
     const fileDelete = await this.fileModel.findOneAndDelete({ _id: fileId })
-
+    await this.storageService.deleteFileUrl(fileDelete['fileKey'])
     if (!fileDelete) {
       throw new NotFoundException(FilesErrors.FILE_NOT_EXIST)
     }

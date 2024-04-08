@@ -2,7 +2,6 @@ import { AxiosRequestConfig } from 'axios'
 import { createHash } from 'crypto'
 import { addYears, formatISO } from 'date-fns'
 import { promises as fsPromises } from 'fs'
-import fsExists from 'fs.promises.exists'
 import * as path from 'path'
 import { ApiClient } from 'src/common/api-client'
 import { ErrorCodes } from 'src/common/constants/error-codes'
@@ -68,12 +67,12 @@ export async function renderFileToResponse(res, fileUrl: string, restrictionKey:
 
   // Write PDF data to the file
   await fsPromises.writeFile(fullPath, visualResult, { encoding: 'binary' })
-  if (await fsExists(fullPath)) {
+  if (await fsPromises.stat(fullPath)) {
     res.set('Content-Type', `${FileMimeType.APPLICATION}${fileExtension}`)
     res.download(fullPath, fileName)
     // Clear the file!
     setTimeout(async function () {
-      if (await fsExists(fullPath)) {
+      if (await fsPromises.stat(fullPath)) {
         await fsPromises.unlink(fullPath).catch((err) => console.error(err))
       }
     }, 3000)

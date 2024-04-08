@@ -45,7 +45,7 @@ export class FilesCreateService {
    * Creates a file document and stores in the database
    */
   async createFile(file: Express.Multer.File, body: CreateFileRequestDto): Promise<StandardMessageResponse | any> {
-    //upload file to Storage
+    // Upload file to Storage
     const storeFileDetails = await this.storageService.uploadFile(file)
 
     const createdFileModel = new CreateFileDto(

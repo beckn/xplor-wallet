@@ -15,12 +15,12 @@ export class CreateFileDto {
 
   @IsString()
   @IsNotEmpty()
-  readonly storedFileKey: string
+  readonly fileKey: string
 
-  constructor(walletId: string, fileType: string, storedUrl: string, storedFileKey: string) {
+  constructor(walletId: string, fileType: string, storedUrl: string, fileKey: string) {
     this.walletId = walletId
     this.fileType = fileType
     this.storedUrl = storedUrl
-    this.storedFileKey = storedFileKey
+    this.fileKey = fileKey
   }
 }

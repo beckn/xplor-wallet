@@ -19,6 +19,20 @@ export class S3StorageService implements IStorageService {
     })
   }
 
+  async deleteFileUrl(fileKey: string) {
+    try {
+      const params = {
+        Bucket: this.AWS_S3_BUCKET,
+        Key: fileKey,
+      }
+      await this.s3.deleteObject(params).promise()
+      return true
+    } catch (err) {
+      console.log(`error deleting file from S3 Bucket ${err}`)
+      return false
+    }
+  }
+
   async refreshFileUrl(fileKey: string): Promise<string> {
     return await this.getSignedFileUrl(MaxVCShareHours, fileKey)
   }

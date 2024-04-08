@@ -54,7 +54,6 @@ export class VCAccessControlCreateService {
       throw new InternalServerErrorException(VcErrors.ACL_GENERATION_ERROR)
     }
 
-    console.log(JSON.stringify(aclResult))
     await this.redisService.setWithExpiry(
       restrictedKey,
       JSON.stringify(aclResult),

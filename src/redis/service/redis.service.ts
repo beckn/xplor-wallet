@@ -28,7 +28,6 @@ export class RedisService {
 
   async getValue(key: string): Promise<any> {
     const value = await this.redisClient.get(key)
-    console.log(value)
     if (value) {
       return JSON.parse(value)
     } else {
@@ -38,7 +37,6 @@ export class RedisService {
 
   async updateField(key: string, fieldName: string, newValue: any): Promise<void> {
     const jsonValue = await this.redisClient.get(key)
-
     if (!jsonValue) {
       throw new NotFoundException(`Key ${key} not found in Redis`)
     }
@@ -49,7 +47,6 @@ export class RedisService {
     parsedValue[fieldName] = newValue
 
     const updatedJsonValue = JSON.stringify(parsedValue)
-
     // Set the updated JSON value back into Redis
     await this.redisClient.set(key, updatedJsonValue)
   }
