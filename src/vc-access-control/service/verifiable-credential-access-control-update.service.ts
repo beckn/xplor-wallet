@@ -6,6 +6,7 @@ import { VcApiRoutes } from 'src/common/constants/api-routes'
 import { ViewAccessControlErrors } from 'src/common/constants/error-messages'
 import { WALLET_SERVICE_URL } from 'src/common/constants/name-constants'
 import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
+import { RedisService } from 'src/redis/service/redis.service'
 import { generateUrlUUID } from 'src/utils/file.utils'
 import { VCAccessControl } from '../schemas/file-access-control.schema'
 
@@ -14,6 +15,7 @@ export class VCAccessControlUpdateService {
   constructor(
     @InjectModel('VCAccessControl') private readonly vcAccessControlModel: Model<VCAccessControl>,
     private readonly configService: ConfigService,
+    private readonly redisService: RedisService,
   ) {}
 
   /**
@@ -25,7 +27,11 @@ export class VCAccessControlUpdateService {
   ): Promise<StandardMessageResponse | any> {
     // Generating unique restricted key and restrictedUrl
     const restrictedKey = generateUrlUUID()
-    const restrictedUrl = this.configService.get(WALLET_SERVICE_URL) + VcApiRoutes.FILES_VIEW_REQUESTS + restrictedKey
+    const restrictedUrl =
+      this.configService.get(WALLET_SERVICE_URL) +
+      VcApiRoutes.VC_REQUEST +
+      VcApiRoutes.FILES_VIEW_REQUESTS +
+      restrictedKey
 
     // Update the document with the given restriction key
     const updatedDocument = await this.vcAccessControlModel
@@ -106,6 +112,7 @@ export class VCAccessControlUpdateService {
       throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
     }
 
+    await this.redisService.updateField(restrictedKey, 'vcId', vcId)
     return updatedAcl
   }
 

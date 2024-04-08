@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import Redis from 'ioredis'
 
 @Injectable()
@@ -28,11 +28,30 @@ export class RedisService {
 
   async getValue(key: string): Promise<any> {
     const value = await this.redisClient.get(key)
+    console.log(value)
     if (value) {
       return JSON.parse(value)
     } else {
       return null
     }
+  }
+
+  async updateField(key: string, fieldName: string, newValue: any): Promise<void> {
+    const jsonValue = await this.redisClient.get(key)
+
+    if (!jsonValue) {
+      throw new NotFoundException(`Key ${key} not found in Redis`)
+    }
+
+    // Parse the JSON into a JavaScript object
+    const parsedValue = JSON.parse(jsonValue)
+
+    parsedValue[fieldName] = newValue
+
+    const updatedJsonValue = JSON.stringify(parsedValue)
+
+    // Set the updated JSON value back into Redis
+    await this.redisClient.set(key, updatedJsonValue)
   }
 
   async deleteKey(key: string): Promise<number> {

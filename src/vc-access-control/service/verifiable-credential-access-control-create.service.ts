@@ -32,7 +32,11 @@ export class VCAccessControlCreateService {
   ): Promise<StandardMessageResponse | any> {
     // Generating unique restricted key and restrictedUrl
     const restrictedKey = generateUrlUUID()
-    const restrictedUrl = this.configService.get(WALLET_SERVICE_URL) + VcApiRoutes.VIEW_FILE_REQUESTS + restrictedKey
+    const restrictedUrl =
+      this.configService.get(WALLET_SERVICE_URL) +
+      VcApiRoutes.VC_REQUEST +
+      VcApiRoutes.VIEW_FILE_REQUESTS +
+      restrictedKey
     const accessModelDto = new CreateAccessControlDto(
       vcId,
       shareRequestId,
@@ -50,6 +54,7 @@ export class VCAccessControlCreateService {
       throw new InternalServerErrorException(VcErrors.ACL_GENERATION_ERROR)
     }
 
+    console.log(aclResult)
     await this.redisService.setWithExpiry(
       restrictedKey,
       aclResult,
