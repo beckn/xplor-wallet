@@ -61,6 +61,20 @@ export class VerifiableCredentialReadService {
       throw new NotFoundException(VcErrors.VCs_NOT_FOUND)
     }
 
+    // Fetch file details for each fileId and add fileType to filesResult
+    const filesWithDetails = await Promise.all(
+      filesResult.map(async (fileItem) => {
+        if (!fileItem.fileId) {
+          return { ...fileItem.toJSON() }
+        }
+
+        const fileDetails = await this.filesReadService.getFileById(fileItem.fileId)
+        return { fileType: fileDetails.fileType, ...fileItem.toJSON() }
+      }),
+    )
+
+    return filesWithDetails
+
     return filesResult
   }
 
@@ -75,7 +89,8 @@ export class VerifiableCredentialReadService {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
-    return vcDetails
+    const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
+    return { fileType: fileDetails.fileType, ...vcDetails.toJSON() }
   }
 
   async getVCById(vcId: string): Promise<any> {
@@ -86,7 +101,8 @@ export class VerifiableCredentialReadService {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
-    return vcDetails
+    const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
+    return { fileType: fileDetails.fileType, ...vcDetails.toJSON() }
   }
 
   async renderVCDocument(restrictionKey: string, res): Promise<any> {

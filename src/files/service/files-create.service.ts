@@ -101,11 +101,6 @@ export class FilesCreateService {
     )
     // Create a VC for this file!
     const vcDocumentResult = await this.vcCreateService.createVerifiableCredential(createVcRequest)
-
-    const result = {
-      fileData: fileDocumentResult,
-      vcData: vcDocumentResult,
-    }
-    return result
+    return { ...vcDocumentResult.toJSON(), fileData: fileDocumentResult }
   }
 }
