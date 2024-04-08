@@ -54,10 +54,10 @@ export class VCAccessControlCreateService {
       throw new InternalServerErrorException(VcErrors.ACL_GENERATION_ERROR)
     }
 
-    console.log(aclResult)
+    console.log(JSON.stringify(aclResult))
     await this.redisService.setWithExpiry(
       restrictedKey,
-      aclResult,
+      JSON.stringify(aclResult),
       getSecondsDifference(generateCurrentIsoTime(), expiresTimeStamp),
     )
     return aclResult
