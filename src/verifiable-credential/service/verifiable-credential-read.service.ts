@@ -128,7 +128,6 @@ export class VerifiableCredentialReadService {
     if (currentIsoTime < expirationTimestamp) {
       // The expiration timestamp has not yet been reached
 
-      // TODO: Do vcType checks to render fileAccordingly
       if (vcDetails['type'] === VcType.SELF_ISSUED) {
         await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
       } else {
