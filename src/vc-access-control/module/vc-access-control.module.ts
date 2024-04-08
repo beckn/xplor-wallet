@@ -1,0 +1,18 @@
+import { Module } from '@nestjs/common'
+import { MongooseModule } from '@nestjs/mongoose'
+import { ApiClient } from 'src/common/api-client'
+import { RedisModule } from 'src/redis/module/redis.module'
+import { VCAccessControl, VCAccessControlSchema } from '../schemas/file-access-control.schema'
+import { VCAccessControlCreateService } from '../service/verifiable-credential-access-control-create.service'
+import { VCAccessControlUpdateService } from '../service/verifiable-credential-access-control-update.service'
+
+@Module({
+  imports: [
+    MongooseModule.forFeature([{ name: VCAccessControl.name, schema: VCAccessControlSchema }]),
+    ApiClient,
+    RedisModule,
+  ],
+  providers: [VCAccessControlCreateService, VCAccessControlUpdateService, ApiClient],
+  exports: [VCAccessControlCreateService, VCAccessControlUpdateService], // Export the service to be available in other modules
+})
+export class VCAccessControlModule {}
