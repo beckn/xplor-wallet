@@ -12,8 +12,6 @@ import { RedisService } from '../service/redis.service'
         return new Redis({
           host: configService.get('REDIS_HOST'),
           port: configService.get('REDIS_PORT'),
-          username: configService.get('REDIS_SERVICE_NAME'),
-          password: configService.get('REDIS_PASSWORD'),
         })
       },
       inject: [ConfigService],

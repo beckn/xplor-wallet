@@ -6,6 +6,8 @@ services:
     ports:
       - 1078:3000
     restart: always
+    depends_on:
+      - redis
     environment:
       - REGISTRY_SERVICE_URL=${REGISTRY_SERVICE_URL}
       - MONGODB_URL=${MONGODB_URL}
@@ -20,8 +22,21 @@ services:
       - SELF_ISSUED_SCHEMA_TAG=${SELF_ISSUED_SCHEMA_TAG}
       - SELF_ISSUED_SCHEMA_ID=${SELF_ISSUED_SCHEMA_ID}
       - SELF_ISSUED_SCHEMA_VERSION=${SELF_ISSUED_SCHEMA_VERSION}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
     networks:
       - xplor-network
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis:/data
+    networks:
+      - xplor-network
+
+volumes:
+  redis:
 networks:
   xplor-network:
     external: true

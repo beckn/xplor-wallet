@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { VcApiRoutes } from 'src/common/constants/api-routes'
 import { ViewAccessControlErrors } from 'src/common/constants/error-messages'
+import { WALLET_SERVICE_URL } from 'src/common/constants/name-constants'
 import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
 import { generateUrlUUID } from 'src/utils/file.utils'
 import { VCAccessControl } from '../schemas/file-access-control.schema'
@@ -24,7 +25,7 @@ export class VCAccessControlUpdateService {
   ): Promise<StandardMessageResponse | any> {
     // Generating unique restricted key and restrictedUrl
     const restrictedKey = generateUrlUUID()
-    const restrictedUrl = this.configService.get('SERVICE_BASE_URL') + VcApiRoutes.FILES_VIEW_REQUESTS + restrictedKey
+    const restrictedUrl = this.configService.get(WALLET_SERVICE_URL) + VcApiRoutes.FILES_VIEW_REQUESTS + restrictedKey
 
     // Update the document with the given restriction key
     const updatedDocument = await this.vcAccessControlModel

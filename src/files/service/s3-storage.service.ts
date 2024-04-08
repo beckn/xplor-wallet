@@ -19,6 +19,10 @@ export class S3StorageService implements IStorageService {
     })
   }
 
+  async refreshFileUrl(fileKey: string): Promise<string> {
+    return await this.getSignedFileUrl(MaxVCShareHours, fileKey)
+  }
+
   /**
    * Uploads a file from Multer to AWS S3 bucket and returns the stored files details
    */

@@ -20,8 +20,6 @@ export class RedisService {
     this.redisClient.on('error', (error) => {
       console.error('Redis connection error:', error)
     })
-
-    // Listen for other events as needed
   }
 
   async setValue(key: string, value: any): Promise<any> {
