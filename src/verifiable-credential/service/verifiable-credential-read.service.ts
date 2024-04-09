@@ -7,6 +7,7 @@ import { ShareRequestAction, VcType } from 'src/common/constants/enums'
 import { VcErrors, ViewAccessControlErrors } from 'src/common/constants/error-messages'
 import { RegistryRequestRoutes } from 'src/common/constants/request-routes'
 import { FilesReadService } from 'src/files/service/files-read.service'
+import { FilesUpdateService } from 'src/files/service/files-update.service'
 import { renderFileToResponse } from 'src/utils/file.utils'
 import {
   generateCurrentIsoTime,
@@ -28,6 +29,7 @@ export class VerifiableCredentialReadService {
     private readonly vcAclReadService: VCAccessControlReadService,
     private readonly vcAclUpdateService: VCAccessControlUpdateService,
     private readonly filesReadService: FilesReadService,
+    private readonly filesUpdateService: FilesUpdateService,
     private readonly shareRequestReadService: ShareRequestReadService,
   ) {}
 
@@ -105,6 +107,9 @@ export class VerifiableCredentialReadService {
     return { fileType: fileDetails.fileType, ...vcDetails.toJSON() }
   }
 
+  /*
+  This function returns the VC in pdf, image or the uploaded file format
+   **/
   async renderVCDocument(restrictionKey: string, res): Promise<any> {
     // Fetch Access control details by restrictedKey
     // Finding Redis Cache to check if ACL Exists
@@ -145,7 +150,11 @@ export class VerifiableCredentialReadService {
       // The expiration timestamp has not yet been reached
 
       if (vcDetails['type'] === VcType.SELF_ISSUED) {
-        await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+        const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+        if (!renderedFile) {
+          const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails['fileId'])
+          await renderFileToResponse(res, newFileUrl, restrictionKey)
+        }
       } else {
         // Hit the Registry layer to Render VC
         await renderVCDocumentToResponse(
@@ -179,7 +188,11 @@ export class VerifiableCredentialReadService {
           .exec()
 
         if (vcDetails['type'] === VcType.SELF_ISSUED) {
-          await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+          const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+          if (!renderedFile) {
+            const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails['fileId'])
+            await renderFileToResponse(res, newFileUrl, restrictionKey)
+          }
         } else {
           // Hit the Registry layer to Render VC
           await renderVCDocumentToResponse(

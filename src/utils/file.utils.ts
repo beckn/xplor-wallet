@@ -31,52 +31,58 @@ export function generateUrlUUID(): string {
   return encryptedUUID
 }
 
-export async function renderFileToResponse(res, fileUrl: string, restrictionKey: string) {
-  const apiClient = new ApiClient()
-  const headers = {
-    Accept: FileMimeType.ALL,
-  }
-  const config: AxiosRequestConfig = {
-    responseType: 'arraybuffer',
-    responseEncoding: 'binary',
-    headers: headers,
-  }
+export async function renderFileToResponse(res, fileUrl: string, restrictionKey: string): Promise<any | boolean> {
+  try {
+    const apiClient = new ApiClient()
+    const headers = {
+      Accept: FileMimeType.ALL,
+    }
+    const config: AxiosRequestConfig = {
+      responseType: 'arraybuffer',
+      responseEncoding: 'binary',
+      headers: headers,
+    }
 
-  const fileDirectory = FILE_LOCAL_CONFIG.STORE_PATH
-  const filePath = path.join(__dirname, '..', fileDirectory)
-  const visualResult = await apiClient.get(fileUrl, config)
+    const fileDirectory = FILE_LOCAL_CONFIG.STORE_PATH
+    const filePath = path.join(__dirname, '..', fileDirectory)
+    const visualResult = await apiClient.get(fileUrl, config)
 
-  const fileResponse = await apiClient.get(fileUrl, {
-    responseType: 'stream',
-  })
-
-  const contentType = fileResponse.headers['content-type']
-  const fileExtension = contentType.split('/').pop()
-  await fsPromises
-    .access(filePath)
-    .then(async (_) => {
-      await fsPromises.mkdir(filePath, { recursive: true }) // Create directory recursively
-    })
-    .catch(async (err) => {
-      await fsPromises.mkdir(filePath, { recursive: true })
+    const fileResponse = await apiClient.get(fileUrl, {
+      responseType: 'stream',
     })
 
-  // Save the file
-  const fileName = `${restrictionKey}.${fileExtension}`
-  const fullPath = path.join(filePath, fileName)
+    const contentType = fileResponse.headers['content-type']
+    const fileExtension = contentType.split('/').pop()
+    await fsPromises
+      .access(filePath)
+      .then(async (_) => {
+        await fsPromises.mkdir(filePath, { recursive: true }) // Create directory recursively
+      })
+      .catch(async (err) => {
+        await fsPromises.mkdir(filePath, { recursive: true })
+      })
 
-  // Write PDF data to the file
-  await fsPromises.writeFile(fullPath, visualResult, { encoding: 'binary' })
-  if (await fsPromises.stat(fullPath)) {
-    res.set('Content-Type', `${FileMimeType.APPLICATION}${fileExtension}`)
-    res.download(fullPath, fileName)
-    // Clear the file!
-    setTimeout(async function () {
-      if (await fsPromises.stat(fullPath)) {
-        await fsPromises.unlink(fullPath).catch((err) => console.error(err))
-      }
-    }, 3000)
-  } else {
-    res.status(ErrorCodes.RESOURCE_NOT_FOUND).send(FilesErrors.INTERNAL_ERROR)
+    // Save the file
+    const fileName = `${restrictionKey}.${fileExtension}`
+    const fullPath = path.join(filePath, fileName)
+
+    // Write PDF data to the file
+    await fsPromises.writeFile(fullPath, visualResult, { encoding: 'binary' })
+    if (await fsPromises.stat(fullPath)) {
+      res.set('Content-Type', `${FileMimeType.APPLICATION}${fileExtension}`)
+      res.download(fullPath, fileName)
+      // Clear the file!
+      setTimeout(async function () {
+        if (await fsPromises.stat(fullPath)) {
+          await fsPromises.unlink(fullPath).catch((err) => console.error(err))
+        }
+      }, 2000)
+      return true
+    } else {
+      res.status(ErrorCodes.RESOURCE_NOT_FOUND).send(FilesErrors.INTERNAL_ERROR)
+      return false
+    }
+  } catch (err) {
+    return false
   }
 }
