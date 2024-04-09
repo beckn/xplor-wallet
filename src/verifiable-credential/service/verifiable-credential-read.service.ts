@@ -159,7 +159,7 @@ export class VerifiableCredentialReadService {
         // Hit the Registry layer to Render VC
         await renderVCDocumentToResponse(
           res,
-          this.configService.get(REGISTRY_SERVICE_URL) + '/credentials/' + vcDetails['did'],
+          this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails['did'],
           vcDetails['templateId'],
           restrictionKey,
         )
