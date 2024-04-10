@@ -8,6 +8,7 @@ services:
     restart: always
     depends_on:
       - xplor_wallet_redis_service
+      - xplor_wallet_mongodb_service
     environment:
       - REGISTRY_SERVICE_URL=${REGISTRY_SERVICE_URL}
       - MONGODB_URL=${MONGODB_URL}
@@ -32,9 +33,18 @@ services:
       - xplor_wallet_redis_service:/data
     networks:
       - xplor-network
+  xplor_wallet_mongodb_service:
+    image: mongo:6-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - xplor-network
 
 volumes:
   xplor_wallet_redis_service:
+  dbdata6:
 networks:
   xplor-network:
     external: true

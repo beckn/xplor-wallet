@@ -63,7 +63,7 @@ export class WalletController {
     description: GET_WALLET_DETAILS_API.successResponseMessage,
     type: WalletEntity,
   })
-  async getWalletdetails(@Query() queryParams: StandardWalletRequestDto) {
+  async getWalletDetails(@Query() queryParams: StandardWalletRequestDto) {
     return await this.walletReadService.getWalletDetails(queryParams)
   }
 }

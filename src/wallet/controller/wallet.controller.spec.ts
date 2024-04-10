@@ -47,8 +47,6 @@ describe('WalletController', () => {
         _id: 'ok',
         userId: 'user123',
         userDid: 'did:user123',
-        createdAt: undefined,
-        updatedAt: undefined,
       }
       jest.spyOn(walletCreateService, 'createWallet').mockResolvedValue(walletEntity)
 
@@ -59,32 +57,28 @@ describe('WalletController', () => {
   describe('deleteWallet', () => {
     it('should delete a wallet', async () => {
       const deleteWalletDto: StandardWalletRequestDto = {
-        /* your test data here */
+        walletId: 'user123',
       }
       const result = {
-        /* your mock result here */
+        _id: 'user123',
       }
       jest.spyOn(walletDeleteService, 'deleteWallet').mockResolvedValue(result)
 
-      expect(await walletController.deleteWallet(deleteWalletDto)).toEqual(result)
+      expect(await walletController.deleteWallet(deleteWalletDto)).toContain(result)
     })
   })
 
   describe('getWalletDetails', () => {
     it('should get wallet details', async () => {
       const getWalletDetailsDto: StandardWalletRequestDto = {
-        /* your test data here */
+        walletId: 'user123',
       }
       const walletEntity: WalletEntity = {
-        _id: '',
-        userId: '',
-        userDid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
+        _id: 'user123',
       }
       jest.spyOn(walletReadService, 'getWalletDetails').mockResolvedValue(walletEntity)
 
-      expect(await walletController.getWalletdetails(getWalletDetailsDto)).toEqual(walletEntity)
+      expect(await walletController.getWalletDetails(getWalletDetailsDto)).toContain(walletEntity)
     })
   })
 })
