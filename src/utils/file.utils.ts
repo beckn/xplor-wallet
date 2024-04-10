@@ -3,10 +3,10 @@ import { createHash } from 'crypto'
 import { addYears, formatISO } from 'date-fns'
 import { promises as fsPromises } from 'fs'
 import * as path from 'path'
-import { ApiClient } from 'src/common/api-client'
-import { ErrorCodes } from 'src/common/constants/error-codes'
-import { FilesErrors } from 'src/common/constants/error-messages'
-import { FILE_LOCAL_CONFIG, FileMimeType } from 'src/common/constants/file-constants'
+import { ApiClient } from '../common/api-client'
+import { ErrorCodes } from '../common/constants/error-codes'
+import { FilesErrors } from '../common/constants/error-messages'
+import { FILE_LOCAL_CONFIG, FileMimeType } from '../common/constants/file-constants'
 
 export function getCurrentTimeStamp(): number {
   return Date.now()

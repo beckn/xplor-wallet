@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { VcCategory, VcType } from 'src/common/constants/enums'
+import { VcCategory, VcType } from '../../common/constants/enums'
 
 export class VCEntity {
   @ApiProperty({ example: '65f058277901e68a7df6db35' })

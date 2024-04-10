@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsInt, IsOptional, IsString, Min } from 'class-validator'
-import { ShareRequestAction } from 'src/common/constants/enums'
+import { ShareRequestAction } from '../../common/constants/enums'
 
 export class GetShareFileRequestsDto {
   @ApiProperty()

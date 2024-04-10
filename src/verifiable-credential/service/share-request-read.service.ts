@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { ShareRequestAction } from 'src/common/constants/enums'
-import { VcErrors } from 'src/common/constants/error-messages'
-import { GetShareFileRequestsDto } from 'src/verifiable-credential/dto/get-share-file-request-list.dto'
+import { ShareRequestAction } from '../../common/constants/enums'
+import { VcErrors } from '../../common/constants/error-messages'
+import { GetShareFileRequestsDto } from '../../verifiable-credential/dto/get-share-file-request-list.dto'
 import { ShareRequest } from '../schemas/share-request.schema'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
 

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
-import { VcType } from 'src/common/constants/enums'
+import { VcType } from '../../common/constants/enums'
 
 @Schema({ timestamps: true })
 export class VerifiableCredential {

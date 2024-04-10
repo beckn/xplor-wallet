@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
-import { ShareRequestAction } from 'src/common/constants/enums'
+import { ShareRequestAction } from '../../common/constants/enums'
 
 class Restrictions {
   @Prop({ required: true })

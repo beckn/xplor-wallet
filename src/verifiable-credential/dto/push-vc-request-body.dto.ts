@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty, IsString } from 'class-validator'
-import { VcCategory, VcType } from 'src/common/constants/enums'
+import { VcCategory, VcType } from '../../common/constants/enums'
 
 export class PushVCRequestBodyDto {
   @IsString()
