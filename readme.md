@@ -86,7 +86,7 @@ This service follows Nest Js framework and the code structure for it. Each featu
 The main module is the heart of the Nest js service and includes the dependencies and configs of the whole service.
 
 ### Wallet
-The files module is responsible for managing CRUD operations of a wallet in the database. This module contains API endpoints in the controller file.
+The wallet module is responsible for managing CRUD operations of a wallet in the database. This module contains API endpoints in the controller file.
 ``` 
 src/wallet 
 ```
