@@ -7,6 +7,7 @@ import { ShareRequestAction, VcType } from 'src/common/constants/enums'
 import { VcErrors, ViewAccessControlErrors } from 'src/common/constants/error-messages'
 import { RegistryRequestRoutes } from 'src/common/constants/request-routes'
 import { FilesReadService } from 'src/files/service/files-read.service'
+import { FilesUpdateService } from 'src/files/service/files-update.service'
 import { renderFileToResponse } from 'src/utils/file.utils'
 import {
   generateCurrentIsoTime,
@@ -28,6 +29,7 @@ export class VerifiableCredentialReadService {
     private readonly vcAclReadService: VCAccessControlReadService,
     private readonly vcAclUpdateService: VCAccessControlUpdateService,
     private readonly filesReadService: FilesReadService,
+    private readonly filesUpdateService: FilesUpdateService,
     private readonly shareRequestReadService: ShareRequestReadService,
   ) {}
 
@@ -61,6 +63,20 @@ export class VerifiableCredentialReadService {
       throw new NotFoundException(VcErrors.VCs_NOT_FOUND)
     }
 
+    // Fetch file details for each fileId and add fileType to filesResult
+    const filesWithDetails = await Promise.all(
+      filesResult.map(async (fileItem) => {
+        if (!fileItem.fileId) {
+          return { ...fileItem.toJSON() }
+        }
+
+        const fileDetails = await this.filesReadService.getFileById(fileItem.fileId)
+        return { fileType: fileDetails.fileType, ...fileItem.toJSON() }
+      }),
+    )
+
+    return filesWithDetails
+
     return filesResult
   }
 
@@ -75,7 +91,8 @@ export class VerifiableCredentialReadService {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
-    return vcDetails
+    const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
+    return { fileType: fileDetails.fileType, ...vcDetails.toJSON() }
   }
 
   async getVCById(vcId: string): Promise<any> {
@@ -86,9 +103,13 @@ export class VerifiableCredentialReadService {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
-    return vcDetails
+    const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
+    return { fileType: fileDetails.fileType, ...vcDetails.toJSON() }
   }
 
+  /*
+  This function returns the VC in pdf, image or the uploaded file format
+   **/
   async renderVCDocument(restrictionKey: string, res): Promise<any> {
     // Fetch Access control details by restrictedKey
     // Finding Redis Cache to check if ACL Exists
@@ -128,14 +149,17 @@ export class VerifiableCredentialReadService {
     if (currentIsoTime < expirationTimestamp) {
       // The expiration timestamp has not yet been reached
 
-      // TODO: Do vcType checks to render fileAccordingly
       if (vcDetails['type'] === VcType.SELF_ISSUED) {
-        await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+        const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+        if (!renderedFile) {
+          const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails['fileId'])
+          await renderFileToResponse(res, newFileUrl, restrictionKey)
+        }
       } else {
         // Hit the Registry layer to Render VC
         await renderVCDocumentToResponse(
           res,
-          this.configService.get(REGISTRY_SERVICE_URL) + '/credentials/' + vcDetails['did'],
+          this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails['did'],
           vcDetails['templateId'],
           restrictionKey,
         )
@@ -164,7 +188,11 @@ export class VerifiableCredentialReadService {
           .exec()
 
         if (vcDetails['type'] === VcType.SELF_ISSUED) {
-          await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+          const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+          if (!renderedFile) {
+            const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails['fileId'])
+            await renderFileToResponse(res, newFileUrl, restrictionKey)
+          }
         } else {
           // Hit the Registry layer to Render VC
           await renderVCDocumentToResponse(

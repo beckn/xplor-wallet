@@ -10,6 +10,7 @@ import { FileModel, FileSchema } from '../schemas/files.schema'
 import { FilesCreateService } from '../service/files-create.service'
 import { FilesDeleteService } from '../service/files-delete.service'
 import { FilesReadService } from '../service/files-read.service'
+import { FilesUpdateService } from '../service/files-update.service'
 import { S3StorageModule } from './s3-storage.module'
 
 @Module({
@@ -22,7 +23,14 @@ import { S3StorageModule } from './s3-storage.module'
     VCAccessControlModule,
   ],
   controllers: [FilesController],
-  providers: [FilesCreateService, WalletReadService, FilesReadService, FilesDeleteService, ApiClient],
-  exports: [MongooseModule, FilesCreateService, FilesReadService, FilesDeleteService],
+  providers: [
+    FilesCreateService,
+    WalletReadService,
+    FilesReadService,
+    FilesDeleteService,
+    FilesUpdateService,
+    ApiClient,
+  ],
+  exports: [MongooseModule, FilesCreateService, FilesReadService, FilesDeleteService, FilesUpdateService],
 })
 export class FilesModule {}

@@ -19,8 +19,10 @@ export class VerifiableCredentialDeleteService {
    **/
   async deleteVc(vcRequest: GetVCRequestDto): Promise<any> {
     const deletedVc = await this.vcModel.findOneAndDelete({ _id: vcRequest.vcId, walletId: vcRequest.walletId })
-    const deletedFile = await this.fileDeleteService.deleteFileById(deletedVc['fileId'])
-    if (!deletedVc || !deletedFile) {
+    if(deletedVc['fileId'] != null) {
+      await this.fileDeleteService.deleteFileById(deletedVc['fileId'])
+    }
+    if (!deletedVc) {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
