@@ -7,18 +7,10 @@ import { ApiClient } from '../../common/api-client'
 import { VcType } from '../../common/constants/enums'
 import { FilesErrors } from '../../common/constants/error-messages'
 import { IStorageService } from '../../common/constants/interface-storage-service'
-import {
-  REGISTRY_SERVICE_URL,
-  SELF_ISSUED_ORGANIZATION_NAME,
-  SELF_ISSUED_SCHEMA_ID,
-  SELF_ISSUED_SCHEMA_TAG,
-  SELF_ISSUED_SCHEMA_VERSION,
-} from '../../common/constants/name-constants'
+import { REGISTRY_SERVICE_URL } from '../../common/constants/name-constants'
 import { RegistryRequestRoutes } from '../../common/constants/request-routes'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
-import { SELF_ISSUED_VC_CONTEXT } from '../../config/vc-schema.config'
 import { getCurrentTimeStamp } from '../../utils/file.utils'
-import { generateVCExpirationDate } from '../../utils/vc.utils'
 import { CreateVCRequestBodyDto } from '../../verifiable-credential/dto/create-vc-request-body.dto'
 import { VerifiableCredentialCreateService } from '../../verifiable-credential/service/verifiable-credential-create.service'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
@@ -65,20 +57,7 @@ export class FilesCreateService {
     const walletDetails = await this.walletReadService.findWalletByWalletId(body.walletId)
     const registryVCRequest = new CreateCredentialRequestDto(
       walletDetails['userDid'],
-      new CredentialDto(
-        SELF_ISSUED_VC_CONTEXT,
-        this.configService.get(SELF_ISSUED_SCHEMA_ID),
-        this.configService.get(SELF_ISSUED_SCHEMA_VERSION),
-        generateVCExpirationDate(100),
-        this.configService.get(SELF_ISSUED_ORGANIZATION_NAME),
-        {
-          id: `did:${this.configService.get(SELF_ISSUED_ORGANIZATION_NAME)}`,
-          type: this.configService.get(SELF_ISSUED_SCHEMA_TAG),
-          certificateLink: storeFileDetails['uploadedFile']['key'],
-        },
-        ['VerifiableCredential', this.configService.get(SELF_ISSUED_SCHEMA_TAG)],
-        body.tags,
-      ),
+      new CredentialDto(storeFileDetails['uploadedFile']['key'], body.tags),
     )
 
     const vcResult = await this.apiClient.post(
