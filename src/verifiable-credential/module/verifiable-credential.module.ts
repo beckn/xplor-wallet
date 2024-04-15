@@ -14,7 +14,7 @@ import { VCAccessControlReadService } from '../../vc-access-control/service/veri
 import { VCAccessControlUpdateService } from '../../vc-access-control/service/verifiable-credential-access-control-update.service'
 import { WalletModule } from '../../wallet/module/wallet.module'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
-import { VerifiableCredentialController } from '../controller/verifiable-credental.controller'
+import { VerifiableCredentialController } from '../controller/verifiable-credential.controller'
 import { ShareRequest, ShareRequestSchema } from '../schemas/share-request.schema'
 import { VerifiableCredentialModel, VerifiableCredentialSchema } from '../schemas/verifiable-credential.schema'
 import { ShareRequestCreateService } from '../service/share-request-create.service'
