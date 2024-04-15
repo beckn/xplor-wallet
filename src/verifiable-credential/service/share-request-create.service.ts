@@ -103,10 +103,6 @@ export class ShareRequestCreateService {
     walletId: string,
     shareRequest: RequestShareFileRequestDto,
   ): Promise<StandardMessageResponse | any> {
-    if (shareRequest.restrictions.expiresIn > 168) {
-      throw new BadRequestException(FilesErrors.FILE_MAX_TIME_LIMIT_ERROR)
-    }
-
     const fileShareDetails = new VcShareDetails(
       shareRequest.certificateType,
       new Restrictions(shareRequest.restrictions.expiresIn, shareRequest.restrictions.viewOnce),

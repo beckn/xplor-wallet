@@ -3,23 +3,24 @@ import { ArrayNotEmpty, ArrayUnique, IsArray, IsNotEmpty, IsString } from 'class
 
 export class CreateFileRequestDto {
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Wallet ID cannot be empty' })
+  @IsString({ message: 'Wallet ID must be a string' })
   readonly walletId: string
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Category cannot be empty' })
+  @IsString({ message: 'Category must be a string' })
   readonly category: string
 
   @ApiProperty()
-  @IsArray()
-  @ArrayNotEmpty()
-  @ArrayUnique()
-  @IsString({ each: true })
+  @IsArray({ message: 'Tags must be an array' })
+  @ArrayNotEmpty({ message: 'Tags array cannot be empty' })
+  @ArrayUnique({ message: 'Tags array must contain unique values' })
+  @IsString({ each: true, message: 'Each tag must be a string' })
   readonly tags: string[]
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Name cannot be empty' })
+  @IsString({ message: 'Name must be a string' })
   readonly name: string
 }

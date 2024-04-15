@@ -1,39 +1,41 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsString } from 'class-validator'
-import { VcCategory, VcType } from '../../common/constants/enums'
+import { IsArray, IsEnum, IsNotEmpty, IsString } from 'class-validator'
+import { VcType } from '../../common/constants/enums'
 
 export class PushVCRequestBodyDto {
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty({ message: 'DID must not be empty' })
   did: string
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty({ message: 'Wallet ID must not be empty' })
   walletId: string
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
+  @IsEnum(VcType, { message: 'Invalid VC type' })
+  @IsNotEmpty({ message: 'VC Type must not be empty' })
   type: VcType
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
-  category: VcCategory | string
+  @IsString()
+  @IsNotEmpty({ message: 'VC Category must not be empty' })
+  category: string
 
-  @IsString()
   @ApiProperty()
+  @IsString()
   templateId?: string
 
-  @IsNotEmpty()
   @ApiProperty()
+  @IsArray()
+  @IsString({ each: true, message: 'Tags must be strings' })
+  @IsNotEmpty({ message: 'Tags must not be empty' })
   tags: string[]
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty({ message: 'Name must not be empty' })
   name: string
 
   constructor(

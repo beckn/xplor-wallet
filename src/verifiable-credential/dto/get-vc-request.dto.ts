@@ -1,40 +1,48 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { ShareRequestAction } from 'aws-sdk/clients/auditmanager'
-import { IsString } from 'class-validator'
+import { IsNotEmpty, IsString } from 'class-validator'
 
 export class GetVCRequestDto {
   @ApiProperty()
-  @IsString()
+  @IsNotEmpty({ message: 'wallet must not be empty' })
+  @IsString({ message: 'walletId must be a string' })
   walletId: string
 
   @ApiProperty()
-  @IsString()
+  @IsNotEmpty({ message: 'vcId must not be empty' })
+  @IsString({ message: 'vcId must be a string' })
   vcId: string
 }
 
 export class GetShareRequestDto {
   @ApiProperty()
-  @IsString()
+  @IsNotEmpty({ message: 'walletId must not be empty' })
+  @IsString({ message: 'walletId must be a string' })
   walletId: string
 
   @ApiProperty()
-  @IsString()
+  @IsNotEmpty({ message: 'requestId must not be empty' })
+  @IsString({ message: 'requestId must be a string' })
   requestId: string
 }
 
 export class ShareVcRequestDto {
   @ApiProperty()
-  @IsString()
+  @IsNotEmpty({ message: 'walletId must not be empty' })
+  @IsString({ message: 'walletId must be a string' })
   walletId: string
 
   @ApiProperty()
-  @IsString()
+  @IsNotEmpty({ message: 'requestId must not be empty' })
+  @IsString({ message: 'requestId must be a string' })
   requestId: string
 
   @ApiProperty()
-  @IsString()
+  @IsNotEmpty({ message: 'vcId must not be empty' })
+  @IsString({ message: 'vcId must be a string' })
   vcId: string
 
   @ApiProperty()
+  @IsNotEmpty({ message: 'action must not be empty' })
   action: ShareRequestAction
 }
