@@ -1,3 +1,11 @@
+export const SwaggerDocs = {
+  title: 'Xplor Wallet',
+  description: 'Wallet layer for Xplore to store, add, share files.',
+  version: '0.0.1-alpha',
+  tag: 'Wallet',
+  route: 'api/v1',
+}
+
 export const CREATE_WALLET_API = {
   summary: 'Create Wallet',
   description: 'Creates a wallet with given userId. This will also generate a VC Registry did.',
