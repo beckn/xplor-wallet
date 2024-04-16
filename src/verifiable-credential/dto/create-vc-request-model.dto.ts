@@ -29,6 +29,10 @@ export class CreateVCRequestModelDto {
 
   @IsString()
   @ApiProperty()
+  iconUrl?: string
+
+  @IsString()
+  @ApiProperty()
   templateId?: string
 
   @IsNotEmpty()
@@ -51,6 +55,7 @@ export class CreateVCRequestModelDto {
     walletId: string,
     type: VcType,
     category: string,
+    iconUrl: string,
     templateId: string,
     tags: string[],
     name: string,
@@ -61,6 +66,7 @@ export class CreateVCRequestModelDto {
     this.walletId = walletId
     this.type = type
     this.category = category
+    this.iconUrl = iconUrl
     this.templateId = templateId
     this.tags = tags
     this.name = name

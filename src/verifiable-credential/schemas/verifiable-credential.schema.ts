@@ -28,6 +28,9 @@ export class VerifiableCredential {
   @Prop({ required: true })
   name: string
 
+  @Prop({ required: true })
+  iconUrl: string
+
   @Prop({ required: false })
   templateId: string
 
