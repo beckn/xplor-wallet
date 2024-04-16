@@ -5,6 +5,7 @@ import { ShareRequestAction } from '../../common/constants/enums'
 import { VcErrors, WalletErrors } from '../../common/constants/error-messages'
 import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
+import { FilesReadService } from '../../files/service/files-read.service'
 import { getSuccessResponse } from '../../utils/get-success-response'
 import { GetShareFileRequestsDto } from '../../verifiable-credential/dto/get-share-file-request-list.dto'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
@@ -17,6 +18,7 @@ export class ShareRequestReadService {
     @InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>,
     @InjectModel('ShareRequest') private readonly shareRequestModel: Model<ShareRequest>,
     private readonly walletReadService: WalletReadService,
+    private readonly filesReadService: FilesReadService,
   ) {}
 
   /**
@@ -42,7 +44,17 @@ export class ShareRequestReadService {
       filter.$and.push({ 'fileShareDetails.documentType': queries.documentType })
     }
 
-    const shareRequests = await this.shareRequestModel.find(filter)
+    let query = this.shareRequestModel.find(filter)
+
+    // Pagination
+    const page = queries.page || 1
+    const pageSize = queries.pageSize || 20
+    const skip = (page - 1) * pageSize
+
+    // Apply pagination
+    query = query.skip(skip).limit(pageSize)
+
+    const shareRequests = await query
 
     const updatedShareRequests = []
 
@@ -52,6 +64,13 @@ export class ShareRequestReadService {
       if (request.vcId && request.status === ShareRequestAction.ACCEPTED) {
         const vcDetails = await this.vcModel.findOne({ _id: request['vcId'] })
         if (vcDetails != null) {
+          if (vcDetails['fileId'] != null) {
+            const fileDetails = await this.filesReadService.getFileByIdWithoutStoredUrl(vcDetails['fileId'])
+            if (fileDetails != null) {
+              updatedRequest['fileDetails'] = fileDetails
+            }
+          }
+
           updatedRequest['vcDetails'] = vcDetails
         }
       }

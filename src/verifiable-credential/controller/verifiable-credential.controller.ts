@@ -10,16 +10,23 @@ import {
   RESPONSE_SHARE_REQUEST_API,
   SHARE_CREDENTIAL_API,
   STORE_CREDENTIAL_API,
+  UPDATE_SHARE_REQUEST_API,
   VIEW_CREDENTIAL_API,
 } from '../../common/constants/api-documentation'
 import { VcApiRoutes } from '../../common/constants/api-routes'
 import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetShareFileRequestsDto } from '../dto/get-share-file-request-list.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
-import { GetShareRequestDto, GetVCRequestDto, ShareVcRequestDto } from '../dto/get-vc-request.dto'
+import {
+  GetShareRequestDto,
+  GetVCRequestDto,
+  ShareVCParamsRequestDto,
+  ShareVcRequestDto,
+} from '../dto/get-vc-request.dto'
 import { PushVCRequestBodyDto } from '../dto/push-vc-request-body.dto'
 import { RequestShareFileRequestDto } from '../dto/request-share-file-request.dto'
 import { ShareFileRequestDto } from '../dto/share-file-request.dto'
+import { UpdateVcQueryRequestDto, UpdateVcRequestDto } from '../dto/update-vc-request.dto'
 import { CreateVCRequestBodyEntity } from '../entities/create-vc-request-body.entity'
 import { ShareRequestEntity, ShareRequestsEntityList } from '../entities/share-request.entity'
 import { VCEntityList } from '../entities/vc.entity'
@@ -143,7 +150,7 @@ export class VerifiableCredentialController {
    * @param body The request body containing information about the file to be shared.
    * @returns The share request entity if the file is shared successfully.
    */
-  @Post('/share')
+  @Post(VcApiRoutes.SHARE_REQUESTS)
   @ApiOperation({
     summary: SHARE_CREDENTIAL_API.summary,
     description: SHARE_CREDENTIAL_API.description,
@@ -153,8 +160,8 @@ export class VerifiableCredentialController {
     description: SHARE_CREDENTIAL_API.successResponseMessage,
     type: ShareRequestEntity,
   })
-  async shareFile(@Query() queryParams: GetVCRequestDto, @Body() body: ShareFileRequestDto) {
-    return await this.shareRequestCreateService.shareVc(queryParams.vcId, queryParams.walletId, body)
+  async shareFile(@Query() queryParams: ShareVCParamsRequestDto, @Body() body: ShareFileRequestDto) {
+    return await this.shareRequestCreateService.shareVCs(queryParams.vcIds, queryParams.walletId, body)
   }
 
   /**
@@ -220,7 +227,7 @@ export class VerifiableCredentialController {
    * @param queryParams The query parameters containing user ID, request ID, file ID, and action.
    * @returns The updated share request entity if successful.
    */
-  @Patch(VcApiRoutes.GET_SHARE_REQUESTS)
+  @Patch(VcApiRoutes.STATUS_SHARE_REQUESTS)
   @ApiOperation({
     summary: RESPONSE_SHARE_REQUEST_API.summary,
     description: RESPONSE_SHARE_REQUEST_API.description,
@@ -237,5 +244,24 @@ export class VerifiableCredentialController {
       queryParams.vcId,
       queryParams.action,
     )
+  }
+
+  /**
+   * Responds to a share request.
+   * @param queryParams The query parameters containing user ID, request ID, file ID, and action.
+   * @returns The updated share request entity if successful.
+   */
+  @Patch(VcApiRoutes.UPDATE_SHARE_REQUESTS)
+  @ApiOperation({
+    summary: UPDATE_SHARE_REQUEST_API.summary,
+    description: UPDATE_SHARE_REQUEST_API.description,
+  })
+  @ApiResponse({
+    status: UPDATE_SHARE_REQUEST_API.successResponseCode,
+    description: UPDATE_SHARE_REQUEST_API.successResponseMessage,
+    type: ShareRequestEntity,
+  })
+  async updateShareRequest(@Query() queryParams: UpdateVcQueryRequestDto, @Body() body: UpdateVcRequestDto) {
+    return await this.shareRequestUpdateService.updateShareRequest(queryParams.walletId, queryParams.requestId, body)
   }
 }

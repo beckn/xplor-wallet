@@ -30,6 +30,20 @@ export class VCAccessControlReadService {
   }
 
   /**
+   * Finds ACl by restrictedUrl
+   */
+  async findByRestrictedUrl(restrictedUrl: string): Promise<StandardMessageResponse | any> {
+    // Find with Redis first!
+    const aclResult = await this.vcAccessControlModel.findOne({ restrictedUrl }).exec()
+
+    if (!aclResult) {
+      throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
+    }
+
+    return aclResult
+  }
+
+  /**
    * Finds ACl by restrictedKey
    */
   async findByRestrictedKey(restrictedKey: string): Promise<StandardMessageResponse | any> {

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { WalletErrors } from '../../common/constants/error-messages'
@@ -20,6 +20,10 @@ export class WalletDeleteService {
    * Deletes a wallet with userId or walletId
    */
   async deleteWallet(queryParams: StandardWalletRequestDto): Promise<StandardMessageResponse | any> {
+    if (!queryParams.walletId && !queryParams.userId) {
+      throw new BadRequestException(WalletErrors.MISSING_FIELDS)
+    }
+
     // Check if the wallet exists for the specified user
     let existingWallet
     if (queryParams.walletId != null) {
@@ -28,7 +32,7 @@ export class WalletDeleteService {
       existingWallet = await this.walletReadService.findWalletByUserId(queryParams.userId)
     }
 
-    if (!existingWallet) {
+    if (!existingWallet.data) {
       // Throw an exception if the wallet doesn't exist
       throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { WalletErrors } from '../../common/constants/error-messages'
@@ -31,6 +31,10 @@ export class WalletReadService {
    */
   async getWalletDetails(queryParams: StandardWalletRequestDto): Promise<StandardMessageResponse | any> {
     let walletDetails
+    if (!queryParams.walletId && !queryParams.userId) {
+      throw new BadRequestException(WalletErrors.MISSING_FIELDS)
+    }
+
     if (queryParams.walletId != null) {
       walletDetails = await this.findWalletByWalletId(queryParams.walletId)
     } else {

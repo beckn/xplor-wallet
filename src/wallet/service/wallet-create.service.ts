@@ -29,7 +29,6 @@ export class WalletCreateService {
   async createWallet(request: CreateWalletRequestDto): Promise<StandardMessageResponse | any> {
     // Check if a wallet with the given userId already exists
     const existingWallet = await this.walletReadService.findWalletByUserId(request.userId)
-    console.log(existingWallet)
     if (existingWallet['data'] !== null) {
       // Throw an exception if the wallet already exists
       throw new ConflictException(WalletErrors.WALLET_ALREADY_EXIST)
