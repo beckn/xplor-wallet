@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { HttpResponseMessage } from 'src/common/constants/http-response-message'
-import { getSuccessResponse } from 'src/utils/get-success-response'
 import { WalletErrors } from '../../common/constants/error-messages'
+import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
 import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
+import { getSuccessResponse } from '../../utils/get-success-response'
 import { Wallet } from '../schemas/wallet.schema'
 import { WalletReadService } from './wallet-read.service'
 

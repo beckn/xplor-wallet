@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { HttpResponseMessage } from 'src/common/constants/http-response-message'
+import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { ShareRequestAction } from '../../common/constants/enums'
 import { FilesErrors, VcErrors, WalletErrors } from '../../common/constants/error-messages'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
