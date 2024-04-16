@@ -7,10 +7,13 @@ import {
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
+import { HttpResponseMessage } from 'src/common/constants/http-response-message'
 import { ShareRequestAction } from '../../common/constants/enums'
-import { FilesErrors, VcErrors } from '../../common/constants/error-messages'
+import { FilesErrors, VcErrors, WalletErrors } from '../../common/constants/error-messages'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
+import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
 import { FilesReadService } from '../../files/service/files-read.service'
+import { getSuccessResponse } from '../../utils/get-success-response'
 import { generateVCAccessControlExpirationTimestamp } from '../../utils/vc.utils'
 import { VCAccessControlCreateService } from '../../vc-access-control/service/verifiable-credential-access-control-create.service'
 import { VCAccessControlUpdateService } from '../../vc-access-control/service/verifiable-credential-access-control-update.service'
@@ -21,6 +24,7 @@ import {
 } from '../../verifiable-credential/dto/create-share-file-request.dto'
 import { RequestShareFileRequestDto } from '../../verifiable-credential/dto/request-share-file-request.dto'
 import { ShareFileRequestDto } from '../../verifiable-credential/dto/share-file-request.dto'
+import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { ShareRequest } from '../schemas/share-request.schema'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
 import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
@@ -34,6 +38,7 @@ export class ShareRequestCreateService {
     private readonly vcAclUpdateService: VCAccessControlUpdateService,
     private readonly vcAclCreateService: VCAccessControlCreateService,
     private readonly filesReadService: FilesReadService,
+    private readonly walletReadService: WalletReadService,
   ) {}
 
   /**
@@ -46,13 +51,19 @@ export class ShareRequestCreateService {
     walletId: string,
     shareRequest: ShareFileRequestDto,
   ): Promise<StandardMessageResponse | any> {
+    const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, walletId))
+
+    if (!wallet['data']) {
+      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
+    }
+
     const vcDetails = await this.vcReadService.getVCById(vcId)
     if (vcDetails == null) {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
     if (vcDetails != null) {
-      if (vcDetails['walletId'] != walletId) {
+      if (vcDetails.data['walletId'] != walletId) {
         throw new UnauthorizedException(FilesErrors.SHARE_PERMISSION_ERROR)
       }
     }
@@ -78,7 +89,7 @@ export class ShareRequestCreateService {
       ShareRequestAction.ACCEPTED,
       restrictedFile.restrictedUrl,
       walletId,
-      vcDetails['walletId'],
+      vcDetails.data['walletId'],
       shareRequest.remarks,
       fileShareDetails,
     )
@@ -90,7 +101,7 @@ export class ShareRequestCreateService {
       result['_id'].toString(),
     )
     if (result) {
-      return result
+      return getSuccessResponse(await result, HttpResponseMessage.OK)
     } else {
       throw new NotFoundException(FilesErrors.FILES_NOT_FOUND)
     }
@@ -103,6 +114,12 @@ export class ShareRequestCreateService {
     walletId: string,
     shareRequest: RequestShareFileRequestDto,
   ): Promise<StandardMessageResponse | any> {
+    const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, walletId))
+
+    if (!wallet['data']) {
+      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
+    }
+
     const fileShareDetails = new VcShareDetails(
       shareRequest.certificateType,
       new Restrictions(shareRequest.restrictions.expiresIn, shareRequest.restrictions.viewOnce),
@@ -125,7 +142,7 @@ export class ShareRequestCreateService {
       throw new InternalServerErrorException(FilesErrors.INTERNAL_ERROR)
     }
 
-    return shareRequestResult
+    return getSuccessResponse(await shareRequestResult, HttpResponseMessage.OK)
   }
 
   /**

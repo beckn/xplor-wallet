@@ -52,6 +52,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     ShareRequestReadService,
     ShareRequestUpdateService,
     ShareRequestCreateService,
+    WalletReadService,
   ],
   exports: [
     MongooseModule,
@@ -66,6 +67,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     FilesReadService,
     FilesDeleteService,
     FilesUpdateService,
+    WalletReadService,
   ],
 })
 export class VerifiableCredentialModule {}

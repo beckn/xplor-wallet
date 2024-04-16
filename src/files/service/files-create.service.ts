@@ -1,22 +1,25 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import 'multer'
+import { HttpResponseMessage } from 'src/common/constants/http-response-message'
 import { ApiClient } from '../../common/api-client'
 import { VcType } from '../../common/constants/enums'
-import { FilesErrors } from '../../common/constants/error-messages'
+import { FilesErrors, WalletErrors } from '../../common/constants/error-messages'
 import { IStorageService } from '../../common/constants/interface-storage-service'
 import { REGISTRY_SERVICE_URL } from '../../common/constants/name-constants'
 import { RegistryRequestRoutes } from '../../common/constants/request-routes'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
 import { getCurrentTimeStamp } from '../../utils/file.utils'
+import { getSuccessResponse } from '../../utils/get-success-response'
 import { CreateVCRequestBodyDto } from '../../verifiable-credential/dto/create-vc-request-body.dto'
 import { VerifiableCredentialCreateService } from '../../verifiable-credential/service/verifiable-credential-create.service'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { CreateCredentialRequestDto, CredentialDto } from '../dto/create-credential-request.dto'
 import { CreateFileRequestDto } from '../dto/create-file-request.dto'
 import { CreateFileDto } from '../dto/create-file.dto'
+import { StandardWalletRequestDto } from '../dto/standard-wallet-request.dto'
 import { File } from '../schemas/files.schema'
 import { S3StorageService } from './s3-storage.service'
 
@@ -38,6 +41,11 @@ export class FilesCreateService {
    */
   async createFile(file: Express.Multer.File, body: CreateFileRequestDto): Promise<StandardMessageResponse | any> {
     // Upload file to Storage
+    const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
+    if (wallet['data'] == null) {
+      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
+    }
+
     const storeFileDetails = await this.storageService.uploadFile(file)
 
     const createdFileModel = new CreateFileDto(
@@ -56,7 +64,7 @@ export class FilesCreateService {
 
     const walletDetails = await this.walletReadService.findWalletByWalletId(body.walletId)
     const registryVCRequest = new CreateCredentialRequestDto(
-      walletDetails['userDid'],
+      walletDetails['data']['userDid'],
       new CredentialDto(storeFileDetails['uploadedFile']['key'], body.tags),
     )
 
@@ -80,6 +88,9 @@ export class FilesCreateService {
     )
     // Create a VC for this file!
     const vcDocumentResult = await this.vcCreateService.createVerifiableCredential(createVcRequest)
-    return { ...vcDocumentResult.toJSON(), fileData: fileDocumentResult }
+    return getSuccessResponse(
+      { ...vcDocumentResult.data.toJSON(), fileData: fileDocumentResult },
+      HttpResponseMessage.OK,
+    )
   }
 }

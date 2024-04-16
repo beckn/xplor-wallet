@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class GetVCListRequestDto {
   @ApiProperty({ description: 'The wallet ID', example: '65f058277901e68a7df6db35' })
@@ -23,11 +23,12 @@ export class GetVCListRequestDto {
   tags?: string[]
 
   @ApiProperty({ description: 'The page number', example: 1 })
-  @IsOptional()
+  @IsNotEmpty({ message: 'page must not be empty' })
+  @IsNumber({}, { message: 'page in must be a number' })
   page: number
 
   @ApiProperty({ description: 'The size of the page', example: 20 })
-  @IsOptional()
+  @IsNumber({}, { message: 'page in must be a number' })
   pageSize: number
 
   constructor(

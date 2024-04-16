@@ -40,7 +40,7 @@ export class FilesController {
     }
 
     const walletDetails = await this.walletService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
-    if (walletDetails['userId'] == null) {
+    if (walletDetails['data']['userId'] == null) {
       throw new Error(WalletErrors.WALLET_NOT_FOUND)
     }
 

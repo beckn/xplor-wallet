@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
+import { v4 as uuidv4 } from 'uuid'
 import { ShareRequestAction } from '../../common/constants/enums'
-
 class Restrictions {
   @Prop({ required: true })
   expireTimeStamp: number
@@ -23,6 +23,9 @@ class VcShareDetails {
 
 @Schema({ timestamps: true })
 export class ShareRequest {
+  @Prop({ default: () => `request_${uuidv4()}` })
+  _id: string
+
   @Prop({ required: true })
   vcId: string
 

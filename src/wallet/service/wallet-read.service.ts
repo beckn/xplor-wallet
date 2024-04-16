@@ -2,8 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { WalletErrors } from '../../common/constants/error-messages'
+import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
 import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
+import { getSuccessResponse } from '../../utils/get-success-response'
 import { Wallet } from '../schemas/wallet.schema'
 
 @Injectable()
@@ -14,14 +16,14 @@ export class WalletReadService {
    * Returns Wallet details by userId
    */
   async findWalletByUserId(userId: string): Promise<Wallet> {
-    return this.walletModel.findOne({ userId }).exec()
+    return getSuccessResponse(await await this.walletModel.findOne({ userId }).exec(), HttpResponseMessage.OK)
   }
 
   /**
    * Returns Wallet details by walletId
    */
   async findWalletByWalletId(walletId: string): Promise<Wallet> {
-    return this.walletModel.findOne({ _id: walletId }).exec()
+    return getSuccessResponse(await this.walletModel.findOne({ _id: walletId }).exec(), HttpResponseMessage.OK)
   }
 
   /**
@@ -36,10 +38,10 @@ export class WalletReadService {
     }
 
     // Check if the wallet does not exist with the userId
-    if (walletDetails == null) {
+    if (!walletDetails.data) {
       throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }
 
-    return walletDetails
+    return getSuccessResponse(walletDetails.data, HttpResponseMessage.OK)
   }
 }
