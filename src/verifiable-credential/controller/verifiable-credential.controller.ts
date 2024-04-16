@@ -222,7 +222,7 @@ export class VerifiableCredentialController {
    * @param queryParams The query parameters containing user ID, request ID, file ID, and action.
    * @returns The updated share request entity if successful.
    */
-  @Patch(VcApiRoutes.RESPOND_SHARE_REQUESTS)
+  @Patch(VcApiRoutes.STATUS_SHARE_REQUESTS)
   @ApiOperation({
     summary: RESPONSE_SHARE_REQUEST_API.summary,
     description: RESPONSE_SHARE_REQUEST_API.description,
