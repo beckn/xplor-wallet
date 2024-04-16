@@ -34,4 +34,22 @@ export class FilesReadService {
 
     return fileDetails
   }
+
+  /**
+   * Returns the file without the stored URL
+   */
+  async getFileByIdWithoutStoredUrl(fileId: string): Promise<any> {
+    const query: any = { _id: fileId }
+
+    // Projection to exclude the stored URL
+    const projection: any = { storedUrl: 0, fileKey: 0 }
+
+    const fileDetails = await this.fileModel.findOne(query, projection)
+
+    if (!fileDetails) {
+      throw new NotFoundException(FilesErrors.FILE_NOT_EXIST)
+    }
+
+    return fileDetails
+  }
 }

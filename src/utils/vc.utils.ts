@@ -16,6 +16,12 @@ export function generateVCExpirationDate(years: number) {
   return formattedFutureDate
 }
 
+export function generateExpirationTimestampFromGivenDate(date, hours): string {
+  const currentDate = new Date(date)
+  const futureDate = new Date(currentDate.getTime() + hours * 60 * 60 * 1000)
+  return futureDate.toISOString()
+}
+
 export function generateVCAccessControlExpirationTimestamp(hours): string {
   const currentDate = new Date()
   const futureDate = new Date(currentDate.getTime() + hours * 60 * 60 * 1000)

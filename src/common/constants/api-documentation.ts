@@ -99,5 +99,13 @@ export const RESPONSE_SHARE_REQUEST_API = {
   description:
     'Responds to a share request. Accept or reject the request raised by the other users. Accepting the request will generate an Access Control link for the expiry Time and generate a file document link to access it.',
   successResponseCode: 200,
-  successResponseMessage: 'Response sent successfully.',
+  successResponseMessage: 'Share request responded successfully.',
+}
+
+export const UPDATE_SHARE_REQUEST_API = {
+  summary: 'Update VC Share Request',
+  description:
+    'Updates a share request remarks and restrictions. Updating the details will also update the Access Control link for the expiry Time and generate a ACL link to access it',
+  successResponseCode: 200,
+  successResponseMessage: 'Share request updated successfully.',
 }

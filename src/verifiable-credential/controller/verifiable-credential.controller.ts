@@ -10,6 +10,7 @@ import {
   RESPONSE_SHARE_REQUEST_API,
   SHARE_CREDENTIAL_API,
   STORE_CREDENTIAL_API,
+  UPDATE_SHARE_REQUEST_API,
   VIEW_CREDENTIAL_API,
 } from '../../common/constants/api-documentation'
 import { VcApiRoutes } from '../../common/constants/api-routes'
@@ -20,6 +21,7 @@ import { GetShareRequestDto, GetVCRequestDto, ShareVcRequestDto } from '../dto/g
 import { PushVCRequestBodyDto } from '../dto/push-vc-request-body.dto'
 import { RequestShareFileRequestDto } from '../dto/request-share-file-request.dto'
 import { ShareFileRequestDto } from '../dto/share-file-request.dto'
+import { UpdateVcQueryRequestDto, UpdateVcRequestDto } from '../dto/update-vc-request.dto'
 import { CreateVCRequestBodyEntity } from '../entities/create-vc-request-body.entity'
 import { ShareRequestEntity, ShareRequestsEntityList } from '../entities/share-request.entity'
 import { VCEntityList } from '../entities/vc.entity'
@@ -220,7 +222,7 @@ export class VerifiableCredentialController {
    * @param queryParams The query parameters containing user ID, request ID, file ID, and action.
    * @returns The updated share request entity if successful.
    */
-  @Patch(VcApiRoutes.GET_SHARE_REQUESTS)
+  @Patch(VcApiRoutes.RESPOND_SHARE_REQUESTS)
   @ApiOperation({
     summary: RESPONSE_SHARE_REQUEST_API.summary,
     description: RESPONSE_SHARE_REQUEST_API.description,
@@ -237,5 +239,24 @@ export class VerifiableCredentialController {
       queryParams.vcId,
       queryParams.action,
     )
+  }
+
+  /**
+   * Responds to a share request.
+   * @param queryParams The query parameters containing user ID, request ID, file ID, and action.
+   * @returns The updated share request entity if successful.
+   */
+  @Patch(VcApiRoutes.UPDATE_SHARE_REQUESTS)
+  @ApiOperation({
+    summary: UPDATE_SHARE_REQUEST_API.summary,
+    description: UPDATE_SHARE_REQUEST_API.description,
+  })
+  @ApiResponse({
+    status: UPDATE_SHARE_REQUEST_API.successResponseCode,
+    description: UPDATE_SHARE_REQUEST_API.successResponseMessage,
+    type: ShareRequestEntity,
+  })
+  async updateShareRequest(@Query() queryParams: UpdateVcQueryRequestDto, @Body() body: UpdateVcRequestDto) {
+    return await this.shareRequestUpdateService.updateShareRequest(queryParams.walletId, queryParams.requestId, body)
   }
 }
