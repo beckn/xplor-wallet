@@ -251,7 +251,7 @@ describe('VerifiableCredentialController', () => {
     it('should shareVc', async () => {
       const body = {
         params: {
-          vcId: 'vcId',
+          vcIds: ['vcId1', 'vcId2'],
           walletId: 'walletId',
         },
         shareDetails: {
@@ -266,7 +266,7 @@ describe('VerifiableCredentialController', () => {
       const storeGetIdResult = {
         vcId: 'vcId',
       }
-      jest.spyOn(shareRequestCreateService, 'shareVc').mockResolvedValue(storeGetIdResult)
+      // jest.spyOn(shareRequestCreateService, 'shareVc').mockResolvedValue(storeGetIdResult)
       const result = await controller.shareFile(body.params, body.shareDetails)
       expect(result).toHaveProperty('vcId', storeGetIdResult.vcId)
     })
@@ -274,7 +274,7 @@ describe('VerifiableCredentialController', () => {
     it('should shareVc throws Exception in Sharing a VC', async () => {
       const body = {
         params: {
-          vcId: null,
+          vcIds: null,
           walletId: 'walletId',
         },
         shareDetails: {
@@ -286,7 +286,7 @@ describe('VerifiableCredentialController', () => {
           },
         },
       }
-      jest.spyOn(shareRequestCreateService, 'shareVc').mockRejectedValue(new NotFoundException(VcErrors.VC_NOT_EXIST))
+      // jest.spyOn(shareRequestCreateService, 'shareVc').mockRejectedValue(new NotFoundException(VcErrors.VC_NOT_EXIST))
       const result = controller.shareFile(body.params, body.shareDetails)
       await expect(result).rejects.toThrow(new NotFoundException(VcErrors.VC_NOT_EXIST))
     })

@@ -23,11 +23,9 @@ export class GetVCListRequestDto {
   tags?: string[]
 
   @ApiProperty({ description: 'The page number', example: 1 })
-  @IsNotEmpty({ message: 'page must not be empty' })
   page: number
 
   @ApiProperty({ description: 'The size of the page', example: 20 })
-  @IsNotEmpty({ message: 'pageSize must not be empty' })
   pageSize: number
 
   constructor(

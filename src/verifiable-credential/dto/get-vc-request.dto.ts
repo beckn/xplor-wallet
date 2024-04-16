@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { ShareRequestAction } from 'aws-sdk/clients/auditmanager'
-import { IsNotEmpty, IsString } from 'class-validator'
+import { IsArray, IsNotEmpty, IsString } from 'class-validator'
 
 export class GetVCRequestDto {
   @ApiProperty()
@@ -12,6 +12,18 @@ export class GetVCRequestDto {
   @IsNotEmpty({ message: 'vcId must not be empty' })
   @IsString({ message: 'vcId must be a string' })
   vcId: string
+}
+
+export class ShareVCParamsRequestDto {
+  @ApiProperty()
+  @IsNotEmpty({ message: 'wallet must not be empty' })
+  @IsString({ message: 'walletId must be a string' })
+  walletId: string
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'vcIds must not be empty' })
+  @IsArray({ message: 'vcIds must be a string array' })
+  vcIds: string[]
 }
 
 export class GetShareRequestDto {

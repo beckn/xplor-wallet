@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 import { ShareRequestAction } from '../../common/constants/enums'
 
 export class GetShareFileRequestsDto {
@@ -18,10 +18,8 @@ export class GetShareFileRequestsDto {
   status?: ShareRequestAction
 
   @ApiProperty({ description: 'The page number', example: 1 })
-  @IsNotEmpty({ message: 'page must not be empty' })
   page: number
 
   @ApiProperty({ description: 'The page size', example: 10 })
-  @IsNotEmpty({ message: 'pageSize must not be empty' })
   pageSize: number
 }

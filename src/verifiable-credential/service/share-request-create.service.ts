@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { ShareRequestAction } from '../../common/constants/enums'
 import { FilesErrors, VcErrors, WalletErrors } from '../../common/constants/error-messages'
+import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
 import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
 import { FilesReadService } from '../../files/service/files-read.service'
@@ -46,8 +46,8 @@ export class ShareRequestCreateService {
    * Creates ACL Record for it
    * Updates Acl record with Vc share request id
    */
-  async shareVc(
-    vcId: string,
+  async shareVCs(
+    vcIds: string[],
     walletId: string,
     shareRequest: ShareFileRequestDto,
   ): Promise<StandardMessageResponse | any> {
@@ -57,53 +57,58 @@ export class ShareRequestCreateService {
       throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }
 
-    const vcDetails = await this.vcReadService.getVCById(vcId)
-    if (vcDetails == null) {
-      throw new NotFoundException(VcErrors.VC_NOT_EXIST)
-    }
+    const sharedVcs = await Promise.all(
+      vcIds.map(async (vcId) => {
+        const vcDetails = await this.vcReadService.getVCById(vcId)
+        if (!vcDetails) {
+          throw new NotFoundException(VcErrors.VC_NOT_EXIST)
+        }
 
-    if (vcDetails != null) {
-      if (vcDetails.data['walletId'] != walletId) {
-        throw new UnauthorizedException(FilesErrors.SHARE_PERMISSION_ERROR)
-      }
-    }
+        if (vcDetails.data['walletId'] !== walletId) {
+          throw new UnauthorizedException(FilesErrors.SHARE_PERMISSION_ERROR)
+        }
 
-    const expiryTimeStamp = generateVCAccessControlExpirationTimestamp(shareRequest.restrictions.expiresIn)
+        const expiryTimeStamp = generateVCAccessControlExpirationTimestamp(shareRequest.restrictions.expiresIn)
 
-    const restrictedFile = await this.vcAclCreateService.createVcAccessControl(
-      vcId,
-      '',
-      expiryTimeStamp,
-      shareRequest.restrictions.viewOnce,
+        const restrictedFile = await this.vcAclCreateService.createVcAccessControl(
+          vcId,
+          '',
+          expiryTimeStamp,
+          shareRequest.restrictions.viewOnce,
+        )
+        if (!restrictedFile) {
+          throw new InternalServerErrorException(VcErrors.ACL_GENERATION_ERROR)
+        }
+
+        const fileShareDetails = new VcShareDetails(
+          shareRequest.certificateType,
+          new Restrictions(shareRequest.restrictions.expiresIn, shareRequest.restrictions.viewOnce),
+        )
+        const createFileShareRequestDto = new CreateShareFileRequestDto(
+          vcId,
+          ShareRequestAction.ACCEPTED,
+          restrictedFile.restrictedUrl,
+          walletId,
+          vcDetails.data['walletId'],
+          shareRequest.remarks,
+          fileShareDetails,
+        )
+        const shareRequestModel = new this.shareRequestModel(createFileShareRequestDto)
+        const result = await shareRequestModel.save()
+
+        await this.vcAclUpdateService.updateShareRequestIdByRestrictedKey(
+          restrictedFile.restrictedKey,
+          result['_id'].toString(),
+        )
+
+        return result
+      }),
     )
-    if (restrictedFile == null) {
-      throw new InternalServerErrorException(VcErrors.ACL_GENERATION_ERROR)
-    }
 
-    const fileShareDetails = new VcShareDetails(
-      shareRequest.certificateType,
-      new Restrictions(shareRequest.restrictions.expiresIn, shareRequest.restrictions.viewOnce),
-    )
-    const createFileShareRequestDto = new CreateShareFileRequestDto(
-      vcId,
-      ShareRequestAction.ACCEPTED,
-      restrictedFile.restrictedUrl,
-      walletId,
-      vcDetails.data['walletId'],
-      shareRequest.remarks,
-      fileShareDetails,
-    )
-    const shareRequestModel = new this.shareRequestModel(createFileShareRequestDto)
-    const result = await shareRequestModel.save()
-
-    await this.vcAclUpdateService.updateShareRequestIdByRestrictedKey(
-      restrictedFile.restrictedKey,
-      result['_id'].toString(),
-    )
-    if (result) {
-      return getSuccessResponse(await result, HttpResponseMessage.OK)
+    if (sharedVcs.length > 0) {
+      return getSuccessResponse(sharedVcs, HttpResponseMessage.OK)
     } else {
-      throw new NotFoundException(FilesErrors.FILES_NOT_FOUND)
+      throw new NotFoundException(VcErrors.VCs_NOT_FOUND)
     }
   }
 

@@ -1,4 +1,5 @@
 export const VcApiRoutes = {
+  SHARE_REQUESTS: '/share',
   GET_SHARE_REQUESTS: '/share/requests',
   UPDATE_SHARE_REQUESTS: '/share/requests/update',
   STATUS_SHARE_REQUESTS: '/share/requests/status',
