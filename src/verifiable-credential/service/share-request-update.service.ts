@@ -97,6 +97,11 @@ export class ShareRequestUpdateService {
     const requestDetails = await this.shareRequestModel.findOne({ _id: requestId })
     const vcDetails = await this.vcReadService.getVCById(vcId)
 
+    // Checking whether the vcId already exists in the record and if not, then handling it
+    if (requestDetails['vcId'] != vcId && requestDetails['vcId'] != 'vcId') {
+      throw new BadRequestException(VcErrors.INVALID_VC_ID)
+    }
+
     if (!requestDetails) {
       throw new NotFoundException(FilesErrors.REQUEST_NOT_FOUND)
     }

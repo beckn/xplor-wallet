@@ -36,4 +36,5 @@ export const VcErrors = {
   SHARE_REJECTED_ERROR: 'You cannot view this Certificate as the VC share has been rejected',
   VC_EXPIRED_ERROR: "You can't access this document as the VC share has expired",
   SHARE_REQUEST_NOT_FOUND: 'The share request with this id does not exist',
+  INVALID_VC_ID: 'Invalid VcId, please enter the correct vc id for share request.',
 }
