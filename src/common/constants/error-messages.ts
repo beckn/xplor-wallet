@@ -5,6 +5,8 @@ export const ViewAccessControlErrors = {
 
 export const WalletErrors = {
   WALLET_NOT_FOUND: 'Wallet with this user does not exists.',
+  REQUESTED_WALLET_NOT_FOUND: 'RequestedFromWallet with this user does not exists.',
+  MISSING_FIELDS: 'One of the following: walletId or userId should be entered.',
   WALLET_ALREADY_EXIST: 'Wallet with this user already exists',
   WALLET_BAD_REQUEST: 'There was an error in creating wallet',
 }
@@ -30,7 +32,7 @@ export const FilesErrors = {
 
 export const VcErrors = {
   VCs_NOT_FOUND: 'VCs not found',
-  VC_NOT_EXIST: 'VC does not exist with the VcId!',
+  VC_NOT_EXIST: 'VC does not exist with the provided details!',
   ACL_GENERATION_ERROR: 'There was an error in generating access control for the file. Try again',
   VC_VIEW_ONCE_ERROR: "You cannot view this file as you've already opened it once",
   SHARE_REJECTED_ERROR: 'You cannot view this Certificate as the VC share has been rejected',

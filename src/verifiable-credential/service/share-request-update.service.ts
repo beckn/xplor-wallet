@@ -173,9 +173,12 @@ export class ShareRequestUpdateService {
     }
 
     const requestDetails = await this.shareRequestModel.findOne({ _id: requestId })
+    if (!requestDetails) {
+      throw new NotFoundException(VcErrors.SHARE_REQUEST_NOT_FOUND)
+    }
+
     const aclDetails = await this.vcAclReadService.findByRestrictedUrl(requestDetails['restrictedUrl'])
     const vcDetails = await this.vcReadService.getVCById(requestDetails['vcId'])
-    console.log(requestDetails)
     if (!requestDetails) {
       throw new NotFoundException(FilesErrors.REQUEST_NOT_FOUND)
     }

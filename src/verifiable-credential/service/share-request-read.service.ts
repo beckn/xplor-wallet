@@ -63,10 +63,15 @@ export class ShareRequestReadService {
 
       if (request.vcId && request.status === ShareRequestAction.ACCEPTED) {
         const vcDetails = await this.vcModel.findOne({ _id: request['vcId'] })
-        const fileDetails = await this.filesReadService.getFileByIdWithoutStoredUrl(vcDetails['fileId'])
         if (vcDetails != null) {
+          if (vcDetails['fileId'] != null) {
+            const fileDetails = await this.filesReadService.getFileByIdWithoutStoredUrl(vcDetails['fileId'])
+            if (fileDetails != null) {
+              updatedRequest['fileDetails'] = fileDetails
+            }
+          }
+
           updatedRequest['vcDetails'] = vcDetails
-          updatedRequest['fileDetails'] = fileDetails
         }
       }
 

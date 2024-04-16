@@ -120,9 +120,15 @@ export class ShareRequestCreateService {
     shareRequest: RequestShareFileRequestDto,
   ): Promise<StandardMessageResponse | any> {
     const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, walletId))
-
+    const requestedFromWallet = await this.walletReadService.getWalletDetails(
+      new StandardWalletRequestDto(null, shareRequest.requestedFromWallet),
+    )
     if (!wallet['data']) {
       throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
+    }
+
+    if (!requestedFromWallet['data']) {
+      throw new NotFoundException(WalletErrors.REQUESTED_WALLET_NOT_FOUND)
     }
 
     const fileShareDetails = new VcShareDetails(
