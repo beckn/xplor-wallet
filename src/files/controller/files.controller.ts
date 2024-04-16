@@ -2,9 +2,9 @@ import { BadRequestException, Body, Controller, Post, UploadedFile, UseIntercept
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import 'multer'
-import { CREATE_FILE_API } from 'src/common/constants/api-documentation'
-import { FilesErrors, WalletErrors } from 'src/common/constants/error-messages'
-import { WalletReadService } from 'src/wallet/service/wallet-read.service'
+import { CREATE_FILE_API } from '../../common/constants/api-documentation'
+import { FilesErrors, WalletErrors } from '../../common/constants/error-messages'
+import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { CreateFileRequestDto } from '../dto/create-file-request.dto'
 import { StandardWalletRequestDto } from '../dto/standard-wallet-request.dto'
 import { FileEntity } from '../entities/file.entity'
@@ -40,7 +40,7 @@ export class FilesController {
     }
 
     const walletDetails = await this.walletService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
-    if (walletDetails['userId'] == null) {
+    if (walletDetails.data['userId'] == null) {
       throw new Error(WalletErrors.WALLET_NOT_FOUND)
     }
 

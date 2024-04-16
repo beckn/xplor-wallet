@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { ApiClient } from 'src/common/api-client'
+import { ApiClient } from '../../common/api-client'
 import { WalletController } from '../controller/wallet.controller'
 import { WalletModel, WalletSchema } from '../schemas/wallet.schema'
 import { WalletCreateService } from '../service/wallet-create.service'

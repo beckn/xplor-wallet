@@ -11,8 +11,8 @@ import {
   SHARE_CREDENTIAL_API,
   STORE_CREDENTIAL_API,
   VIEW_CREDENTIAL_API,
-} from 'src/common/constants/api-documentation'
-import { VcApiRoutes } from 'src/common/constants/api-routes'
+} from '../../common/constants/api-documentation'
+import { VcApiRoutes } from '../../common/constants/api-routes'
 import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetShareFileRequestsDto } from '../dto/get-share-file-request-list.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'

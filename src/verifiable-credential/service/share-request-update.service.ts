@@ -7,12 +7,16 @@ import {
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { ShareRequestAction } from 'src/common/constants/enums'
-import { FilesErrors } from 'src/common/constants/error-messages'
-import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
-import { FilesReadService } from 'src/files/service/files-read.service'
-import { generateVCAccessControlExpirationTimestamp } from 'src/utils/vc.utils'
-import { VCAccessControlCreateService } from 'src/vc-access-control/service/verifiable-credential-access-control-create.service'
+import { ShareRequestAction } from '../../common/constants/enums'
+import { FilesErrors, WalletErrors } from '../../common/constants/error-messages'
+import { HttpResponseMessage } from '../../common/constants/http-response-message'
+import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
+import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
+import { FilesReadService } from '../../files/service/files-read.service'
+import { getSuccessResponse } from '../../utils/get-success-response'
+import { generateVCAccessControlExpirationTimestamp } from '../../utils/vc.utils'
+import { VCAccessControlCreateService } from '../../vc-access-control/service/verifiable-credential-access-control-create.service'
+import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { ShareRequest } from '../schemas/share-request.schema'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
 import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
@@ -25,26 +29,33 @@ export class ShareRequestUpdateService {
     private readonly vcReadService: VerifiableCredentialReadService,
     private readonly vcAclCreateService: VCAccessControlCreateService,
     private readonly filesReadService: FilesReadService,
+    private readonly walletReadService: WalletReadService,
   ) {}
 
   /**
    * Deletes File share request
    * Only the request owner (who made the request), can deleted it
    */
-  async deleteShareRequest(userId: string, requestId: string): Promise<StandardMessageResponse | any> {
+  async deleteShareRequest(walletId: string, requestId: string): Promise<StandardMessageResponse | any> {
+    const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, walletId))
+
+    if (!wallet['data']) {
+      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
+    }
+
     const requestDetails = await this.shareRequestModel.findById(requestId)
 
     if (requestDetails == null) {
       throw new NotFoundException(FilesErrors.REQUEST_NOT_FOUND)
     }
 
-    if (requestDetails['raisedByWallet'] != userId) {
+    if (requestDetails['raisedByWallet'] != walletId) {
       throw new UnauthorizedException(FilesErrors.REQUEST_DELETE_PERMISSION_ERROR)
     }
 
     const result = await this.shareRequestModel.findOneAndDelete({ _id: requestId })
 
-    return result
+    return getSuccessResponse(await result, HttpResponseMessage.OK)
   }
 
   /**
@@ -58,6 +69,12 @@ export class ShareRequestUpdateService {
     vcId: string,
     action: ShareRequestAction | string,
   ): Promise<StandardMessageResponse | any> {
+    const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, walletId))
+
+    if (!wallet['data']) {
+      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
+    }
+
     if (
       action != ShareRequestAction.ACCEPTED &&
       action != ShareRequestAction.REJECTED &&
@@ -125,6 +142,6 @@ export class ShareRequestUpdateService {
       throw new InternalServerErrorException(FilesErrors.INTERNAL_ERROR)
     }
 
-    return actionResult
+    return getSuccessResponse(await actionResult, HttpResponseMessage.OK)
   }
 }

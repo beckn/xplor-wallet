@@ -2,10 +2,12 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { ApiClient } from 'src/common/api-client'
-import { WalletErrors } from 'src/common/constants/error-messages'
-import { RegistryRequestRoutes } from 'src/common/constants/request-routes'
-import { StandardMessageResponse } from 'src/common/constants/standard-message-response.dto'
+import { ApiClient } from '../../common/api-client'
+import { WalletErrors } from '../../common/constants/error-messages'
+import { HttpResponseMessage } from '../../common/constants/http-response-message'
+import { RegistryRequestRoutes } from '../../common/constants/request-routes'
+import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
+import { getSuccessResponse } from '../../utils/get-success-response'
 import { CreateRegistryUserDIDRequestDto, DIDDetails } from '../dto/create-user-did-request.dto'
 import { CreateWalletModelDto } from '../dto/create-wallet-model.dto'
 import { CreateWalletRequestDto } from '../dto/create-wallet-request.dto'
@@ -27,8 +29,8 @@ export class WalletCreateService {
   async createWallet(request: CreateWalletRequestDto): Promise<StandardMessageResponse | any> {
     // Check if a wallet with the given userId already exists
     const existingWallet = await this.walletReadService.findWalletByUserId(request.userId)
-
-    if (existingWallet !== null) {
+    console.log(existingWallet)
+    if (existingWallet['data'] !== null) {
       // Throw an exception if the wallet already exists
       throw new ConflictException(WalletErrors.WALLET_ALREADY_EXIST)
     }
@@ -50,6 +52,6 @@ export class WalletCreateService {
     // Create a new wallet if it doesn't exist
     const wallet = new this.walletModel(createWalletModel)
     const createdWallet = await wallet.save()
-    return createdWallet
+    return getSuccessResponse(await createdWallet, HttpResponseMessage.OK)
   }
 }

@@ -1,9 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
-import { VcType } from 'src/common/constants/enums'
-
+import { v4 as uuidv4 } from 'uuid'
+import { VcType } from '../../common/constants/enums'
 @Schema({ timestamps: true })
 export class VerifiableCredential {
+  @Prop({ default: () => `vc_${uuidv4()}` })
+  _id: string
+
   @Prop({ required: true })
   did: string
 
@@ -24,6 +27,9 @@ export class VerifiableCredential {
 
   @Prop({ required: true })
   name: string
+
+  @Prop({ required: true })
+  iconUrl: string
 
   @Prop({ required: false })
   templateId: string

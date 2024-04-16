@@ -1,36 +1,33 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsInt, IsOptional, IsString, Min } from 'class-validator'
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class GetVCListRequestDto {
-  @ApiProperty()
-  @IsString()
+  @ApiProperty({ description: 'The wallet ID', example: '65f058277901e68a7df6db35' })
+  @IsString({ message: 'walletId must be a string' })
+  @IsNotEmpty({ message: 'walletId must not be empty' })
   walletId: string
 
-  @ApiProperty({ example: '10th Class Result' })
+  @ApiProperty({ description: 'The category of the verifiable credentials', example: '10th Class Result' })
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'category must be a string' })
   category?: string
 
-  @ApiProperty({ example: '10th result' })
+  @ApiProperty({ description: 'The search query', example: '10th result' })
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'searchQuery must be a string' })
   searchQuery?: string
 
-  @ApiProperty({ example: ['10th Class Result'] })
+  @ApiProperty({ description: 'An array of tags', example: ['10th Class Result'] })
   @IsOptional()
-  @IsArray()
+  @IsArray({ message: 'tags must be an array' })
   tags?: string[]
 
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  @Min(1)
+  @ApiProperty({ description: 'The page number', example: 1 })
+  @IsNotEmpty({ message: 'page must not be empty' })
   page: number
 
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  @Min(1)
+  @ApiProperty({ description: 'The size of the page', example: 20 })
+  @IsNotEmpty({ message: 'pageSize must not be empty' })
   pageSize: number
 
   constructor(

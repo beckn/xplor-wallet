@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { ApiClient } from 'src/common/api-client'
-import { S3StorageModule } from 'src/files/module/s3-storage.module'
-import { FileModel, FileSchema } from 'src/files/schemas/files.schema'
-import { FilesCreateService } from 'src/files/service/files-create.service'
-import { FilesDeleteService } from 'src/files/service/files-delete.service'
-import { FilesReadService } from 'src/files/service/files-read.service'
-import { FilesUpdateService } from 'src/files/service/files-update.service'
-import { RedisModule } from 'src/redis/module/redis.module'
-import { VCAccessControlModule } from 'src/vc-access-control/module/vc-access-control.module'
-import { VCAccessControl, VCAccessControlSchema } from 'src/vc-access-control/schemas/file-access-control.schema'
-import { VCAccessControlReadService } from 'src/vc-access-control/service/verifiable-credential-access-control-read.service'
-import { VCAccessControlUpdateService } from 'src/vc-access-control/service/verifiable-credential-access-control-update.service'
-import { WalletModule } from 'src/wallet/module/wallet.module'
-import { WalletReadService } from 'src/wallet/service/wallet-read.service'
-import { VerifiableCredentialController } from '../controller/verifiable-credental.controller'
+import { ApiClient } from '../../common/api-client'
+import { S3StorageModule } from '../../files/module/s3-storage.module'
+import { FileModel, FileSchema } from '../../files/schemas/files.schema'
+import { FilesCreateService } from '../../files/service/files-create.service'
+import { FilesDeleteService } from '../../files/service/files-delete.service'
+import { FilesReadService } from '../../files/service/files-read.service'
+import { FilesUpdateService } from '../../files/service/files-update.service'
+import { RedisModule } from '../../redis/module/redis.module'
+import { VCAccessControlModule } from '../../vc-access-control/module/vc-access-control.module'
+import { VCAccessControl, VCAccessControlSchema } from '../../vc-access-control/schemas/file-access-control.schema'
+import { VCAccessControlReadService } from '../../vc-access-control/service/verifiable-credential-access-control-read.service'
+import { VCAccessControlUpdateService } from '../../vc-access-control/service/verifiable-credential-access-control-update.service'
+import { WalletModule } from '../../wallet/module/wallet.module'
+import { WalletReadService } from '../../wallet/service/wallet-read.service'
+import { VerifiableCredentialController } from '../controller/verifiable-credential.controller'
 import { ShareRequest, ShareRequestSchema } from '../schemas/share-request.schema'
 import { VerifiableCredentialModel, VerifiableCredentialSchema } from '../schemas/verifiable-credential.schema'
 import { ShareRequestCreateService } from '../service/share-request-create.service'
@@ -52,6 +52,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     ShareRequestReadService,
     ShareRequestUpdateService,
     ShareRequestCreateService,
+    WalletReadService,
   ],
   exports: [
     MongooseModule,
@@ -66,6 +67,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     FilesReadService,
     FilesDeleteService,
     FilesUpdateService,
+    WalletReadService,
   ],
 })
 export class VerifiableCredentialModule {}
