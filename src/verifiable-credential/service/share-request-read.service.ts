@@ -78,10 +78,6 @@ export class ShareRequestReadService {
       updatedShareRequests.push(updatedRequest)
     }
 
-    if (updatedShareRequests.length < 1) {
-      throw new NotFoundException(VcErrors.VCs_NOT_FOUND)
-    }
-
     return getSuccessResponse(await updatedShareRequests, HttpResponseMessage.OK)
   }
 
