@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsEnum, IsNotEmpty, IsString } from 'class-validator'
+import { IsArray, IsEnum, IsNotEmpty, IsString, Length } from 'class-validator'
 import { VcCategory, VcType } from '../../common/constants/enums'
 
 export class CreateVCRequestBodyDto {
@@ -39,7 +39,8 @@ export class CreateVCRequestBodyDto {
   tags: string[]
 
   @ApiProperty()
-  @IsString()
+  @IsString({ message: 'name field must be string' })
+  @Length(1, 50, { message: 'Organization must be between 1 and 50 characters' })
   @IsNotEmpty({ message: 'Name must not be empty' })
   name: string
 

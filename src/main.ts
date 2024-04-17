@@ -15,7 +15,7 @@ async function run() {
     new ValidationPipe({
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         return new BadRequestException({
-          message: Object.values(validationErrors[0].constraints).join(', '),
+          message: Object.values(validationErrors[0].constraints).join(', ').split(', ').at(0),
           error: 'Bad Request',
           statusCode: 400,
         })
