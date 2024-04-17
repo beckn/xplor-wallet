@@ -225,7 +225,7 @@ describe('VerifiableCredentialController', () => {
   describe('deleteVc', () => {
     it('should deleteVc', async () => {
       const body = {
-        vcId: 'vcId',
+        vcIds: ['vcId'],
         walletId: 'walletId',
       }
       const storeGetIdResult = {
@@ -238,7 +238,7 @@ describe('VerifiableCredentialController', () => {
 
     it('should deleteVc throws Exception in Deleting a VC', async () => {
       const body = {
-        vcId: 'vcId',
+        vcIds: ['vcId'],
         walletId: 'walletId',
       }
       jest.spyOn(vcDeleteService, 'deleteVc').mockRejectedValue(new NotFoundException(VcErrors.VC_NOT_EXIST))

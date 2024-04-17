@@ -18,6 +18,7 @@ import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetShareFileRequestsDto } from '../dto/get-share-file-request-list.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import {
+  DeleteVCsRequestDto,
   GetShareRequestDto,
   GetVCRequestDto,
   ShareVCParamsRequestDto,
@@ -140,7 +141,7 @@ export class VerifiableCredentialController {
     description: DELETE_CREDENTIAL_API.successResponseMessage,
     type: VCEntityList,
   })
-  async deleteVC(@Query() queryParams: GetVCRequestDto) {
+  async deleteVC(@Query() queryParams: DeleteVCsRequestDto) {
     return await this.vcDeleteService.deleteVc(queryParams)
   }
 

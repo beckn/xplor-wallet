@@ -8,7 +8,7 @@ import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-reques
 import { FilesDeleteService } from '../../files/service/files-delete.service'
 import { getSuccessResponse } from '../../utils/get-success-response'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
-import { GetVCRequestDto } from '../dto/get-vc-request.dto'
+import { DeleteVCsRequestDto, GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
 
 @Injectable()
@@ -22,23 +22,27 @@ export class VerifiableCredentialDeleteService {
   /*
   This function takes all the details of the VC & Stores them
    **/
-  async deleteVc(vcRequest: GetVCRequestDto): Promise<any> {
+  async deleteVc(vcRequest: DeleteVCsRequestDto): Promise<any> {
     const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, vcRequest.walletId))
 
-    if (!wallet['data']) {
-      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
-    }
+    const deletedVcs = await Promise.all(
+      vcRequest.vcIds.map(async (vcId) => {
+        if (!wallet['data']) {
+          throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
+        }
 
-    const deletedVc = await this.vcModel.findOneAndDelete({ _id: vcRequest.vcId, walletId: vcRequest.walletId })
-    if (!deletedVc) {
-      throw new NotFoundException(VcErrors.VC_NOT_EXIST)
-    }
+        const deletedVc = await this.vcModel.findOneAndDelete({ _id: vcId, walletId: vcRequest.walletId })
+        if (!deletedVc) {
+          throw new NotFoundException(VcErrors.VC_NOT_EXIST)
+        }
 
-    const deletedFile = await this.fileDeleteService.deleteFileById(deletedVc['fileId'])
-    if (!deletedVc || !deletedFile) {
-      throw new NotFoundException(VcErrors.VC_NOT_EXIST)
-    }
+        const deletedFile = await this.fileDeleteService.deleteFileById(deletedVc['fileId'])
+        if (!deletedVc || !deletedFile) {
+          throw new NotFoundException(VcErrors.VC_NOT_EXIST)
+        }
+      }),
+    )
 
-    return getSuccessResponse(await deletedVc, HttpResponseMessage.OK)
+    return getSuccessResponse(await deletedVcs, HttpResponseMessage.OK)
   }
 }

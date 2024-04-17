@@ -7,7 +7,7 @@ export const WalletErrors = {
   WALLET_NOT_FOUND: 'Wallet with this id does not exists.',
   REQUESTED_WALLET_NOT_FOUND: 'RequestedFromWallet with this id does not exists.',
   MISSING_FIELDS: 'One of the following: walletId or userId should be entered.',
-  WALLET_ALREADY_EXIST: 'Wallet with this user already exists',
+  WALLET_ALREADY_EXIST: 'Wallet with this id already exists',
   WALLET_BAD_REQUEST: 'There was an error in creating wallet',
 }
 

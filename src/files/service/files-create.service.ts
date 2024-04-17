@@ -42,7 +42,7 @@ export class FilesCreateService {
   async createFile(file: Express.Multer.File, body: CreateFileRequestDto): Promise<StandardMessageResponse | any> {
     // Upload file to Storage
     const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
-    if (wallet['data'] == null) {
+    if (!wallet['data']) {
       throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }
 
