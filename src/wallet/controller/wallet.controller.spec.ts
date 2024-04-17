@@ -55,7 +55,6 @@ describe('WalletController', () => {
         userId: 'user1234',
         fullName: 'Bhaskar Kaura',
         email: 'bhaskar@wits.com',
-        organization: 'WIL',
       }
       const walletEntity = {
         userId: 'user1234',
@@ -71,7 +70,6 @@ describe('WalletController', () => {
         userId: 'user1234',
         fullName: 'Bhaskar Kaura',
         email: 'bhaskar@wits.com',
-        organization: 'WIL',
       }
       const errorMessage = WalletErrors.WALLET_ALREADY_EXIST
       jest.spyOn(walletCreateService, 'createWallet').mockRejectedValue(new ConflictException(errorMessage))
