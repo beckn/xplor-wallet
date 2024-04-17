@@ -13,6 +13,7 @@ import { CreateWalletModelDto } from '../dto/create-wallet-model.dto'
 import { CreateWalletRequestDto } from '../dto/create-wallet-request.dto'
 import { Wallet } from '../schemas/wallet.schema'
 import { WalletReadService } from './wallet-read.service'
+import { REGISTRY_SERVICE_URL } from 'src/common/constants/name-constants'
 
 @Injectable()
 export class WalletCreateService {
@@ -34,12 +35,9 @@ export class WalletCreateService {
       throw new ConflictException(WalletErrors.WALLET_ALREADY_EXIST)
     }
 
-    const registryRequestBody = new CreateRegistryUserDIDRequestDto(
-      new DIDDetails(request.fullName, request.email),
-      request.organization,
-    )
+    const registryRequestBody = new CreateRegistryUserDIDRequestDto(new DIDDetails(request.fullName, request.email))
     const createRegistryUser = await this.apiClient.post(
-      this.configService.get('REGISTRY_SERVICE_URL') + RegistryRequestRoutes.GENERATE_DID,
+      this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.GENERATE_DID,
       registryRequestBody,
     )
 

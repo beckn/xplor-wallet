@@ -23,13 +23,7 @@ export class CreateRegistryUserDIDRequestDto {
   @ApiProperty()
   didDetails: DIDDetails
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  organization: string
-
-  constructor(didDetails: DIDDetails, organization: string) {
+  constructor(didDetails: DIDDetails) {
     this.didDetails = didDetails
-    this.organization = organization
   }
 }

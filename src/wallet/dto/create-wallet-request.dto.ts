@@ -19,11 +19,4 @@ export class CreateWalletRequestDto {
   @IsNotEmpty({ message: 'email field must not be empty' })
   @ApiProperty()
   readonly email: string
-
-  @Matches(/^[a-zA-Z]+[a-zA-Z\s]*$/, { message: 'Organization must contain at least one alphabet' })
-  @Length(1, 50, { message: 'Organization must be between 1 and 50 characters' })
-  @IsString({ message: 'organization field must be a string' })
-  @IsNotEmpty({ message: 'organization field must not be empty' })
-  @ApiProperty()
-  readonly organization: string
 }
