@@ -3,6 +3,7 @@ import { Type as TransformType } from 'class-transformer'
 import { IsBoolean, IsNotEmpty, IsNumber, IsPositive, IsString, Min, ValidateNested } from 'class-validator'
 export class Restrictions {
   @ApiProperty({ description: 'The expiration time of the file access in hours' })
+  @IsNotEmpty({ message: 'expiresIn must not be empty' })
   @IsNumber({}, { message: 'expiresIn must be a number' })
   @IsPositive({ message: 'expiresIn must be a positive number' })
   @Min(1, { message: 'expiresIn must be greater than or equal to 1' })
