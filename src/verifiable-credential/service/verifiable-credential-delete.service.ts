@@ -24,13 +24,12 @@ export class VerifiableCredentialDeleteService {
    **/
   async deleteVc(vcRequest: DeleteVCsRequestDto): Promise<any> {
     const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, vcRequest.walletId))
+    if (!wallet['data']) {
+      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
+    }
 
     const deletedVcs = await Promise.all(
       vcRequest.vcIds.map(async (vcId) => {
-        if (!wallet['data']) {
-          throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
-        }
-
         const deletedVc = await this.vcModel.findOneAndDelete({ _id: vcId, walletId: vcRequest.walletId })
         if (!deletedVc) {
           throw new NotFoundException(VcErrors.VC_NOT_EXIST)
