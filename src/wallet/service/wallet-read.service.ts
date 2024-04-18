@@ -16,14 +16,14 @@ export class WalletReadService {
    * Returns Wallet details by userId
    */
   async findWalletByUserId(userId: string): Promise<Wallet> {
-    return getSuccessResponse(await await this.walletModel.findOne({ userId }).exec(), HttpResponseMessage.OK)
+    return getSuccessResponse(await await this.walletModel.findOne({ userId }).then(), HttpResponseMessage.OK)
   }
 
   /**
    * Returns Wallet details by walletId
    */
   async findWalletByWalletId(walletId: string): Promise<Wallet> {
-    return getSuccessResponse(await this.walletModel.findOne({ _id: walletId }).exec(), HttpResponseMessage.OK)
+    return getSuccessResponse(await this.walletModel.findOne({ _id: walletId }).then(), HttpResponseMessage.OK)
   }
 
   /**

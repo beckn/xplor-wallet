@@ -2,6 +2,7 @@ import { getModelToken } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
 import { WalletDeleteService } from './wallet-delete.service'
 import { WalletReadService } from './wallet-read.service'
+import { NotFoundException } from '@nestjs/common'
 
 describe('WalletDeleteService', () => {
   let service: WalletDeleteService
@@ -33,25 +34,27 @@ describe('WalletDeleteService', () => {
     expect(service).toBeDefined()
   })
 
-  // describe('deleteWallet', () => {
-  //   it('should delete a wallet', async () => {
-  //     const queryParams = { userId: 'user123' }
-  //     const deleteResult = {
-  //       userId: 'user123',
-  //     }
-  //     jest.spyOn(service, 'deleteWallet').mockResolvedValue(queryParams as any)
-  //     const result = await service.deleteWallet(queryParams)
+  describe('deleteWallet', () => {
+    it('should delete a wallet', async () => {
+      const queryParams = { userId: 'user123' }
+      const deleteResult = {
+        userId: 'user123',
+      }
+      jest.spyOn(service, 'deleteWallet').mockResolvedValue(queryParams as any)
+      const result = await service.deleteWallet(queryParams)
 
-  //     expect(result).toHaveProperty('userId', deleteResult.userId)
-  //   })
-  // })
+      expect(result).toHaveProperty('userId', deleteResult.userId)
+    })
+  })
 
-  // it('should throw NotFoundException if wallet does not exist', async () => {
-  //   // Mocking the query parameters
-  //   const queryParams = { walletId: 'walletId' }
+  it('should throw NotFoundException if wallet does not exist', async () => {
+    // Mocking the query parameters
+    const queryParams = { walletId: 'walletId' }
+    const mockedResult = {
+      data: null,
+    }
+    jest.spyOn(walletReadService, 'findWalletByWalletId').mockResolvedValue(mockedResult as any)
 
-  //   jest.spyOn(walletReadService, 'findWalletByWalletId').mockResolvedValue(null)
-
-  //   await expect(service.deleteWallet(queryParams)).rejects.toThrowError(NotFoundException)
-  // })
+    await expect(service.deleteWallet(queryParams)).rejects.toThrowError(NotFoundException)
+  })
 })

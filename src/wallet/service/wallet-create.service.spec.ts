@@ -6,10 +6,10 @@ import { ApiClient } from '../../common/api-client'
 import { Wallet } from '../schemas/wallet.schema'
 import { WalletCreateService } from './wallet-create.service'
 import { WalletReadService } from './wallet-read.service'
-
+import { BadRequestException, ConflictException } from '@nestjs/common'
+import { Types } from 'mongoose'
 describe('WalletCreateService', () => {
   let service: WalletCreateService
-  let configService: ConfigService
   let walletReadService: WalletReadService
   let apiClient: ApiClient
   let walletModel: Model<Wallet>
@@ -38,7 +38,6 @@ describe('WalletCreateService', () => {
     }).compile()
 
     service = module.get<WalletCreateService>(WalletCreateService)
-    configService = module.get<ConfigService>(ConfigService)
     walletReadService = module.get<WalletReadService>(WalletReadService)
     apiClient = module.get<ApiClient>(ApiClient)
     walletModel = module.get<Model<Wallet>>(getModelToken('Wallet'))
@@ -48,62 +47,65 @@ describe('WalletCreateService', () => {
     expect(service).toBeDefined()
   })
 
-  // describe('createWallet', () => {
-  //   it('should create a wallet', async () => {
-  //     const request = {
-  //       userId: 'user123',
-  //       fullName: 'John Doe',
-  //       email: 'john@example.com',
-  //       organization: 'ACME Corp',
-  //     }
+  describe('createWallet', () => {
+    it('should create a wallet', async () => {
+      const request = {
+        userId: 'user123',
+        fullName: 'John Doe',
+        email: 'john@example.com',
+        organization: 'ACME Corp',
+      }
 
-  //     const existingWallet = null
-  //     jest.spyOn(walletReadService, 'findWalletByUserId').mockResolvedValue(existingWallet)
+      const existingWallet = {
+        data: null,
+      }
+      jest.spyOn(walletReadService, 'findWalletByUserId').mockResolvedValue(existingWallet as any)
 
-  //     const createRegistryUserResponse = [{ id: '123456' }]
-  //     jest.spyOn(apiClient, 'post').mockResolvedValue(createRegistryUserResponse)
+      const createRegistryUserResponse = [{ id: '123456' }]
+      jest.spyOn(apiClient, 'post').mockResolvedValue(createRegistryUserResponse)
 
-  //     const createWalletModel = {
-  //       _id: new Types.ObjectId(),
-  //       userId: request.userId,
-  //       did: createRegistryUserResponse[0].id,
-  //     }
+      const createWalletModel = {
+        _id: new Types.ObjectId(),
+        userId: request.userId,
+        did: createRegistryUserResponse[0].id,
+      }
 
-  //     jest.spyOn(walletModel, 'create').mockResolvedValue(createWalletModel)
+      jest.spyOn(walletModel, 'create').mockResolvedValue(createWalletModel as any)
 
-  //     const result = await service.createWallet(request)
+      const result = await service.createWallet(request)
 
-  //     expect(result).toEqual(createWalletModel)
-  //   })
+      expect(result.data).toEqual(createWalletModel)
+    })
 
-  //   it('should throw ConflictException if wallet with userId already exists', async () => {
-  //     const request = {
-  //       userId: 'user123',
-  //       fullName: 'John Doe',
-  //       email: 'john@example.com',
-  //       organization: 'ACME Corp',
-  //     }
+    it('should throw ConflictException if wallet with userId already exists', async () => {
+      const request = {
+        userId: 'user123',
+        fullName: 'John Doe',
+        email: 'john@example.com',
+        organization: 'ACME Corp',
+      }
 
-  //     const existingWallet = { userId: 'user123' }
-  //     jest.spyOn(walletReadService, 'findWalletByUserId').mockResolvedValue(existingWallet as any)
+      const existingWallet = { data: { userId: 'user123' } }
+      jest.spyOn(walletReadService, 'findWalletByUserId').mockResolvedValue(existingWallet as any)
 
-  //     await expect(service.createWallet(request)).rejects.toThrow(ConflictException)
-  //   })
+      await expect(service.createWallet(request)).rejects.toThrow(ConflictException)
+    })
 
-  //   it('should throw BadRequestException if registry service response is null', async () => {
-  //     const request = {
-  //       userId: 'user123',
-  //       fullName: 'John Doe',
-  //       email: 'john@example.com',
-  //       organization: 'ACME Corp',
-  //     }
+    it('should throw BadRequestException if registry service response is null', async () => {
+      const request = {
+        userId: 'user123',
+        fullName: 'John Doe',
+        email: 'john@example.com',
+      }
 
-  //     const existingWallet = null
-  //     jest.spyOn(walletReadService, 'findWalletByUserId').mockResolvedValue(existingWallet)
+      const existingWallet = {
+        data: null,
+      }
+      jest.spyOn(walletReadService, 'findWalletByUserId').mockResolvedValue(existingWallet as any)
 
-  //     jest.spyOn(apiClient, 'post').mockResolvedValue(null)
+      jest.spyOn(apiClient, 'post').mockResolvedValue(null)
 
-  //     await expect(service.createWallet(request)).rejects.toThrow(BadRequestException)
-  //   })
-  // })
+      await expect(service.createWallet(request)).rejects.toThrow(BadRequestException)
+    })
+  })
 })

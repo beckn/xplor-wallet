@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { Model } from 'mongoose'
 import { Wallet } from '../schemas/wallet.schema'
 import { WalletReadService } from './wallet-read.service'
+import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
+import { NotFoundException } from '@nestjs/common/exceptions/not-found.exception'
 
 describe('WalletReadService', () => {
   let service: WalletReadService
@@ -29,35 +31,35 @@ describe('WalletReadService', () => {
     expect(service).toBeDefined()
   })
 
-  // it('should return wallet details by userId', async () => {
-  //   const walletDetails = {
-  //     _id: 'walletId',
-  //     userId: 'userId123',
-  //   }
-  //   jest.spyOn(walletModel, 'findOne').mockResolvedValue(walletDetails)
+  it('should return wallet details by userId', async () => {
+    const walletDetails = {
+      _id: 'walletId',
+      userId: 'userId123',
+    }
+    jest.spyOn(walletModel, 'findOne').mockResolvedValue(walletDetails)
 
-  //   const queryParams: StandardWalletRequestDto = { userId: 'userId123' }
+    const queryParams: StandardWalletRequestDto = { userId: 'userId123' }
 
-  //   await expect(walletReadService.getWalletDetails(queryParams)).resolves.toEqual(walletDetails)
-  // })
+    expect((await service.getWalletDetails(queryParams)).data).toEqual(walletDetails)
+  })
 
-  // it('should return wallet details by walletId', async () => {
-  //   const walletDetails = {
-  //     _id: 'walletId123',
-  //     userId: 'user123',
-  //   }
-  //   jest.spyOn(walletModel, 'findOne').mockResolvedValue(walletDetails)
+  it('should return wallet details by walletId', async () => {
+    const walletDetails = {
+      _id: 'walletId123',
+      userId: 'user123',
+    }
+    jest.spyOn(walletModel, 'findOne').mockResolvedValue(walletDetails)
 
-  //   const queryParams = { walletId: 'walletId123' }
-  //   await expect(walletReadService.getWalletDetails(queryParams)).resolves.toEqual(walletDetails)
-  // })
+    const queryParams = { walletId: 'walletId123' }
+    expect((await service.getWalletDetails(queryParams)).data).toEqual(walletDetails)
+  })
 
-  // it('should throw NotFoundException if wallet does not exist', async () => {
-  //   const walletId = 'nonExistingId'
-  //   jest.spyOn(walletModel, 'findOne').mockResolvedValue(null)
+  it('should throw NotFoundException if wallet does not exist', async () => {
+    const walletId = 'nonExistingId'
+    jest.spyOn(walletModel, 'findOne').mockResolvedValue(null)
 
-  //   const queryParams: StandardWalletRequestDto = { walletId }
+    const queryParams: StandardWalletRequestDto = { walletId }
 
-  //   await expect(walletReadService.getWalletDetails(queryParams)).rejects.toThrowError(NotFoundException)
-  // })
+    await expect(service.getWalletDetails(queryParams)).rejects.toThrowError(NotFoundException)
+  })
 })
