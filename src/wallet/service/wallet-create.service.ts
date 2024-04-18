@@ -13,7 +13,7 @@ import { CreateWalletModelDto } from '../dto/create-wallet-model.dto'
 import { CreateWalletRequestDto } from '../dto/create-wallet-request.dto'
 import { Wallet } from '../schemas/wallet.schema'
 import { WalletReadService } from './wallet-read.service'
-import { REGISTRY_SERVICE_URL } from 'src/common/constants/name-constants'
+import { REGISTRY_SERVICE_URL } from '../../common/constants/name-constants'
 
 @Injectable()
 export class WalletCreateService {

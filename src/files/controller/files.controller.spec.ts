@@ -1,10 +1,11 @@
-import { BadRequestException } from '@nestjs/common'
+import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { CreateFileRequestDto } from '../dto/create-file-request.dto'
 import { FileEntity } from '../entities/file.entity'
 import { FilesCreateService } from '../service/files-create.service'
 import { FilesController } from './files.controller'
+import { WalletErrors } from '../..//common/constants/error-messages'
 
 describe('FilesController', () => {
   let controller: FilesController
@@ -55,7 +56,7 @@ describe('FilesController', () => {
       }
 
       const body: CreateFileRequestDto = {
-        walletId: 'wallet123',
+        walletId: 'wallet_ec3a32c5-b7fa-417c-8537-41c8f915258a',
         category: 'Result',
         tags: ['Result', 'cbse'],
         name: 'Result',
@@ -92,15 +93,19 @@ describe('FilesController', () => {
       }
 
       const body: CreateFileRequestDto = {
-        walletId: 'wallet123',
+        walletId: null,
         category: 'Result',
         tags: ['Result', 'cbse'],
         name: 'Result',
       }
 
-      jest.spyOn(walletReadService, 'getWalletDetails').mockResolvedValue({})
+      jest
+        .spyOn(walletReadService, 'getWalletDetails')
+        .mockRejectedValue(new NotFoundException(WalletErrors.WALLET_NOT_FOUND))
 
-      await expect(controller.createFile(file, body)).rejects.toThrow(Error)
+      await expect(controller.createFile(file, body)).rejects.toThrow(
+        new NotFoundException(WalletErrors.WALLET_NOT_FOUND),
+      )
     })
   })
 })
