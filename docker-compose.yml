@@ -31,8 +31,8 @@ services:
       - xplor-network
   xplor_wallet_mongodb_service:
     image: mongo:6-jammy
-    ports:
-      - '27017:27017'
+    # ports:
+    #   - '27017:27017'
     volumes:
       - dbdata6:/data/db
     networks:
