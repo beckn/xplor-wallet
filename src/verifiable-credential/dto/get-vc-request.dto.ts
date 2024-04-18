@@ -14,6 +14,17 @@ export class GetVCRequestDto {
   vcId: string
 }
 
+export class DeleteVCsRequestDto {
+  @ApiProperty()
+  @IsNotEmpty({ message: 'wallet must not be empty' })
+  @IsString({ message: 'walletId must be a string' })
+  walletId: string
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'vcIds must not be empty' })
+  @IsArray({ message: 'vcIds must be a string array' })
+  vcIds: string[]
+}
 export class ShareVCParamsRequestDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'wallet must not be empty' })

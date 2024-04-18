@@ -72,10 +72,6 @@ export class VerifiableCredentialReadService {
     // Execute the query with pagination using the Mongoose model
     const filesResult = await this.vcModel.find(query).skip(skip).limit(queryParams.pageSize)
 
-    if (filesResult.length < 1) {
-      throw new NotFoundException(VcErrors.VCs_NOT_FOUND)
-    }
-
     // Fetch file details for each fileId and add fileType to filesResult
     const filesWithDetails = await Promise.all(
       filesResult.map(async (fileItem) => {

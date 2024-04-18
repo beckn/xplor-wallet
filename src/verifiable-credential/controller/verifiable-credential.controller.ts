@@ -18,6 +18,7 @@ import { CreateVCRequestBodyDto } from '../dto/create-vc-request-body.dto'
 import { GetShareFileRequestsDto } from '../dto/get-share-file-request-list.dto'
 import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import {
+  DeleteVCsRequestDto,
   GetShareRequestDto,
   GetVCRequestDto,
   ShareVCParamsRequestDto,
@@ -36,6 +37,7 @@ import { ShareRequestUpdateService } from '../service/share-request-update.servi
 import { VerifiableCredentialCreateService } from '../service/verifiable-credential-create.service'
 import { VerifiableCredentialDeleteService } from '../service/verifiable-credential-delete.service'
 import { VerifiableCredentialReadService } from '../service/verifiable-credential-read.service'
+import { ShareRequestDeleteService } from '../service/share-request-delete.service'
 
 @ApiTags('Verifiable Credential (VC)')
 @Controller('wallet/vc')
@@ -47,6 +49,7 @@ export class VerifiableCredentialController {
     private readonly shareRequestCreateService: ShareRequestCreateService,
     private readonly vcReadService: VerifiableCredentialReadService,
     private readonly vcDeleteService: VerifiableCredentialDeleteService,
+    private readonly shareRequestDeleteService: ShareRequestDeleteService,
   ) {}
 
   /**
@@ -140,7 +143,7 @@ export class VerifiableCredentialController {
     description: DELETE_CREDENTIAL_API.successResponseMessage,
     type: VCEntityList,
   })
-  async deleteVC(@Query() queryParams: GetVCRequestDto) {
+  async deleteVC(@Query() queryParams: DeleteVCsRequestDto) {
     return await this.vcDeleteService.deleteVc(queryParams)
   }
 
@@ -219,7 +222,7 @@ export class VerifiableCredentialController {
     type: ShareRequestEntity,
   })
   async deleteShareRequest(@Query() queryParams: GetShareRequestDto) {
-    return await this.shareRequestUpdateService.deleteShareRequest(queryParams.walletId, queryParams.requestId)
+    return await this.shareRequestDeleteService.deleteShareRequest(queryParams.walletId, queryParams.requestId)
   }
 
   /**

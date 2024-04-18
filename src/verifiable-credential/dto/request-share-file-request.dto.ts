@@ -1,16 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type as TransformType } from 'class-transformer'
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator'
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, Min, ValidateNested } from 'class-validator'
 
 export class RestrictionsDto {
   @ApiProperty({ description: 'Number of seconds until the file link expires' })
-  @IsNotEmpty({ message: 'Expires in must be provided' })
-  @IsNumber({}, { message: 'Expires in must be a number' })
+  @IsNotEmpty({ message: 'expiresIn must not be empty' })
+  @IsNumber({}, { message: 'expiresIn must be a number' })
+  @IsPositive({ message: 'expiresIn must be a positive number' })
+  @Min(1, { message: 'expiresIn must be greater than or equal to 1' })
   readonly expiresIn: number
 
   @ApiProperty({ description: 'Indicates whether the file link can be viewed once' })
-  @IsOptional()
-  @IsBoolean({ message: 'View once must be a boolean' })
+  @IsBoolean({ message: 'viewOnce must be a boolean' })
+  @IsNotEmpty({ message: 'viewOnce cannot be empty' })
   readonly viewOnce?: boolean
 
   constructor(expiresIn: number, viewOnce?: boolean) {

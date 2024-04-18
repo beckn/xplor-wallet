@@ -10,6 +10,11 @@ export enum ShareRequestAction {
   REJECTED = 'REJECTED',
 }
 
+export enum FileShareType {
+  SHARED = 'SHARED',
+  RECEIVED = 'RECEIVED',
+}
+
 export enum VcType {
   SELF_ISSUED = 'SELF_ISSUED',
   RECEIVED = 'RECEIVED',

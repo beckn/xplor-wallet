@@ -10,6 +10,7 @@ import { VerifiableCredentialCreateService } from '../service/verifiable-credent
 import { VerifiableCredentialDeleteService } from '../service/verifiable-credential-delete.service'
 import { VerifiableCredentialReadService } from '../service/verifiable-credential-read.service'
 import { VerifiableCredentialController } from './verifiable-credential.controller'
+import { ShareRequestDeleteService } from '../service/share-request-delete.service'
 
 describe('VerifiableCredentialController', () => {
   let controller: VerifiableCredentialController
@@ -17,6 +18,7 @@ describe('VerifiableCredentialController', () => {
   let shareRequestCreateService: ShareRequestCreateService
   let shareRequestReadService: ShareRequestReadService
   let shareRequestUpdateService: ShareRequestUpdateService
+  let shareRequestDeleteService: ShareRequestDeleteService
   let vcReadService: VerifiableCredentialReadService
   let vcDeleteService: VerifiableCredentialDeleteService
 
@@ -225,7 +227,7 @@ describe('VerifiableCredentialController', () => {
   describe('deleteVc', () => {
     it('should deleteVc', async () => {
       const body = {
-        vcId: 'vcId',
+        vcIds: ['vcId'],
         walletId: 'walletId',
       }
       const storeGetIdResult = {
@@ -238,7 +240,7 @@ describe('VerifiableCredentialController', () => {
 
     it('should deleteVc throws Exception in Deleting a VC', async () => {
       const body = {
-        vcId: 'vcId',
+        vcIds: ['vcId'],
         walletId: 'walletId',
       }
       jest.spyOn(vcDeleteService, 'deleteVc').mockRejectedValue(new NotFoundException(VcErrors.VC_NOT_EXIST))
@@ -381,7 +383,7 @@ describe('VerifiableCredentialController', () => {
       const storeGetIdResult = {
         did: 'did:vcId',
       }
-      jest.spyOn(shareRequestUpdateService, 'deleteShareRequest').mockResolvedValue(storeGetIdResult)
+      jest.spyOn(shareRequestDeleteService, 'deleteShareRequest').mockResolvedValue(storeGetIdResult)
       const result = await controller.deleteShareRequest(body)
       expect(result).toHaveProperty('did', storeGetIdResult.did)
     })
@@ -392,7 +394,7 @@ describe('VerifiableCredentialController', () => {
         walletId: 'walletId',
       }
       jest
-        .spyOn(shareRequestUpdateService, 'deleteShareRequest')
+        .spyOn(shareRequestDeleteService, 'deleteShareRequest')
         .mockRejectedValue(new NotFoundException(FilesErrors.REQUEST_NOT_FOUND))
       const result = controller.deleteShareRequest(body)
       await expect(result).rejects.toThrow(new NotFoundException(FilesErrors.REQUEST_NOT_FOUND))
