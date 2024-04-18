@@ -37,6 +37,7 @@ import { ShareRequestUpdateService } from '../service/share-request-update.servi
 import { VerifiableCredentialCreateService } from '../service/verifiable-credential-create.service'
 import { VerifiableCredentialDeleteService } from '../service/verifiable-credential-delete.service'
 import { VerifiableCredentialReadService } from '../service/verifiable-credential-read.service'
+import { ShareRequestDeleteService } from '../service/share-request-delete.service'
 
 @ApiTags('Verifiable Credential (VC)')
 @Controller('wallet/vc')
@@ -48,6 +49,7 @@ export class VerifiableCredentialController {
     private readonly shareRequestCreateService: ShareRequestCreateService,
     private readonly vcReadService: VerifiableCredentialReadService,
     private readonly vcDeleteService: VerifiableCredentialDeleteService,
+    private readonly shareRequestDeleteService: ShareRequestDeleteService,
   ) {}
 
   /**
@@ -220,7 +222,7 @@ export class VerifiableCredentialController {
     type: ShareRequestEntity,
   })
   async deleteShareRequest(@Query() queryParams: GetShareRequestDto) {
-    return await this.shareRequestUpdateService.deleteShareRequest(queryParams.walletId, queryParams.requestId)
+    return await this.shareRequestDeleteService.deleteShareRequest(queryParams.walletId, queryParams.requestId)
   }
 
   /**

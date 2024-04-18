@@ -10,12 +10,14 @@ import { getSuccessResponse } from '../../utils/get-success-response'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { DeleteVCsRequestDto, GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
+import { ShareRequestDeleteService } from './share-request-delete.service'
 
 @Injectable()
 export class VerifiableCredentialDeleteService {
   constructor(
     @InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>,
     private readonly fileDeleteService: FilesDeleteService,
+    private readonly shareRequestDeleteService: ShareRequestDeleteService,
     private readonly walletReadService: WalletReadService,
   ) {}
 
@@ -36,6 +38,7 @@ export class VerifiableCredentialDeleteService {
         }
 
         const deletedFile = await this.fileDeleteService.deleteFileById(deletedVc['fileId'])
+        await this.shareRequestDeleteService.deleteShareRequestsByVcId(vcId)
         if (!deletedVc || !deletedFile) {
           throw new NotFoundException(VcErrors.VC_NOT_EXIST)
         }

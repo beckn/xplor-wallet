@@ -44,32 +44,6 @@ export class ShareRequestUpdateService {
   ) {}
 
   /**
-   * Deletes File share request
-   * Only the request owner (who made the request), can deleted it
-   */
-  async deleteShareRequest(walletId: string, requestId: string): Promise<StandardMessageResponse | any> {
-    const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, walletId))
-
-    if (!wallet['data']) {
-      throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
-    }
-
-    const requestDetails = await this.shareRequestModel.findById(requestId)
-
-    if (requestDetails == null) {
-      throw new NotFoundException(FilesErrors.REQUEST_NOT_FOUND)
-    }
-
-    if (requestDetails['raisedByWallet'] != walletId) {
-      throw new UnauthorizedException(FilesErrors.REQUEST_DELETE_PERMISSION_ERROR)
-    }
-
-    const result = await this.shareRequestModel.findOneAndDelete({ _id: requestId })
-
-    return getSuccessResponse(await result, HttpResponseMessage.OK)
-  }
-
-  /**
    * ACCEPTS, REJECTS the VC ShareRequest
    * if ACCEPTED:
    * Stores the ACL RestrictedUrl in ShareRequest's VcUrl

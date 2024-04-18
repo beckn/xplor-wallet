@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { ShareRequestAction } from '../../common/constants/enums'
+import { FileShareType, ShareRequestAction } from '../../common/constants/enums'
 import { VcErrors, WalletErrors } from '../../common/constants/error-messages'
 import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
@@ -39,9 +39,15 @@ export class ShareRequestReadService {
       filter.$and = [{ status: queries.status }]
     }
 
+    if (queries.shareType === FileShareType.RECEIVED) {
+      filter.$and = [{ raisedByWallet: { $ne: queries.walletId } }]
+    } else {
+      filter.$and = [{ raisedByWallet: queries.walletId }]
+    }
+
     if (queries.documentType) {
       filter.$and = filter.$and || []
-      filter.$and.push({ 'fileShareDetails.documentType': queries.documentType })
+      filter.$and.push({ 'vcShareDetails.certificateType': queries.documentType })
     }
 
     let query = this.shareRequestModel.find(filter)

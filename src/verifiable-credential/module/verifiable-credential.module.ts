@@ -23,6 +23,7 @@ import { ShareRequestUpdateService } from '../service/share-request-update.servi
 import { VerifiableCredentialCreateService } from '../service/verifiable-credential-create.service'
 import { VerifiableCredentialDeleteService } from '../service/verifiable-credential-delete.service'
 import { VerifiableCredentialReadService } from '../service/verifiable-credential-read.service'
+import { ShareRequestDeleteService } from '../service/share-request-delete.service'
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     ShareRequestReadService,
     ShareRequestUpdateService,
     ShareRequestCreateService,
+    ShareRequestDeleteService,
     WalletReadService,
   ],
   exports: [
@@ -61,6 +63,7 @@ import { VerifiableCredentialReadService } from '../service/verifiable-credentia
     ShareRequestReadService,
     ShareRequestCreateService,
     ShareRequestUpdateService,
+    ShareRequestDeleteService,
     VerifiableCredentialCreateService,
     VerifiableCredentialDeleteService,
     VCAccessControlReadService,
