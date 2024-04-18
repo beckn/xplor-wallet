@@ -35,10 +35,6 @@ export class ShareRequestReadService {
       $or: [{ raisedByWallet: walletId }, { vcOwnerWallet: walletId }],
     }
 
-    if (queries.status) {
-      filter.$and = [{ status: queries.status }]
-    }
-
     if (queries.shareType === FileShareType.RECEIVED) {
       filter.$and = [{ raisedByWallet: { $ne: queries.walletId } }]
     } else {
@@ -50,8 +46,12 @@ export class ShareRequestReadService {
       filter.$and.push({ 'vcShareDetails.certificateType': queries.documentType })
     }
 
-    let query = this.shareRequestModel.find(filter)
+    if (queries.status != null) {
+      filter.$and.push({ status: queries.status })
+    }
 
+    let query = this.shareRequestModel.find(filter)
+    console.log('filter', filter)
     // Pagination
     const page = queries.page || 1
     const pageSize = queries.pageSize || 20

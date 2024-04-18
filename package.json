@@ -75,7 +75,18 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!**/*api-client.ts",
+      "!**/*app.module.ts",
+      "!**/*main.ts",
+      "!**/*standard-message-response.dto.ts",
+      "!**/*src/config",
+      "!**/*create-access-control.dto.ts",
+      "!**/*create-access-control.dto.ts",
+      "!**/*files.module.ts",
+      "!**/*s3-storage.module.ts",
+      "!**/*redis.module.ts",
+      "!**/*redis.module.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
