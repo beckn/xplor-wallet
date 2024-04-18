@@ -85,7 +85,6 @@
       "!**/*create-access-control.dto.ts",
       "!**/*files.module.ts",
       "!**/*s3-storage.module.ts",
-      "!**/*redis.module.ts",
       "!**/*redis.module.ts"
     ],
     "coverageDirectory": "../coverage",
