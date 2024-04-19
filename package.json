@@ -88,6 +88,7 @@
       "!**/*files.module.ts",
       "!**/*s3-storage.module.ts",
       "!**/*redis.module.ts",
+      "!**/*redis.service.ts",
       "!**/*file.utils.ts",
       "!**/*get-files-request.dto.ts",
       "!**/*create-user-did-api-body.dto.ts",

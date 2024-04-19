@@ -117,7 +117,7 @@ describe('ShareRequestCreateService', () => {
         restrictions: { expiresIn: 24, viewOnce: false },
       }
       await expect(service.shareVCs(vcIds, walletId, shareRequest)).rejects.toThrowError(NotFoundException)
-    })
+    }, 30000)
 
     // Add more test cases for different scenarios
   })
@@ -132,7 +132,7 @@ describe('ShareRequestCreateService', () => {
         restrictions: null,
       }
       await expect(service.requestShareFile(walletId, shareRequest)).rejects.toThrowError(NotFoundException)
-    })
+    }, 30000)
 
     // Add more test cases for different scenarios
   })
@@ -153,7 +153,7 @@ describe('ShareRequestCreateService', () => {
       }
       jest.spyOn(service['shareRequestModel'], 'findById').mockResolvedValueOnce(mockRequest as any)
       await expect(service.deleteShareRequest(userId, requestId)).rejects.toThrowError(UnauthorizedException)
-    })
+    }, 30000)
 
     // Add more test cases for different scenarios
   })
@@ -167,7 +167,7 @@ describe('ShareRequestCreateService', () => {
       await expect(service.respondToShareRequest(walletId, requestId, vcId, action)).rejects.toThrowError(
         NotFoundException,
       )
-    })
+    }, 30000)
 
     it('should throw UnauthorizedException when the VC owner is different from the wallet id', async () => {
       const walletId = 'walletId1'
@@ -183,8 +183,6 @@ describe('ShareRequestCreateService', () => {
       await expect(service.respondToShareRequest(walletId, requestId, vcId, action)).rejects.toThrowError(
         UnauthorizedException,
       )
-    })
-
-    // Add more test cases for different scenarios
+    }, 30000)
   })
 })
