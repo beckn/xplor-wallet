@@ -75,6 +75,8 @@ export class VCAccessControlUpdateService {
       )
       .exec()
 
+    // Update the field in redis cache
+    await this.redisService.updateField(resKey, 'viewAllowed', viewAllowed)
     if (!updatedDocument) {
       throw new NotFoundException(ViewAccessControlErrors.DOCUMENT_NOT_FOUND)
     }

@@ -62,11 +62,7 @@ export class VerifiableCredentialReadService {
     // Add the search query condition to the query
     if (queryParams.searchQuery) {
       const regex = new RegExp(queryParams.searchQuery, 'i') // Case-insensitive regex pattern
-      query.$or = [
-        { name: { $regex: regex } },
-        { category: { $regex: regex } },
-        // Add more fields if needed
-      ]
+      query.$or = [{ name: { $regex: regex } }, { category: { $regex: regex } }]
     }
 
     // Execute the query with pagination using the Mongoose model
