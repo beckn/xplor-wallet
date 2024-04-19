@@ -186,7 +186,7 @@ describe('VerifiableCredentialReadService', () => {
       }
       const walletDetails = { data: { _id: 'walletId' } }
       jest.spyOn(service['walletReadService'], 'getWalletDetails').mockResolvedValue(walletDetails)
-      const vcDetails = { _id: 'test_vcId', fileId: 'fileId1' }
+      const vcDetails = { _id: 'test_vcId', fileId: 'fileId1', toJSON: jest.fn().mockReturnThis() }
       jest.spyOn(service['vcModel'], 'findOne').mockResolvedValue(vcDetails)
       jest.spyOn(service['filesReadService'], 'getFileById').mockResolvedValue({ _id: 'fileId', fileType: 'pdf' })
       const result = await service.getVCByIdAndWalletId(queryParams)
@@ -210,7 +210,7 @@ describe('VerifiableCredentialReadService', () => {
   describe('getVCById', () => {
     it('should return VC details by ID', async () => {
       const vcId = 'test_vcId'
-      const vcDetails = { fileId: 'fileId1' }
+      const vcDetails = { _id: 'test_vcId', fileId: 'fileId1', toJSON: jest.fn().mockReturnThis() }
       jest.spyOn(vcModel, 'findOne').mockResolvedValue(vcDetails)
       jest.spyOn(service['filesReadService'], 'getFileById').mockResolvedValue({ fileType: 'pdf' })
 
