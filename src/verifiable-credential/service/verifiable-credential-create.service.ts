@@ -59,8 +59,7 @@ export class VerifiableCredentialCreateService {
       vcAclDetails['restrictedUrl'],
     )
 
-    const createdVc = new this.vcModel(vcSaveRequest)
-    const fileResult = await createdVc.save()
+    const fileResult = await this.vcModel.create(vcSaveRequest)
 
     // Updated VcId in ACL Document
     await this.vcAclUpdateService.updateVcIdByRestrictedKey(vcAclDetails['restrictedKey'], fileResult['_id'].toString())
@@ -101,8 +100,7 @@ export class VerifiableCredentialCreateService {
       vcAclDetails['restrictedUrl'],
     )
 
-    const createdVc = new this.vcModel(vcSaveRequest)
-    const fileResult = await createdVc.save()
+    const fileResult = await this.vcModel.create(vcSaveRequest)
 
     // Updated VcId in ACL Document
     await this.vcAclUpdateService.updateVcIdByRestrictedKey(vcAclDetails['restrictedKey'], fileResult['_id'].toString())

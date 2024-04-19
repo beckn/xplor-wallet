@@ -119,7 +119,7 @@ export class VerifiableCredentialReadService {
     }
 
     const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
-    return getSuccessResponse(await { fileType: fileDetails.fileType, ...vcDetails.toJSON() }, HttpResponseMessage.OK)
+    return getSuccessResponse(await { fileType: fileDetails.fileType, ...vcDetails }, HttpResponseMessage.OK)
   }
 
   /*
