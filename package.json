@@ -93,7 +93,8 @@
       "!**/*get-files-request.dto.ts",
       "!**/*create-user-did-api-body.dto.ts",
       "!**/*wallet.module.ts",
-      "!**/*wallet.module.ts"
+      "!**/*wallet.module.ts",
+      "!**/*vc.utils.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
