@@ -103,7 +103,7 @@ export class VerifiableCredentialReadService {
     }
 
     const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
-    return getSuccessResponse(await { fileType: fileDetails.fileType, ...vcDetails }, HttpResponseMessage.OK)
+    return getSuccessResponse(await { fileType: fileDetails.fileType, ...vcDetails.toJSON() }, HttpResponseMessage.OK)
   }
 
   async getVCById(vcId: string): Promise<any> {
@@ -115,7 +115,7 @@ export class VerifiableCredentialReadService {
     }
 
     const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
-    return getSuccessResponse(await { fileType: fileDetails.fileType, ...vcDetails }, HttpResponseMessage.OK)
+    return getSuccessResponse(await { fileType: fileDetails.fileType, ...vcDetails.toJSON() }, HttpResponseMessage.OK)
   }
 
   /*
@@ -124,9 +124,7 @@ export class VerifiableCredentialReadService {
   async renderVCDocument(restrictionKey: string, res): Promise<any> {
     // Fetch Access control details by restrictedKey
     // Finding Redis Cache to check if ACL Exists
-
     const aclDetails = await this.vcAclReadService.findCachedByRestrictedKey(restrictionKey)
-
     if (!aclDetails) {
       throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
     }
@@ -141,7 +139,7 @@ export class VerifiableCredentialReadService {
 
     if (aclDetails['viewAllowed'] === false && aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
       throw new UnauthorizedException(VcErrors.VC_VIEW_ONCE_ERROR)
-    } else if (aclDetails['viewAllowed'] === true && aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
+    } else if (aclDetails['viewAllowed'] === true && aclDetails['viewOnce'] === true) {
       // Update viewAllowed of Access Control
       await this.vcAclUpdateService.updateViewAllowedByRestrictionKey(aclDetails['restrictedKey'], false)
     } else if (aclDetails['viewAllowed'] === false) {
