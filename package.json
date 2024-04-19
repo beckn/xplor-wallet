@@ -80,12 +80,19 @@
       "!**/*app.module.ts",
       "!**/*main.ts",
       "!**/*standard-message-response.dto.ts",
-      "!**/*src/config",
+      "!**/*multer-file.config.ts",
+      "!**/*env.config.ts",
       "!**/*create-access-control.dto.ts",
       "!**/*create-access-control.dto.ts",
       "!**/*files.module.ts",
       "!**/*s3-storage.module.ts",
-      "!**/*redis.module.ts"
+      "!**/*redis.module.ts",
+      "!**/*redis.service.ts",
+      "!**/*file.utils.ts",
+      "!**/*get-files-request.dto.ts",
+      "!**/*create-user-did-api-body.dto.ts",
+      "!**/*wallet.module.ts",
+      "!**/*wallet.module.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
