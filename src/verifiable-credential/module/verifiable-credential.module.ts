@@ -24,6 +24,7 @@ import { VerifiableCredentialCreateService } from '../service/verifiable-credent
 import { VerifiableCredentialDeleteService } from '../service/verifiable-credential-delete.service'
 import { VerifiableCredentialReadService } from '../service/verifiable-credential-read.service'
 import { ShareRequestDeleteService } from '../service/share-request-delete.service'
+import { ConfigService } from 'aws-sdk'
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ShareRequestDeleteService } from '../service/share-request-delete.servi
     ApiClient,
     S3StorageModule,
     RedisModule,
+    ConfigService,
   ],
   controllers: [VerifiableCredentialController],
   providers: [
@@ -71,6 +73,7 @@ import { ShareRequestDeleteService } from '../service/share-request-delete.servi
     FilesDeleteService,
     FilesUpdateService,
     WalletReadService,
+    ConfigService,
   ],
 })
 export class VerifiableCredentialModule {}

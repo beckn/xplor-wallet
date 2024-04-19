@@ -51,7 +51,6 @@ export class ShareRequestReadService {
     }
 
     let query = this.shareRequestModel.find(filter)
-    console.log('filter', filter)
     // Pagination
     const page = queries.page || 1
     const pageSize = queries.pageSize || 20

@@ -18,7 +18,7 @@ export class RedisService {
 
     // Listen for 'error' event
     this.redisClient.on('error', (error) => {
-      console.error('Redis connection error:', error)
+      // console.error('Redis connection error:', error)
     })
   }
 

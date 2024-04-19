@@ -43,7 +43,6 @@ export class ShareRequestDeleteService {
    */
   async deleteShareRequest(walletId: string, requestId: string): Promise<StandardMessageResponse | any> {
     const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, walletId))
-
     if (!wallet['data']) {
       throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }
