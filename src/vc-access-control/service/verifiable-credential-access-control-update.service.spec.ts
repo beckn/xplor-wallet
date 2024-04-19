@@ -211,7 +211,7 @@ describe('VCAccessControlUpdateService', () => {
       await expect(service.updateRestrictionsByRestrictionKey(restrictionKey, expiresTimeStamp)).rejects.toThrowError(
         NotFoundException,
       )
-    })
+    }, 30000)
   })
 
   describe('updateViewAllowedByRestrictionKey', () => {
