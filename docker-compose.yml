@@ -21,14 +21,18 @@ services:
       - REDIS_PORT=${REDIS_PORT}
     networks:
       - xplor-network
+      
   xplor_wallet_redis_service:
+    container_name: Wallet-redis-service
     image: redis
+    restart: always
     ports:
       - '1093:6379'
     volumes:
       - xplor_wallet_redis_service:/data
     networks:
       - xplor-network
+
   xplor_wallet_mongodb_service:
     image: mongo:6-jammy
     # ports:
@@ -41,6 +45,7 @@ services:
 volumes:
   xplor_wallet_redis_service:
   dbdata6:
+
 networks:
   xplor-network:
     external: true
