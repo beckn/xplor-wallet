@@ -1,0 +1,4 @@
+export const MaxVCShareHours = 167
+export const REGISTRY_SERVICE_URL = 'REGISTRY_SERVICE_URL'
+export const WALLET_SERVICE_URL = 'WALLET_SERVICE_URL'
+export const REDIS_CLIENT = 'REDIS_CLIENT'
