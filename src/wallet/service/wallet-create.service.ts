@@ -13,7 +13,7 @@ import { CreateWalletModelDto } from '../dto/create-wallet-model.dto'
 import { CreateWalletRequestDto } from '../dto/create-wallet-request.dto'
 import { Wallet } from '../schemas/wallet.schema'
 import { WalletReadService } from './wallet-read.service'
-import { REGISTRY_SERVICE_URL } from 'src/common/constants/name-constants'
+import { REGISTRY_SERVICE_URL } from '../../common/constants/name-constants'
 
 @Injectable()
 export class WalletCreateService {
@@ -30,7 +30,7 @@ export class WalletCreateService {
   async createWallet(request: CreateWalletRequestDto): Promise<StandardMessageResponse | any> {
     // Check if a wallet with the given userId already exists
     const existingWallet = await this.walletReadService.findWalletByUserId(request.userId)
-    if (existingWallet['data'] !== null) {
+    if (existingWallet['data'] != null) {
       // Throw an exception if the wallet already exists
       throw new ConflictException(WalletErrors.WALLET_ALREADY_EXIST)
     }
@@ -47,8 +47,7 @@ export class WalletCreateService {
 
     const createWalletModel = new CreateWalletModelDto(request.userId, createRegistryUser[0]['id'])
     // Create a new wallet if it doesn't exist
-    const wallet = new this.walletModel(createWalletModel)
-    const createdWallet = await wallet.save()
+    const createdWallet = await this.walletModel.create(createWalletModel)
     return getSuccessResponse(await createdWallet, HttpResponseMessage.OK)
   }
 }

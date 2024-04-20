@@ -39,10 +39,7 @@ export class FilesController {
       throw new BadRequestException(FilesErrors.FILE_MISSING_ERROR)
     }
 
-    const walletDetails = await this.walletService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
-    if (walletDetails.data['userId'] == null) {
-      throw new Error(WalletErrors.WALLET_NOT_FOUND)
-    }
+    await this.walletService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
 
     return this.fileCreateService.createFile(file, body)
   }

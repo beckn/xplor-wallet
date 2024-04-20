@@ -55,14 +55,19 @@ describe('VerifiableCredentialController', () => {
         {
           provide: ShareRequestUpdateService,
           useValue: {
-            deleteShareRequest: jest.fn(),
             respondToShareRequest: jest.fn(),
+          },
+        },
+        {
+          provide: ShareRequestDeleteService,
+          useValue: {
+            deleteShareRequest: jest.fn(),
           },
         },
         {
           provide: ShareRequestCreateService,
           useValue: {
-            shareVc: jest.fn(),
+            shareVCs: jest.fn(),
             requestShareFile: jest.fn(),
           },
         },
@@ -88,6 +93,7 @@ describe('VerifiableCredentialController', () => {
     shareRequestCreateService = module.get<ShareRequestCreateService>(ShareRequestCreateService)
     shareRequestReadService = module.get<ShareRequestReadService>(ShareRequestReadService)
     shareRequestUpdateService = module.get<ShareRequestUpdateService>(ShareRequestUpdateService)
+    shareRequestDeleteService = module.get<ShareRequestDeleteService>(ShareRequestDeleteService)
     vcReadService = module.get<VerifiableCredentialReadService>(VerifiableCredentialReadService)
     vcDeleteService = module.get<VerifiableCredentialDeleteService>(VerifiableCredentialDeleteService)
   })
@@ -268,7 +274,7 @@ describe('VerifiableCredentialController', () => {
       const storeGetIdResult = {
         vcId: 'vcId',
       }
-      // jest.spyOn(shareRequestCreateService, 'shareVc').mockResolvedValue(storeGetIdResult)
+      jest.spyOn(shareRequestCreateService, 'shareVCs').mockResolvedValue(storeGetIdResult)
       const result = await controller.shareFile(body.params, body.shareDetails)
       expect(result).toHaveProperty('vcId', storeGetIdResult.vcId)
     })
@@ -288,7 +294,7 @@ describe('VerifiableCredentialController', () => {
           },
         },
       }
-      // jest.spyOn(shareRequestCreateService, 'shareVc').mockRejectedValue(new NotFoundException(VcErrors.VC_NOT_EXIST))
+      jest.spyOn(shareRequestCreateService, 'shareVCs').mockRejectedValue(new NotFoundException(VcErrors.VC_NOT_EXIST))
       const result = controller.shareFile(body.params, body.shareDetails)
       await expect(result).rejects.toThrow(new NotFoundException(VcErrors.VC_NOT_EXIST))
     })

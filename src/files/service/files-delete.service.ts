@@ -22,10 +22,11 @@ export class FilesDeleteService {
    */
   async deleteFileById(fileId: string): Promise<any> {
     const fileDelete = await this.fileModel.findOneAndDelete({ _id: fileId })
-    await this.storageService.deleteFileUrl(fileDelete['fileKey'])
     if (!fileDelete) {
       throw new NotFoundException(FilesErrors.FILE_NOT_EXIST)
     }
+
+    await this.storageService.deleteFileUrl(fileDelete['fileKey'])
 
     return fileDelete
   }

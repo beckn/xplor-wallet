@@ -1,15 +1,23 @@
-import { BadRequestException } from '@nestjs/common'
+import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { CreateFileRequestDto } from '../dto/create-file-request.dto'
 import { FileEntity } from '../entities/file.entity'
 import { FilesCreateService } from '../service/files-create.service'
 import { FilesController } from './files.controller'
+import { WalletErrors } from '../..//common/constants/error-messages'
+import { File } from '../schemas/files.schema'
+import { Model } from 'mongoose'
+import { ApiClient } from '../../common/api-client'
+import { VerifiableCredentialCreateService } from '../../verifiable-credential/service/verifiable-credential-create.service'
+import { S3StorageService } from '../service/s3-storage.service'
+import { ConfigService } from '@nestjs/config'
 
 describe('FilesController', () => {
   let controller: FilesController
   let fileCreateService: FilesCreateService
   let walletReadService: WalletReadService
+  let fileModelMock: Model<File>
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,7 +26,7 @@ describe('FilesController', () => {
         {
           provide: FilesCreateService,
           useValue: {
-            createFile: jest.fn().mockResolvedValue({} as FileEntity),
+            createFile: jest.fn().mockResolvedValue({} as any),
           },
         },
         {
@@ -55,7 +63,7 @@ describe('FilesController', () => {
       }
 
       const body: CreateFileRequestDto = {
-        walletId: 'wallet123',
+        walletId: 'wallet_ec3a32c5-b7fa-417c-8537-41c8f915258a',
         category: 'Result',
         tags: ['Result', 'cbse'],
         name: 'Result',
@@ -92,15 +100,19 @@ describe('FilesController', () => {
       }
 
       const body: CreateFileRequestDto = {
-        walletId: 'wallet123',
+        walletId: null,
         category: 'Result',
         tags: ['Result', 'cbse'],
         name: 'Result',
       }
 
-      jest.spyOn(walletReadService, 'getWalletDetails').mockResolvedValue({})
+      jest
+        .spyOn(walletReadService, 'getWalletDetails')
+        .mockRejectedValue(new NotFoundException(WalletErrors.WALLET_NOT_FOUND))
 
-      await expect(controller.createFile(file, body)).rejects.toThrow(Error)
+      await expect(controller.createFile(file, body)).rejects.toThrow(
+        new NotFoundException(WalletErrors.WALLET_NOT_FOUND),
+      )
     })
   })
 })

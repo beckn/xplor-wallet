@@ -46,7 +46,7 @@ export class VCAccessControlUpdateService {
         },
         { new: true }, // Return the updated document
       )
-      .exec()
+      .then()
 
     if (!updatedDocument) {
       throw new NotFoundException(ViewAccessControlErrors.DOCUMENT_NOT_FOUND)
@@ -73,8 +73,10 @@ export class VCAccessControlUpdateService {
         },
         { new: true }, // Return the updated document
       )
-      .exec()
+      .then()
 
+    // Update the field in redis cache
+    await this.redisService.updateField(resKey, 'viewAllowed', viewAllowed)
     if (!updatedDocument) {
       throw new NotFoundException(ViewAccessControlErrors.DOCUMENT_NOT_FOUND)
     }
@@ -91,7 +93,7 @@ export class VCAccessControlUpdateService {
   ): Promise<StandardMessageResponse | any> {
     const updatedAcl = await this.vcAccessControlModel
       .findOneAndUpdate({ restrictedKey }, { $set: { shareRequestId: shareRequestId } }, { new: true })
-      .exec()
+      .then()
 
     if (!updatedAcl) {
       throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
@@ -106,7 +108,7 @@ export class VCAccessControlUpdateService {
   async updateVcIdByRestrictedKey(restrictedKey: string, vcId: string): Promise<StandardMessageResponse | any> {
     const updatedAcl = await this.vcAccessControlModel
       .findOneAndUpdate({ restrictedKey }, { $set: { vcId: vcId } }, { new: true })
-      .exec()
+      .then()
 
     if (!updatedAcl) {
       throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
@@ -127,7 +129,7 @@ export class VCAccessControlUpdateService {
         },
         { new: true },
       )
-      .exec()
+      .then()
     return updatedDocument
   }
 }

@@ -94,7 +94,7 @@ export class ShareRequestUpdateService {
         { _id: requestId },
         {
           status: action,
-          vcId: '',
+          // vcId: '',
           restrictedUrl: '',
         },
         { new: true },

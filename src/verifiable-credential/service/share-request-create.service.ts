@@ -12,7 +12,6 @@ import { FilesErrors, VcErrors, WalletErrors } from '../../common/constants/erro
 import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
 import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
-import { FilesReadService } from '../../files/service/files-read.service'
 import { getSuccessResponse } from '../../utils/get-success-response'
 import { generateVCAccessControlExpirationTimestamp } from '../../utils/vc.utils'
 import { VCAccessControlCreateService } from '../../vc-access-control/service/verifiable-credential-access-control-create.service'
@@ -26,18 +25,15 @@ import { RequestShareFileRequestDto } from '../../verifiable-credential/dto/requ
 import { ShareFileRequestDto } from '../../verifiable-credential/dto/share-file-request.dto'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { ShareRequest } from '../schemas/share-request.schema'
-import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
 import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
 
 @Injectable()
 export class ShareRequestCreateService {
   constructor(
-    @InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>,
     @InjectModel('ShareRequest') private readonly shareRequestModel: Model<ShareRequest>,
     private readonly vcReadService: VerifiableCredentialReadService,
     private readonly vcAclUpdateService: VCAccessControlUpdateService,
     private readonly vcAclCreateService: VCAccessControlCreateService,
-    private readonly filesReadService: FilesReadService,
     private readonly walletReadService: WalletReadService,
   ) {}
 
