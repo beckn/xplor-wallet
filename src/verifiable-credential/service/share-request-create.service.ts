@@ -60,7 +60,6 @@ export class ShareRequestCreateService {
           throw new NotFoundException(VcErrors.VC_NOT_EXIST)
         }
 
-        console.log(vcDetails)
         if (vcDetails.data['walletId'] !== walletId) {
           throw new UnauthorizedException(FilesErrors.SHARE_PERMISSION_ERROR)
         }
