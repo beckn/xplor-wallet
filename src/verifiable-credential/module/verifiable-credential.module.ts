@@ -69,6 +69,7 @@ import { ConfigService } from 'aws-sdk'
     VerifiableCredentialCreateService,
     VerifiableCredentialDeleteService,
     VCAccessControlReadService,
+    VCAccessControlUpdateService,
     FilesReadService,
     FilesDeleteService,
     FilesUpdateService,

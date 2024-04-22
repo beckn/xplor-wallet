@@ -1,6 +1,7 @@
 export const ViewAccessControlErrors = {
   DOCUMENT_NOT_FOUND: 'No document found with the provided restriction key.',
   ACL_NOT_FOUND: 'Access control document not found for the provided restrictedKey.',
+  EXPIRED_DOCUMENT: 'You cannot update this request as it has expired.',
 }
 
 export const WalletErrors = {

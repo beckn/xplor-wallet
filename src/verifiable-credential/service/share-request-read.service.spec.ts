@@ -18,6 +18,7 @@ import { ShareRequestDeleteService } from './share-request-delete.service'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
 import { ShareRequestAction } from '../../common/constants/enums'
+import { generateCurrentIsoTime } from '../../utils/vc.utils'
 
 describe('ShareRequestReadService', () => {
   let service: ShareRequestReadService
@@ -137,11 +138,23 @@ describe('ShareRequestReadService', () => {
           _id: 'requestId1',
           vcId: 'vcId',
           status: ShareRequestAction.ACCEPTED, // Add status property
+          vcShareDetails: {
+            restrictions: {
+              expiresIn: 128,
+            },
+          },
+          createdAt: generateCurrentIsoTime(),
         },
         {
           _id: 'requestId2',
           vcId: 'vcId',
           status: ShareRequestAction.ACCEPTED, // Add status property
+          vcShareDetails: {
+            restrictions: {
+              expiresIn: 128,
+            },
+          },
+          createdAt: generateCurrentIsoTime(),
         },
       ]
       const expResponse = { data: { _id: 'vcId', fileId: 'fileId' } }
