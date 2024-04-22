@@ -98,6 +98,7 @@ export class ShareRequestUpdateService {
         },
         { new: true },
       )
+      await this.vcAclUpdateService.deleteAclByRestrictedUrl(requestDetails['restrictedUrl'])
     } else if (action == ShareRequestAction.ACCEPTED) {
       // Here if the action is ACCEPTED, then set the fileId and generate the restrictedUrl in the shareRequestModel
       // Create an ACL document

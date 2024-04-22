@@ -9,6 +9,7 @@ import { getSuccessResponse } from '../../utils/get-success-response'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { ShareRequest } from '../schemas/share-request.schema'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
+import { VCAccessControlUpdateService } from 'src/vc-access-control/service/verifiable-credential-access-control-update.service'
 
 @Injectable()
 export class ShareRequestDeleteService {
@@ -16,6 +17,7 @@ export class ShareRequestDeleteService {
     @InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>,
     @InjectModel('ShareRequest') private readonly shareRequestModel: Model<ShareRequest>,
     private readonly walletReadService: WalletReadService,
+    private readonly vcAclUpdateService: VCAccessControlUpdateService,
   ) {}
 
   /**
@@ -39,7 +41,7 @@ export class ShareRequestDeleteService {
     }
 
     const result = await this.shareRequestModel.findOneAndDelete({ _id: requestId })
-
+    await this.vcAclUpdateService.deleteAclByRestrictedUrl(result['restrictedUrl'])
     return getSuccessResponse(await result, HttpResponseMessage.OK)
   }
 
