@@ -29,7 +29,7 @@ services:
     ports:
       - '1093:6379'
     volumes:
-      - xplor_wallet_redis_service:/data
+      - /home/ubuntu/ALL_VOLUMES/Xplor-Wallet-nest-backend/redis-service/xplor_wallet_redis_service:/data
     networks:
       - xplor-network
 
