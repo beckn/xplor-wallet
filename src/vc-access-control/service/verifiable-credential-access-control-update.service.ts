@@ -25,23 +25,36 @@ export class VCAccessControlUpdateService {
     resKey: string,
     expiresTimeStamp: number,
   ): Promise<StandardMessageResponse | any> {
-    // Generating unique restricted key and restrictedUrl
-    const restrictedKey = generateUrlUUID()
-    const restrictedUrl =
-      this.configService.get(WALLET_SERVICE_URL) +
-      VcApiRoutes.VC_REQUEST +
-      VcApiRoutes.FILES_VIEW_REQUESTS +
-      restrictedKey
-
     // Update the document with the given restriction key
     const updatedDocument = await this.vcAccessControlModel
       .findOneAndUpdate(
         { restrictedKey: resKey }, // Find the document with the matching restriction key
         {
           $set: {
-            restrictedKey: restrictedKey, // Update the restriction key
-            restrictedUrl: restrictedUrl, // Update the restriction URL
+            restrictedKey: resKey, // Update the restriction key
             expireTimeStamp: expiresTimeStamp, // Update the expiration timestamp
+          },
+        },
+        { new: true }, // Return the updated document
+      )
+      .then()
+
+    if (!updatedDocument) {
+      throw new NotFoundException(ViewAccessControlErrors.DOCUMENT_NOT_FOUND)
+    }
+
+    return updatedDocument
+  }
+
+  async updateViewOnceByRestrictionKey(resKey: string, viewOnce: boolean): Promise<StandardMessageResponse | any> {
+    // Update the document with the given restriction key
+    const updatedDocument = await this.vcAccessControlModel
+      .findOneAndUpdate(
+        { restrictedKey: resKey }, // Find the document with the matching restriction key
+        {
+          $set: {
+            restrictedKey: resKey, // Update the restriction key
+            viewOnce: viewOnce, // Update the expiration timestamp
           },
         },
         { new: true }, // Return the updated document

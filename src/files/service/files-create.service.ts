@@ -84,7 +84,7 @@ export class FilesCreateService {
       body.category,
       null,
       body.tags,
-      `${body.name}-${getCurrentTimeStamp()}`,
+      body.name,
     )
     // Create a VC for this file!
     const vcDocumentResult = await this.vcCreateService.createVerifiableCredential(createVcRequest)

@@ -191,7 +191,6 @@ describe('VCAccessControlUpdateService', () => {
         {
           $set: {
             restrictedKey: expect.any(String),
-            restrictedUrl: expect.any(String),
             expireTimeStamp: expiresTimeStamp,
           },
         },

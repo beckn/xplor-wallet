@@ -152,7 +152,9 @@ describe('ShareRequestReadService', () => {
         .spyOn(service['filesReadService'], 'getFileByIdWithoutStoredUrl')
         .mockResolvedValue({ data: { _id: 'fileId' } } as any)
       jest.spyOn(service['shareRequestModel'], 'find').mockReturnValue({
-        skip: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue(shareRequests as any) }),
+        sort: jest.fn().mockReturnValue({
+          skip: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue(shareRequests as any) }),
+        }),
       } as any)
       // Call the method
       const result = await service.getShareRequestsList(walletId, queries as any)

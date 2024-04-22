@@ -172,11 +172,14 @@ export class ShareRequestUpdateService {
     )
 
     await this.vcAclUpdateService.renewAccessControl(aclDetails['restrictedKey'], updatedExpirationTimeStamp)
-    const updatedAcl = await this.vcAclUpdateService.updateViewAllowedByRestrictionKey(
+    await this.vcAclUpdateService.updateViewOnceByRestrictionKey(
       aclDetails['restrictedKey'],
       updateRequest.restrictions.viewOnce,
     )
-
+    const updatedAcl = await this.vcAclUpdateService.updateViewAllowedByRestrictionKey(
+      aclDetails['restrictedKey'],
+      true,
+    )
     await this.redisService.setWithExpiry(
       aclDetails['restrictedKey'],
       JSON.stringify(updatedAcl),
