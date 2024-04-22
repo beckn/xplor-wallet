@@ -8,6 +8,7 @@ export enum ShareRequestAction {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
+  EXPIRED = 'EXPIRED',
 }
 
 export enum FileShareType {

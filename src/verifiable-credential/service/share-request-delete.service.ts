@@ -1,33 +1,14 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { ShareRequestAction } from '../../common/constants/enums'
-import { FilesErrors, VcErrors, WalletErrors } from '../../common/constants/error-messages'
+import { FilesErrors, WalletErrors } from '../../common/constants/error-messages'
 import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
 import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
-import { FilesReadService } from '../../files/service/files-read.service'
-import { RedisService } from '../../redis/service/redis.service'
 import { getSuccessResponse } from '../../utils/get-success-response'
-import {
-  generateExpirationTimestampFromGivenDate,
-  generateVCAccessControlExpirationTimestamp,
-  getSecondsDifference,
-} from '../../utils/vc.utils'
-import { VCAccessControlCreateService } from '../../vc-access-control/service/verifiable-credential-access-control-create.service'
-import { VCAccessControlReadService } from '../../vc-access-control/service/verifiable-credential-access-control-read.service'
-import { VCAccessControlUpdateService } from '../../vc-access-control/service/verifiable-credential-access-control-update.service'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
-import { UpdateVcRequestDto } from '../dto/update-vc-request.dto'
 import { ShareRequest } from '../schemas/share-request.schema'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
-import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
 
 @Injectable()
 export class ShareRequestDeleteService {
