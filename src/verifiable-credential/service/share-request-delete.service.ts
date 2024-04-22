@@ -9,7 +9,7 @@ import { getSuccessResponse } from '../../utils/get-success-response'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { ShareRequest } from '../schemas/share-request.schema'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
-import { VCAccessControlUpdateService } from 'src/vc-access-control/service/verifiable-credential-access-control-update.service'
+import { VCAccessControlUpdateService } from '../../vc-access-control/service/verifiable-credential-access-control-update.service'
 
 @Injectable()
 export class ShareRequestDeleteService {
