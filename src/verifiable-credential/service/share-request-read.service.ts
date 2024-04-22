@@ -51,6 +51,10 @@ export class ShareRequestReadService {
     }
 
     let query = this.shareRequestModel.find(filter)
+
+    // Sort by updatedAt date field
+    query = query.sort({ updatedAt: -1 })
+
     // Pagination
     const page = queries.page || 1
     const pageSize = queries.pageSize || 20
