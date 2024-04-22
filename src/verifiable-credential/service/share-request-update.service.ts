@@ -8,7 +8,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { ShareRequestAction } from '../../common/constants/enums'
-import { FilesErrors, VcErrors, WalletErrors } from '../../common/constants/error-messages'
+import { FilesErrors, VcErrors, ViewAccessControlErrors, WalletErrors } from '../../common/constants/error-messages'
 import { HttpResponseMessage } from '../../common/constants/http-response-message'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
 import { StandardWalletRequestDto } from '../../files/dto/standard-wallet-request.dto'
@@ -34,13 +34,12 @@ export class ShareRequestUpdateService {
   constructor(
     @InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>,
     @InjectModel('ShareRequest') private readonly shareRequestModel: Model<ShareRequest>,
-    private readonly vcReadService: VerifiableCredentialReadService,
     private readonly vcAclCreateService: VCAccessControlCreateService,
     private readonly vcAclReadService: VCAccessControlReadService,
     private readonly vcAclUpdateService: VCAccessControlUpdateService,
-    private readonly filesReadService: FilesReadService,
     private readonly walletReadService: WalletReadService,
     private readonly redisService: RedisService,
+    private readonly vcReadService: VerifiableCredentialReadService,
   ) {}
 
   /**
@@ -163,6 +162,10 @@ export class ShareRequestUpdateService {
 
     if (requestDetails['vcOwnerWallet'] != walletId) {
       throw new UnauthorizedException(FilesErrors.SHARE_ACTION_PERMISSION_ERROR)
+    }
+
+    if (requestDetails['status'] === ShareRequestAction.EXPIRED) {
+      throw new BadRequestException(ViewAccessControlErrors.EXPIRED_DOCUMENT)
     }
 
     const requestCreatedAt = requestDetails['createdAt']

@@ -16,6 +16,18 @@ export class VCAccessControlReadService {
   ) {}
 
   /**
+   * Finds Acl by shareRequestId
+   */
+  async findAclByShareRequestId(shareRequestId: string): Promise<StandardMessageResponse | any> {
+    const aclResult = await this.vcAccessControlModel.findOne({ shareRequestId }).then()
+
+    if (!aclResult) {
+      throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
+    }
+
+    return aclResult
+  }
+  /**
    * Finds ACl by restrictedKey
    */
   async findCachedByRestrictedKey(restrictedKey: string): Promise<StandardMessageResponse | any> {
