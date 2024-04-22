@@ -11,6 +11,8 @@ import { GetShareFileRequestsDto } from '../../verifiable-credential/dto/get-sha
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { ShareRequest } from '../schemas/share-request.schema'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
+import { generateCurrentIsoTime, generateExpirationTimestampFromGivenDate } from '../../utils/vc.utils'
+import { VCAccessControlReadService } from '../../vc-access-control/service/verifiable-credential-access-control-read.service'
 
 @Injectable()
 export class ShareRequestReadService {
@@ -18,6 +20,7 @@ export class ShareRequestReadService {
     @InjectModel('VerifiableCredential') private readonly vcModel: Model<VerifiableCredential>,
     @InjectModel('ShareRequest') private readonly shareRequestModel: Model<ShareRequest>,
     private readonly walletReadService: WalletReadService,
+    private readonly vcAclReadService: VCAccessControlReadService,
     private readonly filesReadService: FilesReadService,
   ) {}
 
@@ -51,36 +54,59 @@ export class ShareRequestReadService {
     }
 
     let query = this.shareRequestModel.find(filter)
+
     // Pagination
     const page = queries.page || 1
     const pageSize = queries.pageSize || 20
     const skip = (page - 1) * pageSize
 
     // Apply pagination
-    query = query.skip(skip).limit(pageSize)
+    query = query.sort({ updatedAt: -1 }).skip(skip).limit(pageSize)
 
     const shareRequests = await query
 
     const updatedShareRequests = []
-
+    const currentIsoTime = generateCurrentIsoTime()
     for (const request of shareRequests) {
-      const updatedRequest = { ...request['_doc'] }
+      const requestCreatedAt = request['createdAt']
+      const expirationTimeStamp = generateExpirationTimestampFromGivenDate(
+        requestCreatedAt,
+        request.vcShareDetails['restrictions']['expiresIn'],
+      )
 
-      if (request.vcId && request.status === ShareRequestAction.ACCEPTED) {
-        const vcDetails = await this.vcModel.findOne({ _id: request['vcId'] })
-        if (vcDetails != null) {
-          if (vcDetails['fileId'] != null) {
-            const fileDetails = await this.filesReadService.getFileByIdWithoutStoredUrl(vcDetails['fileId'])
-            if (fileDetails != null) {
-              updatedRequest['fileDetails'] = fileDetails
+      if (currentIsoTime > expirationTimeStamp && request.status !== ShareRequestAction.EXPIRED) {
+        // The request has expired!!
+        // Change the status of request to expired
+
+        await this.shareRequestModel.findOneAndUpdate(
+          { _id: request['_id'].toString() },
+          {
+            status: ShareRequestAction.EXPIRED,
+            restrictedUrl: '',
+          },
+          { new: true },
+        )
+      } else if (currentIsoTime < expirationTimeStamp || queries.status === ShareRequestAction.EXPIRED) {
+        // The request is still alive or we return the expired ones
+
+        const updatedRequest = { ...request['_doc'] }
+
+        if (request.vcId && request.status === ShareRequestAction.ACCEPTED) {
+          const vcDetails = await this.vcModel.findOne({ _id: request['vcId'] })
+          if (vcDetails != null) {
+            if (vcDetails['fileId'] != null) {
+              const fileDetails = await this.filesReadService.getFileByIdWithoutStoredUrl(vcDetails['fileId'])
+              if (fileDetails != null) {
+                updatedRequest['fileDetails'] = fileDetails
+              }
             }
+
+            updatedRequest['vcDetails'] = vcDetails
           }
-
-          updatedRequest['vcDetails'] = vcDetails
         }
-      }
 
-      updatedShareRequests.push(updatedRequest)
+        updatedShareRequests.push(updatedRequest)
+      }
     }
 
     return getSuccessResponse(await updatedShareRequests, HttpResponseMessage.OK)

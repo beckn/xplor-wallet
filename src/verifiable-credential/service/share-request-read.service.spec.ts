@@ -18,6 +18,7 @@ import { ShareRequestDeleteService } from './share-request-delete.service'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
 import { ShareRequestAction } from '../../common/constants/enums'
+import { generateCurrentIsoTime } from '../../utils/vc.utils'
 
 describe('ShareRequestReadService', () => {
   let service: ShareRequestReadService
@@ -137,11 +138,23 @@ describe('ShareRequestReadService', () => {
           _id: 'requestId1',
           vcId: 'vcId',
           status: ShareRequestAction.ACCEPTED, // Add status property
+          vcShareDetails: {
+            restrictions: {
+              expiresIn: 128,
+            },
+          },
+          createdAt: generateCurrentIsoTime(),
         },
         {
           _id: 'requestId2',
           vcId: 'vcId',
           status: ShareRequestAction.ACCEPTED, // Add status property
+          vcShareDetails: {
+            restrictions: {
+              expiresIn: 128,
+            },
+          },
+          createdAt: generateCurrentIsoTime(),
         },
       ]
       const expResponse = { data: { _id: 'vcId', fileId: 'fileId' } }
@@ -152,7 +165,9 @@ describe('ShareRequestReadService', () => {
         .spyOn(service['filesReadService'], 'getFileByIdWithoutStoredUrl')
         .mockResolvedValue({ data: { _id: 'fileId' } } as any)
       jest.spyOn(service['shareRequestModel'], 'find').mockReturnValue({
-        skip: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue(shareRequests as any) }),
+        sort: jest.fn().mockReturnValue({
+          skip: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue(shareRequests as any) }),
+        }),
       } as any)
       // Call the method
       const result = await service.getShareRequestsList(walletId, queries as any)

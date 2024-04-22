@@ -66,7 +66,7 @@ export class VerifiableCredentialReadService {
     }
 
     // Execute the query with pagination using the Mongoose model
-    const filesResult = await this.vcModel.find(query).skip(skip).limit(queryParams.pageSize)
+    const filesResult = await this.vcModel.find(query).sort({ updatedAt: -1 }).skip(skip).limit(queryParams.pageSize)
 
     // Fetch file details for each fileId and add fileType to filesResult
     const filesWithDetails = await Promise.all(
@@ -137,7 +137,7 @@ export class VerifiableCredentialReadService {
 
     // Checking whether the allowedViewCount reached limit for the shareRequest
 
-    if (aclDetails['viewAllowed'] === false && aclDetails['viewOnce'] === true && aclDetails['shareRequestId']) {
+    if (aclDetails['viewAllowed'] === false && aclDetails['viewOnce'] === true) {
       throw new UnauthorizedException(VcErrors.VC_VIEW_ONCE_ERROR)
     } else if (aclDetails['viewAllowed'] === true && aclDetails['viewOnce'] === true) {
       // Update viewAllowed of Access Control
