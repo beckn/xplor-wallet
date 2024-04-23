@@ -48,7 +48,6 @@ export class ShareRequestCreateService {
     shareRequest: ShareFileRequestDto,
   ): Promise<StandardMessageResponse | any> {
     const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, walletId))
-
     if (!wallet['data']) {
       throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }
@@ -65,7 +64,6 @@ export class ShareRequestCreateService {
         }
 
         const expiryTimeStamp = generateVCAccessControlExpirationTimestamp(shareRequest.restrictions.expiresIn)
-
         const restrictedFile = await this.vcAclCreateService.createVcAccessControl(
           vcId,
           '',
@@ -96,8 +94,7 @@ export class ShareRequestCreateService {
           restrictedFile.restrictedKey,
           result['_id'].toString(),
         )
-
-        return result
+        return { ...result.toJSON(), vcDetails: vcDetails.data }
       }),
     )
 

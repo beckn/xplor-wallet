@@ -116,6 +116,10 @@ export class VerifiableCredentialReadService {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
+    if (!vcDetails.fileId) {
+      return getSuccessResponse(await { ...vcDetails.toJSON() }, HttpResponseMessage.OK)
+    }
+
     const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
     return getSuccessResponse(await { fileType: fileDetails.fileType, ...vcDetails.toJSON() }, HttpResponseMessage.OK)
   }
@@ -133,7 +137,7 @@ export class VerifiableCredentialReadService {
 
     const vcDetails = await this.getVCById(aclDetails['vcId'])
     let fileDetails
-    if (vcDetails.data['fileId']) {
+    if (vcDetails.data['fileId'] !== '' && vcDetails.data['fileId'] !== null) {
       fileDetails = await this.filesReadService.getFileById(vcDetails.data['fileId'])
     }
 
@@ -188,6 +192,7 @@ export class VerifiableCredentialReadService {
             .replace('template-id-here', vcDetails.data['templateId']),
           res,
         )
+        return
         await renderVCDocumentToResponse(
           res,
           this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
