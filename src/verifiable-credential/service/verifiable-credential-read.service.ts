@@ -17,6 +17,7 @@ import {
   generateCurrentIsoTime,
   generateVCAccessControlExpirationTimestamp,
   renderVCDocumentToResponse,
+  renderViewVCHtmlPage,
 } from '../../utils/vc.utils'
 import { VCAccessControlReadService } from '../../vc-access-control/service/verifiable-credential-access-control-read.service'
 import { VCAccessControlUpdateService } from '../../vc-access-control/service/verifiable-credential-access-control-update.service'
@@ -25,6 +26,7 @@ import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import { GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
 import { ShareRequestReadService } from './share-request-read.service'
+import { VC_RECEIVED_VIEW_HTML, VC_SELF_ISSUED_VIEW_HTML } from '../../config/vc.config'
 @Injectable()
 export class VerifiableCredentialReadService {
   constructor(
@@ -114,6 +116,10 @@ export class VerifiableCredentialReadService {
       throw new NotFoundException(VcErrors.VC_NOT_EXIST)
     }
 
+    if (!vcDetails.fileId) {
+      return getSuccessResponse(await { ...vcDetails.toJSON() }, HttpResponseMessage.OK)
+    }
+
     const fileDetails = await this.filesReadService.getFileById(vcDetails.fileId)
     return getSuccessResponse(await { fileType: fileDetails.fileType, ...vcDetails.toJSON() }, HttpResponseMessage.OK)
   }
@@ -131,7 +137,7 @@ export class VerifiableCredentialReadService {
 
     const vcDetails = await this.getVCById(aclDetails['vcId'])
     let fileDetails
-    if (vcDetails.data['fileId']) {
+    if (vcDetails.data['fileId'] !== '' && vcDetails.data['fileId'] !== null) {
       fileDetails = await this.filesReadService.getFileById(vcDetails.data['fileId'])
     }
 
@@ -160,13 +166,33 @@ export class VerifiableCredentialReadService {
       // The expiration timestamp has not yet been reached
 
       if (vcDetails.data['type'] === VcType.SELF_ISSUED) {
+        // Render html with the file!
+        await renderViewVCHtmlPage(
+          VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replace(
+            'vc-name',
+            vcDetails.data['name'],
+          ),
+          res,
+        )
+        return
         const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
         if (!renderedFile) {
           const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails.data['fileId'])
+
           await renderFileToResponse(res, newFileUrl, restrictionKey)
         }
       } else {
         // Hit the Registry layer to Render VC
+        await renderViewVCHtmlPage(
+          VC_RECEIVED_VIEW_HTML.replaceAll(
+            'remote-url',
+            this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
+          )
+            .replace('vc-name', vcDetails.data['name'])
+            .replace('template-id-here', vcDetails.data['templateId']),
+          res,
+        )
+        return
         await renderVCDocumentToResponse(
           res,
           this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
@@ -198,6 +224,15 @@ export class VerifiableCredentialReadService {
           .exec()
 
         if (vcDetails.data['type'] === VcType.SELF_ISSUED) {
+          // Render html with the file!
+          await renderViewVCHtmlPage(
+            VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replace(
+              'vc-name',
+              vcDetails.data['name'],
+            ),
+            res,
+          )
+          return
           const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
           if (!renderedFile) {
             const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails.data['fileId'])
@@ -205,6 +240,16 @@ export class VerifiableCredentialReadService {
           }
         } else {
           // Hit the Registry layer to Render VC
+          await renderViewVCHtmlPage(
+            VC_RECEIVED_VIEW_HTML.replaceAll(
+              'remote-url',
+              this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
+            )
+              .replace('vc-name', vcDetails.data['name'])
+              .replace('template-id-here', vcDetails.data['templateId']),
+            res,
+          )
+          return
           await renderVCDocumentToResponse(
             res,
             this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],

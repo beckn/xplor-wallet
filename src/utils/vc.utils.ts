@@ -53,6 +53,11 @@ export function generateUrlUUID(): string {
   return encryptedUUID
 }
 
+export async function renderViewVCHtmlPage(htmlText, res) {
+  res.status(200).send(htmlText)
+  return
+}
+
 export async function renderVCDocumentToResponse(res, fileUrl: string, templateId: string, restrictionKey: string) {
   const apiClient = new ApiClient()
   const headers = {
