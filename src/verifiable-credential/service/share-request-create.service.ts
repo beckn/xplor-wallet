@@ -94,8 +94,7 @@ export class ShareRequestCreateService {
           restrictedFile.restrictedKey,
           result['_id'].toString(),
         )
-
-        return result
+        return { ...result.toJSON(), vcDetails: vcDetails.data }
       }),
     )
 
