@@ -46,6 +46,20 @@ export class VCAccessControlUpdateService {
     return updatedDocument
   }
 
+  async deleteAclByRestrictedUrl(restrictedUrl: string): Promise<StandardMessageResponse | any> {
+    const deletedAcl = await this.vcAccessControlModel.findOneAndDelete({
+      restrictedUrl,
+    })
+    if (!deletedAcl) {
+      throw new NotFoundException(ViewAccessControlErrors.DOCUMENT_NOT_FOUND)
+    }
+
+    await this.redisService.deleteKey(deletedAcl['restrictedKey'])
+    return deletedAcl
+  }
+  /**
+   * Finds and updates viewAllowed
+   **/
   async updateViewOnceByRestrictionKey(resKey: string, viewOnce: boolean): Promise<StandardMessageResponse | any> {
     // Update the document with the given restriction key
     const updatedDocument = await this.vcAccessControlModel
