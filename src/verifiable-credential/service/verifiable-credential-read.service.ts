@@ -26,7 +26,7 @@ import { GetVCListRequestDto } from '../dto/get-vc-list-request.dto'
 import { GetVCRequestDto } from '../dto/get-vc-request.dto'
 import { VerifiableCredential } from '../schemas/verifiable-credential.schema'
 import { ShareRequestReadService } from './share-request-read.service'
-import { VC_RECEIVED_VIEW_HTML, VC_SELF_ISSUED_VIEW_HTML } from 'src/config/vc.config'
+import { VC_RECEIVED_VIEW_HTML, VC_SELF_ISSUED_VIEW_HTML } from '../../config/vc.config'
 @Injectable()
 export class VerifiableCredentialReadService {
   constructor(
