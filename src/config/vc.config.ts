@@ -47,7 +47,7 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
     }
     img, object {
       max-width: 100%;
-      max-height: 90vh; /* Maximum height of 90% of the viewport height */
+      height: 80vh;
       display: block;
       margin: auto;
     }
@@ -112,12 +112,13 @@ export const VC_RECEIVED_VIEW_HTML = `<!DOCTYPE html>
     h2 {
       font-weight: 600;
     }
-    img, object {
-      max-width: 100%;
-      max-height: 90vh; /* Maximum height of 90% of the viewport height */
-      display: block;
-      margin: auto;
-    }
+    img,
+        object {
+            width: 80vw; /* 80% of viewport width */
+            height: 80vh;
+            display: block;
+            margin: auto;
+        }
   </style>
 </head>
 <body>
@@ -134,7 +135,7 @@ export const VC_RECEIVED_VIEW_HTML = `<!DOCTYPE html>
     async function fetchData() {
       const url = 'remote-url'; // Specify your API endpoint URL
       const headers = {
-        'templateId': 'template-id-here' // Example custom header
+        'templateId': 'template-id-here', // Example custom header
         'Accept': 'application/pdf'
       };
 
