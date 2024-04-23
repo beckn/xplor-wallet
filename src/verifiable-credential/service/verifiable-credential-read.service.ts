@@ -128,10 +128,14 @@ export class VerifiableCredentialReadService {
   This function returns the VC in pdf, image or the uploaded file format
    **/
   async renderVCDocument(restrictionKey: string, req, res): Promise<any> {
+    // Checking User Agent
+    const userAgent = req.headers['user-agent'] || ''
+    if (userAgent.includes('PageRenderer') || userAgent.includes('WhatsApp')) {
+      return
+    }
+
     // Fetch Access control details by restrictedKey
     // Finding Redis Cache to check if ACL Exists
-    const userAgent = req.headers['user-agent'] || ''
-    console.log('Request from a crawler:', userAgent)
     const aclDetails = await this.vcAclReadService.findCachedByRestrictedKey(restrictionKey)
     if (!aclDetails) {
       throw new NotFoundException(ViewAccessControlErrors.ACL_NOT_FOUND)
