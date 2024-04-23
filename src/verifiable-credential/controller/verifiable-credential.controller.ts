@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Res } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import {
   DELETE_CREDENTIAL_API,
@@ -100,8 +100,8 @@ export class VerifiableCredentialController {
     description: VIEW_CREDENTIAL_API.successResponseMessage,
     type: VCEntityList,
   })
-  async viewVCDocument(@Param('restrictedKey') keyParam: string, @Res() res) {
-    return await this.vcReadService.renderVCDocument(keyParam, res)
+  async viewVCDocument(@Param('restrictedKey') keyParam: string, @Res() res, @Req() req) {
+    return await this.vcReadService.renderVCDocument(keyParam, req, res)
   }
 
   @Get('/single')
