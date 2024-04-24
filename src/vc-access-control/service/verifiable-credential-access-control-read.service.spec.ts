@@ -22,6 +22,7 @@ import { VerifiableCredentialDeleteService } from '../../verifiable-credential/s
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { VCAccessControlCreateService } from './verifiable-credential-access-control-create.service'
 import { VCAccessControlUpdateService } from './verifiable-credential-access-control-update.service'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 describe('VCAccessControlReadService', () => {
   let service: VCAccessControlReadService
   let modelMock: Model<VCAccessControl>
@@ -32,6 +33,7 @@ describe('VCAccessControlReadService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RedisModule, AppModule],
       providers: [
+        GrafanaLoggerService,
         VCAccessControlReadService,
         ConfigService,
         RedisService,

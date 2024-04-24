@@ -22,6 +22,7 @@ import { ShareRequestReadService } from './share-request-read.service'
 import { VerifiableCredentialCreateService } from './verifiable-credential-create.service'
 import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
 import { ApiClient } from '../../common/api-client'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 describe('VerifiableCredentialDeleteService', () => {
   let service: VerifiableCredentialDeleteService
@@ -34,6 +35,7 @@ describe('VerifiableCredentialDeleteService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RedisModule, AppModule],
       providers: [
+        GrafanaLoggerService,
         VerifiableCredentialDeleteService,
         FilesDeleteService,
         ShareRequestDeleteService,

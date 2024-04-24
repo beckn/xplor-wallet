@@ -8,6 +8,7 @@ import { ApiClient } from '../common/api-client'
 import { ErrorCodes } from '../common/constants/error-codes'
 import { FilesErrors } from '../common/constants/error-messages'
 import { FILE_LOCAL_CONFIG, FileMimeType } from '../common/constants/file-constants'
+import { GrafanaLoggerService } from '../grafana/service/grafana.service'
 
 export function generateVCExpirationDate(years: number) {
   const currentDate = new Date()
@@ -104,7 +105,12 @@ export async function renderVCDocumentToResponse(res, fileUrl: string, templateI
     // Clear the file!
     setTimeout(async function () {
       if (await fsPromises.stat(fullPath)) {
-        await fsPromises.unlink(fullPath).catch((err) => console.error(err))
+        await fsPromises.unlink(fullPath).catch((err) =>
+          new GrafanaLoggerService().sendDebug({
+            message: err,
+            methodName: this.renderVCDocumentToResponse.name,
+          }),
+        )
       }
     }, 3000)
   } else {

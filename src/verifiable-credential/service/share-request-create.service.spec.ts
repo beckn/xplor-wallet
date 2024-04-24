@@ -17,6 +17,7 @@ import { S3StorageService } from '../../files/service/s3-storage.service'
 import { RedisModule } from '../../redis/module/redis.module'
 import { AppModule } from '../../app.module'
 import * as redisMock from 'redis-mock'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 describe('ShareRequestCreateService', () => {
   let service: ShareRequestCreateService
@@ -32,6 +33,7 @@ describe('ShareRequestCreateService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RedisModule, AppModule],
       providers: [
+        GrafanaLoggerService,
         ShareRequestCreateService,
         {
           provide: VerifiableCredentialReadService,
