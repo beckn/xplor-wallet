@@ -174,7 +174,7 @@ export class VerifiableCredentialReadService {
       if (vcDetails.data['type'] === VcType.SELF_ISSUED) {
         // Render html with the file!
         await renderViewVCHtmlPage(
-          VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replace(
+          VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replaceAll(
             'vc-name',
             vcDetails.data['name'],
           ),
@@ -194,8 +194,8 @@ export class VerifiableCredentialReadService {
             'remote-url',
             this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
           )
-            .replace('vc-name', vcDetails.data['name'])
-            .replace('template-id-here', vcDetails.data['templateId']),
+            .replaceAll('vc-name', vcDetails.data['name'])
+            .replaceAll('template-id-here', vcDetails.data['templateId']),
           res,
         )
         return
@@ -232,7 +232,7 @@ export class VerifiableCredentialReadService {
         if (vcDetails.data['type'] === VcType.SELF_ISSUED) {
           // Render html with the file!
           await renderViewVCHtmlPage(
-            VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replace(
+            VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replaceAll(
               'vc-name',
               vcDetails.data['name'],
             ),
@@ -251,8 +251,8 @@ export class VerifiableCredentialReadService {
               'remote-url',
               this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
             )
-              .replace('vc-name', vcDetails.data['name'])
-              .replace('template-id-here', vcDetails.data['templateId']),
+              .replaceAll('vc-name', vcDetails.data['name'])
+              .replaceAll('template-id-here', vcDetails.data['templateId']),
             res,
           )
           return
