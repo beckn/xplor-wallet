@@ -4,7 +4,7 @@ import * as AWS from 'aws-sdk'
 import { AWSError } from 'aws-sdk'
 import { IStorageService } from '../../common/constants/interface-storage-service'
 import { MaxVCShareHours } from '../../common/constants/name-constants'
-import { GrafanaLoggerService } from 'src/grafana/service/grafana.service'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 @Injectable()
 export class S3StorageService implements IStorageService {
