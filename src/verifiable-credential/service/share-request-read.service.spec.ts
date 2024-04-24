@@ -19,6 +19,7 @@ import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
 import { ShareRequestAction } from '../../common/constants/enums'
 import { generateCurrentIsoTime } from '../../utils/vc.utils'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 describe('ShareRequestReadService', () => {
   let service: ShareRequestReadService
@@ -28,6 +29,7 @@ describe('ShareRequestReadService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RedisModule, AppModule],
       providers: [
+        GrafanaLoggerService,
         ShareRequestDeleteService,
         {
           provide: getModelToken('Wallet'),

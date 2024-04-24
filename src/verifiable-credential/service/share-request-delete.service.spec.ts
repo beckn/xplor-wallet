@@ -19,6 +19,7 @@ import { AppModule } from '../../app.module'
 import { RedisModule } from '../../redis/module/redis.module'
 import { ShareRequest } from '../schemas/share-request.schema'
 import { Model } from 'mongoose'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 describe('ShareRequestDeleteService', () => {
   let service: ShareRequestDeleteService
   let walletReadService: WalletReadService
@@ -29,6 +30,7 @@ describe('ShareRequestDeleteService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RedisModule, AppModule],
       providers: [
+        GrafanaLoggerService,
         ShareRequestDeleteService,
         {
           provide: getModelToken('VerifiableCredential'),

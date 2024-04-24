@@ -19,6 +19,7 @@ import { VCAccessControlReadService } from '../../vc-access-control/service/veri
 import { ShareRequestDeleteService } from './share-request-delete.service'
 import { ShareRequestReadService } from './share-request-read.service'
 import { VerifiableCredentialReadService } from './verifiable-credential-read.service'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 describe('VerifiableCredentialCreateService', () => {
   let service: VerifiableCredentialCreateService
@@ -31,6 +32,7 @@ describe('VerifiableCredentialCreateService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RedisModule, AppModule],
       providers: [
+        GrafanaLoggerService,
         VerifiableCredentialCreateService,
         VCAccessControlCreateService,
         VCAccessControlUpdateService,
