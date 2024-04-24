@@ -19,6 +19,7 @@ services:
       - WALLET_SERVICE_URL=${WALLET_SERVICE_URL}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
+      - GRAFANA_SERVICE_URL=${GRAFANA_SERVICE_URL}
     networks:
       - xplor-network
       

@@ -51,6 +51,7 @@ REGISTRY_SERVICE_URL=
 WALLET_SERVICE_URL=
 REDIS_HOST=
 REDIS_PORT=
+GRAFANA_SERVICE_URL=
 ```
 ### Run service using Docker
 Make sure you've the latest version of the docker installed in-order to run the application. Run the service with the following command
@@ -123,6 +124,7 @@ REGISTRY_SERVICE_URL=
 WALLET_SERVICE_URL=
 REDIS_HOST=
 REDIS_PORT=
+GRAFANA_SERVICE_URL=
 ```
 
 ## Deployment
