@@ -23,6 +23,7 @@ import { RedisService } from '../../redis/service/redis.service'
 import { ShareRequestDeleteService } from './share-request-delete.service'
 import { VerifiableCredentialCreateService } from './verifiable-credential-create.service'
 import { VerifiableCredentialDeleteService } from './verifiable-credential-delete.service'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 describe('VerifiableCredentialReadService', () => {
   let service: VerifiableCredentialReadService
@@ -39,6 +40,7 @@ describe('VerifiableCredentialReadService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RedisModule, AppModule],
       providers: [
+        GrafanaLoggerService,
         VerifiableCredentialReadService,
         {
           provide: getModelToken('VerifiableCredential'),

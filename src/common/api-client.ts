@@ -1,4 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { InternalMessages } from './constants/error-messages'
+import { GrafanaLoggerService } from '../grafana/service/grafana.service'
 
 // Interface defining the implementation of REST methods
 export interface ApiImplementation {
@@ -20,7 +22,10 @@ export class ApiClient implements ApiImplementation {
       const response = await this.axiosInstance.get(url, config)
       return response.data
     } catch (error) {
-      console.error('Error in GET request:', error)
+      new GrafanaLoggerService().sendDebug({
+        message: `${InternalMessages.GET_REQUEST} ${error}`,
+        methodName: this.get.name,
+      })
     }
   }
 
@@ -29,7 +34,10 @@ export class ApiClient implements ApiImplementation {
       const response = await this.axiosInstance.post(url, data, config)
       return response.data
     } catch (error) {
-      console.error('Error in POST request:', error)
+      new GrafanaLoggerService().sendDebug({
+        message: `${InternalMessages.POST_REQUEST} ${error}`,
+        methodName: this.post.name,
+      })
     }
   }
 
@@ -38,7 +46,10 @@ export class ApiClient implements ApiImplementation {
       const response = await this.axiosInstance.put(url, data, config)
       return response.data
     } catch (error) {
-      console.error('Error in PUT request:', error)
+      new GrafanaLoggerService().sendDebug({
+        message: `${InternalMessages.PUT_REQUEST} ${error}`,
+        methodName: this.put.name,
+      })
     }
   }
 
@@ -47,7 +58,10 @@ export class ApiClient implements ApiImplementation {
       const response = await this.axiosInstance.delete(url, config)
       return response.data
     } catch (error) {
-      console.error('Error in DELETE request:', error)
+      new GrafanaLoggerService().sendDebug({
+        message: `${InternalMessages.DELETE_REQUEST} ${error}`,
+        methodName: this.delete.name,
+      })
     }
   }
 }

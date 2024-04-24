@@ -12,6 +12,7 @@ import { FilesDeleteService } from '../service/files-delete.service'
 import { FilesReadService } from '../service/files-read.service'
 import { FilesUpdateService } from '../service/files-update.service'
 import { S3StorageModule } from './s3-storage.module'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { S3StorageModule } from './s3-storage.module'
     FilesDeleteService,
     FilesUpdateService,
     ApiClient,
+    GrafanaLoggerService,
   ],
   exports: [MongooseModule, FilesCreateService, FilesReadService, FilesDeleteService, FilesUpdateService],
 })

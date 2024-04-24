@@ -4,12 +4,14 @@ import * as AWS from 'aws-sdk'
 import { AWSError } from 'aws-sdk'
 import { IStorageService } from '../../common/constants/interface-storage-service'
 import { MaxVCShareHours } from '../../common/constants/name-constants'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
+import { InternalMessages } from '../../common/constants/error-messages'
 
 @Injectable()
 export class S3StorageService implements IStorageService {
   AWS_S3_BUCKET
   s3
-  constructor(private readonly configService: ConfigService) {
+  constructor(private readonly configService: ConfigService, private readonly loggerService: GrafanaLoggerService) {
     this.AWS_S3_BUCKET = this.configService.get('STORAGE_BUCKET_NAME')
     this.s3 = new AWS.S3({
       accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
@@ -28,7 +30,10 @@ export class S3StorageService implements IStorageService {
       await this.s3.deleteObject(params).promise()
       return true
     } catch (err) {
-      console.log(`error deleting file from S3 Bucket ${err}`)
+      this.loggerService.sendDebug({
+        message: `${InternalMessages.DELETING_FILE_URL} ${err}`,
+        methodName: this.deleteFileUrl.name,
+      })
       return false
     }
   }
@@ -65,7 +70,10 @@ export class S3StorageService implements IStorageService {
 
       return signedUrl
     } catch (err) {
-      console.error('Error generating signed URL:', err as AWSError)
+      this.loggerService.sendDebug({
+        message: `${InternalMessages.SIGNED_URL}  ${err as AWSError}`,
+        methodName: this.getSignedFileUrl.name,
+      })
       throw err
     }
   }

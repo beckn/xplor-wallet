@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigService } from '@nestjs/config'
 import { S3StorageService } from './s3-storage.service'
 import * as AWS from 'aws-sdk'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 describe('S3StorageService', () => {
   let service: S3StorageService
@@ -14,6 +15,7 @@ describe('S3StorageService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        GrafanaLoggerService,
         S3StorageService,
         {
           provide: ConfigService,

@@ -127,7 +127,7 @@ export class VerifiableCredentialReadService {
   /*
   This function returns the VC in pdf, image or the uploaded file format
    **/
-  async renderVCDocument(restrictionKey: string, req, res): Promise<any> {
+  async renderVCDocument(restrictionKey: string, viewType: string, req, res): Promise<any> {
     // Checking User Agent
     const userAgent = req.headers['user-agent'] || ''
     if (userAgent.includes('PageRenderer') || userAgent.includes('WhatsApp')) {
@@ -172,39 +172,45 @@ export class VerifiableCredentialReadService {
       // The expiration timestamp has not yet been reached
 
       if (vcDetails.data['type'] === VcType.SELF_ISSUED) {
-        // Render html with the file!
-        await renderViewVCHtmlPage(
-          VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replaceAll(
-            'vc-name',
-            vcDetails.data['name'],
-          ),
-          res,
-        )
-        return
-        const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
-        if (!renderedFile) {
-          const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails.data['fileId'])
+        if (viewType === 'preview') {
+          const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+          if (!renderedFile) {
+            const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails.data['fileId'])
 
-          await renderFileToResponse(res, newFileUrl, restrictionKey)
+            await renderFileToResponse(res, newFileUrl, restrictionKey)
+          }
+        } else {
+          // Render html with the file!
+          await renderViewVCHtmlPage(
+            VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replaceAll(
+              'vc-name',
+              vcDetails.data['name'],
+            ),
+            res,
+          )
+          return
         }
       } else {
         // Hit the Registry layer to Render VC
-        await renderViewVCHtmlPage(
-          VC_RECEIVED_VIEW_HTML.replaceAll(
-            'remote-url',
+        if (viewType === 'preview') {
+          await renderVCDocumentToResponse(
+            res,
             this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
+            vcDetails.data['templateId'],
+            restrictionKey,
           )
-            .replaceAll('vc-name', vcDetails.data['name'])
-            .replaceAll('template-id-here', vcDetails.data['templateId']),
-          res,
-        )
-        return
-        await renderVCDocumentToResponse(
-          res,
-          this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
-          vcDetails.data['templateId'],
-          restrictionKey,
-        )
+        } else {
+          await renderViewVCHtmlPage(
+            VC_RECEIVED_VIEW_HTML.replaceAll(
+              'remote-url',
+              this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
+            )
+              .replaceAll('vc-name', vcDetails.data['name'])
+              .replaceAll('template-id-here', vcDetails.data['templateId']),
+            res,
+          )
+          return
+        }
       }
     } else {
       // The expiration timestamp has passed
@@ -230,38 +236,44 @@ export class VerifiableCredentialReadService {
           .exec()
 
         if (vcDetails.data['type'] === VcType.SELF_ISSUED) {
-          // Render html with the file!
-          await renderViewVCHtmlPage(
-            VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replaceAll(
-              'vc-name',
-              vcDetails.data['name'],
-            ),
-            res,
-          )
-          return
-          const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
-          if (!renderedFile) {
-            const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails.data['fileId'])
-            await renderFileToResponse(res, newFileUrl, restrictionKey)
+          if (viewType === 'preview') {
+            const renderedFile = await renderFileToResponse(res, fileDetails['storedUrl'], restrictionKey)
+            if (!renderedFile) {
+              const newFileUrl = await this.filesUpdateService.refreshFileUrl(vcDetails.data['fileId'])
+              await renderFileToResponse(res, newFileUrl, restrictionKey)
+            }
+          } else {
+            // Render html with the file!
+            await renderViewVCHtmlPage(
+              VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replaceAll(
+                'vc-name',
+                vcDetails.data['name'],
+              ),
+              res,
+            )
+            return
           }
         } else {
           // Hit the Registry layer to Render VC
-          await renderViewVCHtmlPage(
-            VC_RECEIVED_VIEW_HTML.replaceAll(
-              'remote-url',
+          if (viewType === 'preview') {
+            await renderVCDocumentToResponse(
+              res,
               this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
+              vcDetails.data['templateId'],
+              restrictionKey,
             )
-              .replaceAll('vc-name', vcDetails.data['name'])
-              .replaceAll('template-id-here', vcDetails.data['templateId']),
-            res,
-          )
-          return
-          await renderVCDocumentToResponse(
-            res,
-            this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
-            vcDetails.data['templateId'],
-            restrictionKey,
-          )
+          } else {
+            await renderViewVCHtmlPage(
+              VC_RECEIVED_VIEW_HTML.replaceAll(
+                'remote-url',
+                this.configService.get(REGISTRY_SERVICE_URL) + RegistryRequestRoutes.READ_VC + vcDetails.data['did'],
+              )
+                .replaceAll('vc-name', vcDetails.data['name'])
+                .replaceAll('template-id-here', vcDetails.data['templateId']),
+              res,
+            )
+            return
+          }
         }
       }
     }
