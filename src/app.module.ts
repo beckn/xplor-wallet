@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { APP_INTERCEPTOR } from '@nestjs/core'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
 import { MulterModule } from '@nestjs/platform-express'
@@ -12,7 +13,6 @@ import { S3StorageModule } from './files/module/s3-storage.module'
 import { VCAccessControlModule } from './vc-access-control/module/vc-access-control.module'
 import { VerifiableCredentialModule } from './verifiable-credential/module/verifiable-credential.module'
 import { WalletModule } from './wallet/module/wallet.module'
-import { APP_INTERCEPTOR } from '@nestjs/core'
 import { LoggingInterceptor } from './utils/logger-interceptor'
 import { GrafanaLoggerService } from './grafana/service/grafana.service'
 @Module({
