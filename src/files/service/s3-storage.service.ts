@@ -5,6 +5,7 @@ import { AWSError } from 'aws-sdk'
 import { IStorageService } from '../../common/constants/interface-storage-service'
 import { MaxVCShareHours } from '../../common/constants/name-constants'
 import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
+import { InternalMessages } from '../../common/constants/error-messages'
 
 @Injectable()
 export class S3StorageService implements IStorageService {
@@ -30,7 +31,7 @@ export class S3StorageService implements IStorageService {
       return true
     } catch (err) {
       this.loggerService.sendDebug({
-        message: `error deleting file from S3 Bucket ${err}`,
+        message: `${InternalMessages.DELETING_FILE_URL} ${err}`,
         methodName: this.deleteFileUrl.name,
       })
       return false
@@ -70,8 +71,8 @@ export class S3StorageService implements IStorageService {
       return signedUrl
     } catch (err) {
       this.loggerService.sendDebug({
-        message: `Error generating signed URL:  ${err as AWSError}`,
-        methodName: this.deleteFileUrl.name,
+        message: `${InternalMessages.SIGNED_URL}  ${err as AWSError}`,
+        methodName: this.getSignedFileUrl.name,
       })
       throw err
     }

@@ -1,5 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import Redis from 'ioredis'
+import { InternalMessages } from '../../common/constants/error-messages'
+import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 
 @Injectable()
 export class RedisService {
@@ -13,7 +15,10 @@ export class RedisService {
   private setupEventListeners(): void {
     // Listen for 'connect' event
     this.redisClient.on('connect', () => {
-      console.log('Connected to Redis')
+      new GrafanaLoggerService().sendDebug({
+        message: InternalMessages.SIGNED_URL,
+        methodName: this.setupEventListeners.name,
+      })
     })
 
     // Listen for 'error' event

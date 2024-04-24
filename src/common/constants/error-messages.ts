@@ -41,3 +41,13 @@ export const VcErrors = {
   SHARE_REQUEST_NOT_FOUND: 'The share request with this id does not exist',
   INVALID_VC_ID: 'Invalid VcId, please enter the correct vc id for share request.',
 }
+
+export const InternalMessages = {
+  DELETING_FILE_URL: 'Error deleting file from S3 Bucket: ',
+  SIGNED_URL: 'Error generating signed URL:',
+  REDIS_CONNECTED: 'Connected to Redis',
+  GET_REQUEST: 'Error in GET request:',
+  POST_REQUEST: 'Error in POST request:',
+  PUT_REQUEST: 'Error in PUT request:',
+  DELETE_REQUEST: 'Error in DELETE request:',
+}
