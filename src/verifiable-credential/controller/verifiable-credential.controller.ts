@@ -100,8 +100,13 @@ export class VerifiableCredentialController {
     description: VIEW_CREDENTIAL_API.successResponseMessage,
     type: VCEntityList,
   })
-  async viewVCDocument(@Param('restrictedKey') keyParam: string, @Res() res, @Req() req) {
-    return await this.vcReadService.renderVCDocument(keyParam, req, res)
+  async viewVCDocument(
+    @Param('restrictedKey') keyParam: string,
+    @Res() res,
+    @Req() req,
+    @Query('viewType') viewType?: string,
+  ) {
+    return await this.vcReadService.renderVCDocument(keyParam, viewType, req, res)
   }
 
   @Get('/single')
