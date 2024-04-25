@@ -1,9 +1,18 @@
-import { BadRequestException, Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  MaxFileSizeValidator,
+  ParseFilePipe,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import 'multer'
+import * as multer from 'multer'
 import { CREATE_FILE_API } from '../../common/constants/api-documentation'
-import { FilesErrors, WalletErrors } from '../../common/constants/error-messages'
+import { FilesErrors, InternalMessages } from '../../common/constants/error-messages'
 import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { CreateFileRequestDto } from '../dto/create-file-request.dto'
 import { StandardWalletRequestDto } from '../dto/standard-wallet-request.dto'
@@ -33,8 +42,29 @@ export class FilesController {
     description: CREATE_FILE_API.successResponseMessage,
     type: FileEntity,
   })
-  @UseInterceptors(FileInterceptor('file'))
-  async createFile(@UploadedFile() file: Express.Multer.File, @Body() body: CreateFileRequestDto) {
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: multer.memoryStorage(),
+      fileFilter: (req, file, cb) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|pdf|doc|docx|octet-stream)$/)) {
+          return cb(new BadRequestException(InternalMessages.UPLOAD_FILE_TYPE), false)
+        }
+
+        cb(null, true)
+      },
+    }),
+  )
+  async createFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024, message: InternalMessages.UPLOAD_FILE_SIZE }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Body() body: CreateFileRequestDto,
+  ) {
     if (file == null) {
       throw new BadRequestException(FilesErrors.FILE_MISSING_ERROR)
     }

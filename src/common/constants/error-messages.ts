@@ -50,4 +50,6 @@ export const InternalMessages = {
   POST_REQUEST: 'Error in POST request:',
   PUT_REQUEST: 'Error in PUT request:',
   DELETE_REQUEST: 'Error in DELETE request:',
+  UPLOAD_FILE_TYPE: 'Only JPG, JPEG, PNG, PDF, DOC, DOCX, Octer Stream files are allowed',
+  UPLOAD_FILE_SIZE: 'File size cannot exceed 10MB',
 }
