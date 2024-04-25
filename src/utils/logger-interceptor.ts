@@ -58,7 +58,7 @@ export const defaultResponseHandler: ResponseHandler = (
 ) => {
   // Log response details
 
-  const message = `RESPONSE: ${request.method} ${request.url} => ${_body}`
+  const message = `RESPONSE: ${request.method} ${request.url} => ${JSON.stringify(_body)}`
 
   logger.sendLog({ message, methodName: LoggerMessage.responseInterceptorName })
 }
