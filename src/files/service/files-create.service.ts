@@ -52,7 +52,7 @@ export class FilesCreateService {
       body.walletId,
       file.mimetype,
       storeFileDetails['signedUrl'],
-      storeFileDetails['uploadedFile']['key'],
+      storeFileDetails['uploadedFile']['Key'],
     )
 
     // Saved file to database
@@ -65,7 +65,7 @@ export class FilesCreateService {
     const walletDetails = await this.walletReadService.findWalletByWalletId(body.walletId)
     const registryVCRequest = new CreateCredentialRequestDto(
       walletDetails['data']['userDid'],
-      new CredentialDto(storeFileDetails['uploadedFile']['key'], body.tags),
+      new CredentialDto(storeFileDetails['uploadedFile']['Key'], body.tags),
     )
 
     const vcResult = await this.apiClient.post(
