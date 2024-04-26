@@ -6,6 +6,7 @@ import {
   GET_CREDENTIAL_LIST_API,
   GET_SHARE_REQUESTS_API,
   GET_SINGLE_CREDENTIAL_API,
+  PUSH_CREDENTIAL_API,
   REQUEST_SHARE_API,
   RESPONSE_SHARE_REQUEST_API,
   SHARE_CREDENTIAL_API,
@@ -30,7 +31,7 @@ import { ShareFileRequestDto } from '../dto/share-file-request.dto'
 import { UpdateVcQueryRequestDto, UpdateVcRequestDto } from '../dto/update-vc-request.dto'
 import { CreateVCRequestBodyEntity } from '../entities/create-vc-request-body.entity'
 import { ShareRequestEntity, ShareRequestsEntityList } from '../entities/share-request.entity'
-import { VCEntityList } from '../entities/vc.entity'
+import { VCEntity, VCEntityList } from '../entities/vc.entity'
 import { ShareRequestCreateService } from '../service/share-request-create.service'
 import { ShareRequestReadService } from '../service/share-request-read.service'
 import { ShareRequestUpdateService } from '../service/share-request-update.service'
@@ -78,12 +79,12 @@ export class VerifiableCredentialController {
    */
   @Post('/push')
   @ApiOperation({
-    summary: STORE_CREDENTIAL_API.summary,
-    description: STORE_CREDENTIAL_API.description,
+    summary: PUSH_CREDENTIAL_API.summary,
+    description: PUSH_CREDENTIAL_API.description,
   })
   @ApiResponse({
-    status: STORE_CREDENTIAL_API.successResponseCode,
-    description: STORE_CREDENTIAL_API.successResponseMessage,
+    status: PUSH_CREDENTIAL_API.successResponseCode,
+    description: PUSH_CREDENTIAL_API.successResponseMessage,
     type: CreateVCRequestBodyEntity,
   })
   async pushCredentialToWallet(@Body() body: PushVCRequestBodyDto) {
@@ -98,7 +99,7 @@ export class VerifiableCredentialController {
   @ApiResponse({
     status: VIEW_CREDENTIAL_API.successResponseCode,
     description: VIEW_CREDENTIAL_API.successResponseMessage,
-    type: VCEntityList,
+    type: 'Returns the pdf, image document/html rendered page depending upon the viewType',
   })
   async viewVCDocument(
     @Param('restrictedKey') keyParam: string,
@@ -117,7 +118,7 @@ export class VerifiableCredentialController {
   @ApiResponse({
     status: GET_SINGLE_CREDENTIAL_API.successResponseCode,
     description: GET_SINGLE_CREDENTIAL_API.successResponseMessage,
-    type: VCEntityList,
+    type: VCEntity,
   })
   async getVCById(@Query() queryParams: GetVCRequestDto) {
     return await this.vcReadService.getVCByIdAndWalletId(queryParams)

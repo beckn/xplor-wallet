@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
 
 export class WalletEntity {
-  @ApiProperty({ description: 'The unique identifier of the wallet', example: '65f058277901e68a7df6db35' })
+  @ApiProperty({ description: 'The unique identifier of the wallet', example: 'wallet_65f058277901e68a7df6db35' })
   _id: string
 
-  @ApiProperty({ description: 'The user ID associated with the wallet', example: '61h053277501e68a7d76db85' })
+  @ApiProperty({ description: 'The user ID associated with the wallet', example: 'user_61h053277501e68a7d76db85' })
   userId?: string
 
   @ApiProperty({

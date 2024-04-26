@@ -11,7 +11,6 @@ import { IStorageService } from '../../common/constants/interface-storage-servic
 import { REGISTRY_SERVICE_URL } from '../../common/constants/name-constants'
 import { RegistryRequestRoutes } from '../../common/constants/request-routes'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
-import { getCurrentTimeStamp } from '../../utils/file.utils'
 import { getSuccessResponse } from '../../utils/get-success-response'
 import { CreateVCRequestBodyDto } from '../../verifiable-credential/dto/create-vc-request-body.dto'
 import { VerifiableCredentialCreateService } from '../../verifiable-credential/service/verifiable-credential-create.service'
