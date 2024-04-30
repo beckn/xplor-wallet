@@ -35,11 +35,17 @@ export class GrafanaLoggerService {
   }
 
   async sendError(logger: LoggerPayloadDto) {
-    return this.axiosInstance.post(LoggerEndpoints.error, {
-      ...logger,
-      serviceName: this.serviceName,
-      message: JSON.stringify(logger.message),
-    })
+    try {
+      return await this.axiosInstance.post(LoggerEndpoints.error, {
+        ...logger,
+        serviceName: this.serviceName,
+        message: JSON.stringify(logger.message),
+      })
+    } catch (error) {
+      this.logger.error(error?.message)
+      this.logger.log(JSON.stringify(logger))
+      return new BadGatewayException(error?.message)
+    }
   }
 
   async sendDebug(logger: LoggerPayloadDto) {
