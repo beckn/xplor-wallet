@@ -21,8 +21,7 @@ import { ConfigService } from '@nestjs/config'
     {
       provide: UrlShortenerUtil,
       useFactory: (configService: ConfigService) => {
-        const urlShortenerServiceUrl = configService.get<string>('URL_SHORTENER_SERVICE_URL')
-        return new UrlShortenerUtil(urlShortenerServiceUrl)
+        return new UrlShortenerUtil(configService)
       },
       inject: [ConfigService],
     },

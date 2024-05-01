@@ -12,8 +12,7 @@ import { UrlShortenerUtil } from '../../utils/url-shortner.util'
     {
       provide: UrlShortenerUtil,
       useFactory: (configService: ConfigService) => {
-        const urlShortenerServiceUrl = configService.get<string>('URL_SHORTENER_SERVICE_URL')
-        return new UrlShortenerUtil(urlShortenerServiceUrl)
+        return new UrlShortenerUtil(configService)
       },
       inject: [ConfigService],
     },

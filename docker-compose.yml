@@ -20,7 +20,7 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - GRAFANA_SERVICE_URL=${GRAFANA_SERVICE_URL}
-      - URL_SHORTNER_SERVICE_URL${URL_SHORTNER_SERVICE_URL}
+      - URL_SHORTNER_SERVICE_URL=${URL_SHORTNER_SERVICE_URL}
     networks:
       - xplor-network
       
@@ -31,8 +31,8 @@ services:
     ports:
       - '1093:6379'
     volumes:
-      - /Users/wiladmin/Desktop/Xplor-Wallet-nest-backend/redis-service/xplor_wallet_redis_service:/data
-      # - xplor_wallet_redis_service:/data
+      # - /Users/wiladmin/Desktop/Xplor-Wallet-nest-backend/redis-service/xplor_wallet_redis_service:/data
+      - xplor_wallet_redis_service:/data
     networks:
       - xplor-network
 
