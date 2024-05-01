@@ -6,12 +6,17 @@ import { IStorageService } from '../../common/constants/interface-storage-servic
 import { MaxVCShareHours } from '../../common/constants/name-constants'
 import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
 import { InternalMessages } from '../../common/constants/error-messages'
+import { UrlShortenerUtil } from '../../utils/url-shortner.util'
 
 @Injectable()
 export class S3StorageService implements IStorageService {
   AWS_S3_BUCKET
   s3
-  constructor(private readonly configService: ConfigService, private readonly loggerService: GrafanaLoggerService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly loggerService: GrafanaLoggerService,
+    private readonly urlShortner: UrlShortenerUtil,
+  ) {
     this.AWS_S3_BUCKET = this.configService.get('STORAGE_BUCKET_NAME')
     this.s3 = new AWS.S3({
       accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
@@ -67,8 +72,8 @@ export class S3StorageService implements IStorageService {
 
       // Generate the pre-signed URL using getSignedUrlPromise method
       const signedUrl = await this.s3.getSignedUrlPromise('getObject', params)
-
-      return signedUrl
+      const shortSignedUrl = await this.urlShortner.createShortUrl(signedUrl)
+      return shortSignedUrl['data']['shortUrl']
     } catch (err) {
       this.loggerService.sendDebug({
         message: `${InternalMessages.SIGNED_URL}  ${err as AWSError}`,

@@ -10,4 +10,5 @@ export default () => ({
   REDIS_PORT: process.env.REDIS_PORT,
   REDIS_SERVICE_NAME: process.env.REDIS_SERVICE_NAME,
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+  URL_SHORTENER_SERVICE_URL: process.env.URL_SHORTENER_SERVICE_URL,
 })

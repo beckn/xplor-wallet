@@ -3,10 +3,10 @@ import { ConfigService } from '@nestjs/config'
 import { S3StorageService } from './s3-storage.service'
 import * as AWS from 'aws-sdk'
 import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
+import { UrlShortenerUtil } from '../../utils/url-shortner.util'
 
 describe('S3StorageService', () => {
   let service: S3StorageService
-  let configService: ConfigService
 
   const mockConfigService = {
     get: jest.fn().mockReturnValue('test-bucket'),
@@ -21,11 +21,20 @@ describe('S3StorageService', () => {
           provide: ConfigService,
           useValue: mockConfigService,
         },
+        {
+          provide: UrlShortenerUtil,
+          useValue: {
+            createShortUrl: jest.fn().mockReturnValue({
+              data: {
+                shortUrl: 'https://shorturl.com/',
+              },
+            }),
+          },
+        },
       ],
     }).compile()
 
     service = module.get<S3StorageService>(S3StorageService)
-    configService = module.get<ConfigService>(ConfigService)
   })
 
   afterEach(() => {
@@ -62,7 +71,7 @@ describe('S3StorageService', () => {
 
       const result = await service.refreshFileUrl('test-key')
 
-      expect(result).toBe('signed-url')
+      expect(result).toBe('https://shorturl.com/')
       expect(mockGetSignedUrlPromise).toHaveBeenCalledWith('getObject', {
         Bucket: 'test-bucket',
         Key: 'test-key',
@@ -94,12 +103,12 @@ describe('S3StorageService', () => {
       const mockGetSignedUrlPromise = jest.fn().mockResolvedValue('signed-url')
       AWS.S3.prototype.getSignedUrlPromise = mockGetSignedUrlPromise
 
-      const result = await service.getSignedFileUrl(2, 'test-key') // 2 hours expiration
+      const result = await service.getSignedFileUrl(2, 'https://shorturl.com/') // 2 hours expiration
 
-      expect(result).toBe('signed-url')
+      expect(result).toBe('https://shorturl.com/')
       expect(mockGetSignedUrlPromise).toHaveBeenCalledWith('getObject', {
         Bucket: 'test-bucket',
-        Key: 'test-key',
+        Key: 'https://shorturl.com/',
         Expires: 7200, // 2 hours in seconds
       })
     })

@@ -15,6 +15,7 @@ import { VerifiableCredentialModule } from './verifiable-credential/module/verif
 import { WalletModule } from './wallet/module/wallet.module'
 import { LoggingInterceptor } from './utils/logger-interceptor'
 import { GrafanaLoggerService } from './grafana/service/grafana.service'
+import { UrlShortenerUtil } from './utils/url-shortner.util'
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,8 +42,26 @@ import { GrafanaLoggerService } from './grafana/service/grafana.service'
     AppService,
     GrafanaLoggerService,
     {
+      provide: UrlShortenerUtil,
+      useFactory: (configService: ConfigService) => {
+        const urlShortenerServiceUrl = configService.get<string>('URL_SHORTENER_SERVICE_URL')
+        return new UrlShortenerUtil(urlShortenerServiceUrl)
+      },
+      inject: [ConfigService],
+    },
+    {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+  ],
+  exports: [
+    {
+      provide: UrlShortenerUtil,
+      useFactory: (configService: ConfigService) => {
+        const urlShortenerServiceUrl = configService.get<string>('URL_SHORTENER_SERVICE_URL')
+        return new UrlShortenerUtil(urlShortenerServiceUrl)
+      },
+      inject: [ConfigService],
     },
   ],
 })

@@ -20,6 +20,7 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - GRAFANA_SERVICE_URL=${GRAFANA_SERVICE_URL}
+      - URL_SHORTNER_SERVICE_URL${URL_SHORTNER_SERVICE_URL}
     networks:
       - xplor-network
       

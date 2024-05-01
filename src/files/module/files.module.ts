@@ -13,6 +13,8 @@ import { FilesReadService } from '../service/files-read.service'
 import { FilesUpdateService } from '../service/files-update.service'
 import { S3StorageModule } from './s3-storage.module'
 import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
+import { UrlShortenerUtil } from '../../utils/url-shortner.util'
+import { ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
@@ -32,6 +34,14 @@ import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
     FilesUpdateService,
     ApiClient,
     GrafanaLoggerService,
+    {
+      provide: UrlShortenerUtil,
+      useFactory: (configService: ConfigService) => {
+        const urlShortenerServiceUrl = configService.get<string>('URL_SHORTENER_SERVICE_URL')
+        return new UrlShortenerUtil(urlShortenerServiceUrl)
+      },
+      inject: [ConfigService],
+    },
   ],
   exports: [MongooseModule, FilesCreateService, FilesReadService, FilesDeleteService, FilesUpdateService],
 })
