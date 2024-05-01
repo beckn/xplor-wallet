@@ -5,5 +5,5 @@ export const RegistryRequestRoutes = {
 }
 
 export const UrlShortnerRequestRoutes = {
-  CREATE_SHORT_URL: '/api/v1/shortner',
+  CREATE_SHORT_URL: '/shortner',
 }
