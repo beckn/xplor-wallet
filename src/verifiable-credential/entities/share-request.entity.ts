@@ -1,30 +1,33 @@
 import { ApiProperty } from '@nestjs/swagger'
 
 export class ShareRequestEntity {
-  @ApiProperty({ example: 'fileId123' })
-  fileId: string
+  @ApiProperty({ example: 'request_fnkjdsnfkjsdnfjk' })
+  _id: string
+
+  @ApiProperty({ example: 'vc_fnkjdsnfkjsdnfjk' })
+  vcId: string
 
   @ApiProperty({ example: 'ACCEPTED' })
   status: string
 
   @ApiProperty({ example: 'https://example.com/fileUrl' })
-  fileShareUrl: string
+  restrictedUrl: string
 
-  @ApiProperty({ example: 'userId123' })
-  raisedByUser: string
+  @ApiProperty({ example: 'wallet_628fdsfsds34324' })
+  raisedByWallet: string
 
-  @ApiProperty({ example: 'fileOwnerUserId123' })
-  fileOwnerUser: string
+  @ApiProperty({ example: 'I am sharing this file.' })
+  remarks: string
+
+  @ApiProperty({ example: 'wallet_628fdsfsds34324' })
+  vcOwnerWallet: string
 
   @ApiProperty({
     example: {
-      type: 'public',
-      documentType: '10th board result',
+      certificateType: '10th board result',
       restrictions: {
-        expireTimeStamp: 1648764000,
-        viewCount: 5,
-        downloadEnabled: true,
-        sharedWithUsers: ['userId1', 'userId2'],
+        expireTimeStamp: '2024-07-04T05:03:03Z',
+        viewOnce: false,
       },
     },
   })
