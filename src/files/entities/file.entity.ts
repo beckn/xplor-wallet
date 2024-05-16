@@ -5,34 +5,16 @@ export class FileEntity {
   _id: string
 
   @ApiProperty({ example: '61h053277501e68a7d76db85' })
-  userId: string
+  walletId: string
 
-  @ApiProperty({ example: 'pdf' })
+  @ApiProperty({ example: 'application/pdf' })
   fileType: string
 
-  @ApiProperty({ example: ['important', 'finance'] })
-  fileTags: string[]
+  @ApiProperty({ example: 'https://example.com/files/example.pdf' })
+  storedUrl: string
 
   @ApiProperty({ example: 'example.pdf' })
-  fileName: string
-
-  @ApiProperty({ example: false })
-  softDeleted: boolean
-
-  @ApiProperty({ example: 'example_file_key' })
   fileKey: string
-
-  @ApiProperty({ example: 'https://example.com/files/example.pdf' })
-  fileUrl: string
-
-  @ApiProperty({
-    example: {
-      author: 'John Doe',
-      created_at: '2024-03-12T13:27:03.696Z',
-      size: '2MB',
-    },
-  })
-  metadata: Record<string, any>
 }
 
 export class FilesListEntity {

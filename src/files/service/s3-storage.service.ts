@@ -49,7 +49,7 @@ export class S3StorageService implements IStorageService {
     const fileResult = {}
     const uploadedFile = await this.s3_upload(file.buffer, new Date().getTime() + file.originalname, file.mimetype)
     fileResult['uploadedFile'] = uploadedFile
-    fileResult['signedUrl'] = await this.getSignedFileUrl(MaxVCShareHours, uploadedFile['key'])
+    fileResult['signedUrl'] = await this.getSignedFileUrl(MaxVCShareHours, uploadedFile['Key'])
     return fileResult
   }
 
@@ -88,9 +88,7 @@ export class S3StorageService implements IStorageService {
       Body: file,
       ContentType: mimetype,
       ContentDisposition: 'inline',
-      CreateBucketConfiguration: {
-        LocationConstraint: this.configService.get('STORAGE_REGION'),
-      },
+      multipartUploadThreshold: 1024 * 1024 * 10,
     }
     const s3Response = await this.s3.upload(params).promise()
     return s3Response

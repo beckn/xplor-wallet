@@ -17,6 +17,9 @@ export class VCEntity {
   @ApiProperty({ example: VcCategory.PROOF_OF_ADDRESS })
   category: string
 
+  @ApiProperty({ example: 'cljdsewrwur83844hdfnkfknf' })
+  templateId: string
+
   @ApiProperty({ example: ['important', 'finance'] })
   tags: string[]
 

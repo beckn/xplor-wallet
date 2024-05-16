@@ -11,7 +11,6 @@ import { IStorageService } from '../../common/constants/interface-storage-servic
 import { REGISTRY_SERVICE_URL } from '../../common/constants/name-constants'
 import { RegistryRequestRoutes } from '../../common/constants/request-routes'
 import { StandardMessageResponse } from '../../common/constants/standard-message-response.dto'
-import { getCurrentTimeStamp } from '../../utils/file.utils'
 import { getSuccessResponse } from '../../utils/get-success-response'
 import { CreateVCRequestBodyDto } from '../../verifiable-credential/dto/create-vc-request-body.dto'
 import { VerifiableCredentialCreateService } from '../../verifiable-credential/service/verifiable-credential-create.service'
@@ -52,7 +51,7 @@ export class FilesCreateService {
       body.walletId,
       file.mimetype,
       storeFileDetails['signedUrl'],
-      storeFileDetails['uploadedFile']['key'],
+      storeFileDetails['uploadedFile']['Key'],
     )
 
     // Saved file to database
@@ -65,7 +64,7 @@ export class FilesCreateService {
     const walletDetails = await this.walletReadService.findWalletByWalletId(body.walletId)
     const registryVCRequest = new CreateCredentialRequestDto(
       walletDetails['data']['userDid'],
-      new CredentialDto(storeFileDetails['uploadedFile']['key'], body.tags),
+      new CredentialDto(storeFileDetails['uploadedFile']['Key'], body.tags),
     )
 
     const vcResult = await this.apiClient.post(

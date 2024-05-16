@@ -1,5 +1,5 @@
 # Xplor - Wallet Service
-This layer is responsible for creating, storing, deleting & sharing the Verifiable Credentials in user's wallet. The Wallet can receive Verifiable Credentials(VCs) from a VC issuer as well. 
+This service is responsible for creating, storing, deleting & sharing the Verifiable Credentials in user's wallet. The Wallet can receive Verifiable Credentials(VCs) from a VC issuer as well. 
 
 ## Table of Contents
 

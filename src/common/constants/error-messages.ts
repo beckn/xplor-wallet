@@ -45,6 +45,7 @@ export const VcErrors = {
 export const InternalMessages = {
   DELETING_FILE_URL: 'Error deleting file from S3 Bucket: ',
   SIGNED_URL: 'Error generating signed URL:',
+  UPLOAD_FILE: 'Error uploading file to S3:',
   REDIS_CONNECTED: 'Connected to Redis',
   GET_REQUEST: 'Error in GET request:',
   POST_REQUEST: 'Error in POST request:',

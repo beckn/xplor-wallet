@@ -18,7 +18,7 @@ export class CreateVCRequestBodyDto {
   @IsNotEmpty({ message: 'Wallet ID must not be empty' })
   walletId: string
 
-  @ApiProperty()
+  @ApiProperty({ example: VcType.SELF_ISSUED })
   @IsEnum(VcType, { message: 'Invalid VC type' })
   @IsNotEmpty({ message: 'VC Type must not be empty' })
   type: VcType

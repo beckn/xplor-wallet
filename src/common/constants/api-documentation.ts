@@ -1,6 +1,7 @@
 export const SwaggerDocs = {
   title: 'Xplor Wallet',
-  description: 'Wallet layer for Xplore to store, add, share files.',
+  description:
+    "This service is responsible for creating, storing, deleting & sharing the Verifiable Credentials in user's wallet. The Wallet can receive Verifiable Credentials(VCs) from a VC issuer as well.",
   version: '0.0.1-alpha',
   tag: 'Wallet',
   route: 'api/v1',
@@ -31,6 +32,14 @@ export const STORE_CREDENTIAL_API = {
   summary: 'Create/Store Verifiable Credential to wallet',
   description:
     'Creates a VC record and stores it in the user wallet, it contains information of both Sunbird VC and Stored File',
+  successResponseCode: 201,
+  successResponseMessage: 'Created/Stored VC successfully.',
+}
+
+export const PUSH_CREDENTIAL_API = {
+  summary: 'Pushes an already made Verifiable Credential to wallet',
+  description:
+    'Pushes a VC record and stores it in the user wallet, it contains information of both Sunbird VC and Stored file is null.',
   successResponseCode: 201,
   successResponseMessage: 'Created/Stored VC successfully.',
 }
