@@ -22,8 +22,8 @@ deploy:dev:
           cd &&  sudo rm -rf Wallet-nest-backend
         fi "
 
-    #- sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b develop https://'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/Wallet-nest-backend.git"
-    - - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP "git clone https://gitlab.thewitslab.com/wil-workspace/xplor/Wallet-nest-backend.git"
+    - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b develop https://'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/Wallet-nest-backend.git"
+   # - - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP "git clone https://gitlab.thewitslab.com/wil-workspace/xplor/Wallet-nest-backend.git"
     - sshpass -p $Xplor_Passwordd scp -r .env $Xplor_Username@$Xplor_IP:/home/ubuntu/Wallet-nest-backend
     - sshpass -p $Xplor_Password ssh -tt $Xplor_Username@$Xplor_IP  "
         cd /home/ubuntu/Wallet-nest-backend && docker-compose up -d --build "
