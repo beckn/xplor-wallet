@@ -22,7 +22,7 @@ deploy:dev:
           cd &&  sudo rm -rf Wallet-nest-backend
         fi "
 
-    - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b git@gitlab.thewitslab.com:wil-workspace/xplor/Wallet-nest-backend.git
+    - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b git@gitlab.thewitslab.com:wil-workspace/xplor/Wallet-nest-backend.git"
     #develop https://'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/Wallet-nest-backend.git"
    # git clone -b develop git@gitlab.thewitslab.com:wil-workspace/xplor/Wallet-nest-backend.git
 
