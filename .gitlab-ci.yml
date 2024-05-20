@@ -30,4 +30,4 @@ deploy:dev:
     - sshpass -p $Xplor_Password scp .env $Xplor_Username@$Xplor_IP:/home/ubuntu/Wallet-nest-backend
     - sshpass -p $Xplor_Password ssh -tt $Xplor_Username@$Xplor_IP  "
         cd /home/ubuntu/Wallet-nest-backend && docker-compose up -d --build "
-    - echo "Docker compose up for dev complete"
+    - echo "xplor-wallet-nest-dev.thewitslab.com"
