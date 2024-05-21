@@ -5,12 +5,12 @@ deploy:dev:
   stage: dev
   tags:
     - gcp
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" '
-      when: on_success
-    - when: manual
+  #rules:
+  #  - if: '$CI_COMMIT_BRANCH == "main" '
+  #    when: on_success
+  # - when: manual
   script:
-    - echo "Deployment on Client Server."
+    - echo "Deployment on Server."
     - Path=$(pwd)
     - cd /home/ubuntu/script && ./env_script.sh dev Wallet-nest-backend-dev $VAULT_TOKEN && cd $Path
     - mv /home/ubuntu/script/.env $Path && cd $Path
