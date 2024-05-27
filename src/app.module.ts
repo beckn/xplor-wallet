@@ -48,10 +48,10 @@ import { UrlShortenerUtil } from './utils/url-shortner.util'
       },
       inject: [ConfigService],
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: LoggingInterceptor,
+    // },
   ],
   exports: [
     {
