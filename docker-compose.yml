@@ -4,7 +4,7 @@ services:
     #logging:
       #driver: "file-log-driver"
       #options:
-        #fpath: "/docker/py-ondc-protocol.log"
+        #fpath: "/docker/xplor_wallet_backend_service.log"
     container_name: Wallet-nest-backend
     build: .
     ports:
@@ -32,7 +32,7 @@ services:
     #logging:
       #driver: "file-log-driver"
       #options:
-        #fpath: "/docker/py-ondc-protocol.log"
+        #fpath: "/docker/xplor_wallet_redis_service.log"
     container_name: Wallet-redis-service
     image: redis
     restart: always
@@ -48,7 +48,7 @@ services:
     #logging:
       #driver: "file-log-driver"
       #options:
-        #fpath: "/docker/py-ondc-protocol.log"
+        #fpath: "/docker/xplor_wallet_mongodb_service.log"
     image: mongo:6-jammy
     # ports:
     #   - '27017:27017'
