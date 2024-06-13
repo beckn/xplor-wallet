@@ -1,6 +1,10 @@
 version: '3'
 services:
   xplor_wallet_backend_service:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/xplor_wallet_backend_service.log"
     container_name: Wallet-nest-backend
     build: .
     ports:
@@ -20,22 +24,31 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - GRAFANA_SERVICE_URL=${GRAFANA_SERVICE_URL}
+      - URL_SHORTNER_SERVICE_URL=${URL_SHORTNER_SERVICE_URL}
     networks:
       - xplor-network
       
   xplor_wallet_redis_service:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/xplor_wallet_redis_service.log"
     container_name: Wallet-redis-service
     image: redis
     restart: always
     ports:
       - '1093:6379'
     volumes:
-      - /Users/wiladmin/Desktop/Xplor-Wallet-nest-backend/redis-service/xplor_wallet_redis_service:/data
-      # - xplor_wallet_redis_service:/data
+      # - /Users/wiladmin/Desktop/Xplor-Wallet-nest-backend/redis-service/xplor_wallet_redis_service:/data
+      - xplor_wallet_redis_service:/data
     networks:
       - xplor-network
 
   xplor_wallet_mongodb_service:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/xplor_wallet_mongodb_service.log"
     image: mongo:6-jammy
     # ports:
     #   - '27017:27017'

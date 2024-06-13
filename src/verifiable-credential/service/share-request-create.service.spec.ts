@@ -116,6 +116,7 @@ describe('ShareRequestCreateService', () => {
         requestedFromWallet: 'invalidRequestedFromWallet',
         certificateType: 'certificateType',
         remarks: 'remarks',
+        sharedWithEntity: 'WIL',
         restrictions: { expiresIn: 24, viewOnce: false },
       }
       await expect(service.shareVCs(vcIds, walletId, shareRequest)).rejects.toThrowError(NotFoundException)

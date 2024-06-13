@@ -265,6 +265,7 @@ describe('VerifiableCredentialController', () => {
         shareDetails: {
           certificateType: 'certificateType',
           remarks: 'Sharing certificate',
+          sharedWithEntity: 'WIL',
           restrictions: {
             expiresIn: 48,
             viewOnce: false,
@@ -288,6 +289,7 @@ describe('VerifiableCredentialController', () => {
         shareDetails: {
           certificateType: 'certificateType',
           remarks: 'Sharing certificate',
+          sharedWithEntity: 'WIL',
           restrictions: {
             expiresIn: 48,
             viewOnce: false,

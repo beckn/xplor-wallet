@@ -46,7 +46,6 @@ export class FilesCreateService {
     }
 
     const storeFileDetails = await this.storageService.uploadFile(file)
-
     const createdFileModel = new CreateFileDto(
       body.walletId,
       file.mimetype,

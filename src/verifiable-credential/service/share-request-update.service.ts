@@ -196,6 +196,7 @@ export class ShareRequestUpdateService {
         {
           $set: {
             remarks: updateRequest.remarks,
+            sharedWithEntity: updateRequest.sharedWithEntity,
             'vcShareDetails.restrictions.viewOnce': updateRequest.restrictions.viewOnce,
             'vcShareDetails.restrictions.expiresIn': updateRequest.restrictions.expiresIn,
           },
