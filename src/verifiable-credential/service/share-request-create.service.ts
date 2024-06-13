@@ -86,6 +86,7 @@ export class ShareRequestCreateService {
           vcDetails.data['walletId'],
           shareRequest.remarks,
           fileShareDetails,
+          shareRequest.sharedWithEntity,
         )
         const shareRequestModel = new this.shareRequestModel(createFileShareRequestDto)
         const result = await shareRequestModel.save()

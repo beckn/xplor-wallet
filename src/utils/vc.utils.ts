@@ -7,7 +7,7 @@ import * as path from 'path'
 import { ApiClient } from '../common/api-client'
 import { ErrorCodes } from '../common/constants/error-codes'
 import { FilesErrors } from '../common/constants/error-messages'
-import { FILE_LOCAL_CONFIG, FileMimeType } from '../common/constants/file-constants'
+import { FILE_LOCAL_CONFIG, FileMimeType } from '../common/constants/file'
 import { GrafanaLoggerService } from '../grafana/service/grafana.service'
 
 export function generateVCExpirationDate(years: number) {

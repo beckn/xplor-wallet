@@ -44,6 +44,9 @@ export class ShareRequest {
   @Prop({ required: true })
   remarks: string
 
+  @Prop({ required: false })
+  sharedWithEntity: string
+
   @Prop({ required: true })
   vcShareDetails: VcShareDetails
 }

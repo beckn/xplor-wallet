@@ -62,6 +62,11 @@ export class CreateShareFileRequestDto {
   readonly remarks: string
 
   @ApiProperty()
+  @IsString()
+  @IsOptional()
+  readonly sharedWithEntity: string
+
+  @ApiProperty()
   @ValidateNested()
   readonly vcShareDetails: VcShareDetails
 
@@ -73,6 +78,7 @@ export class CreateShareFileRequestDto {
     vcOwnerWallet: string,
     remarks: string,
     fileShareDetails: VcShareDetails,
+    sharedWithEntity?: string,
   ) {
     this.vcId = vcId
     this.status = status
@@ -81,5 +87,6 @@ export class CreateShareFileRequestDto {
     this.vcOwnerWallet = vcOwnerWallet
     this.remarks = remarks
     this.vcShareDetails = fileShareDetails
+    this.sharedWithEntity = sharedWithEntity
   }
 }

@@ -3,3 +3,7 @@ export const RegistryRequestRoutes = {
   CREATE_VC: '/credentials',
   READ_VC: '/credentials/',
 }
+
+export const UrlShortnerRequestRoutes = {
+  CREATE_SHORT_URL: '/shortner',
+}

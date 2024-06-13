@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator'
+import { IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { Restrictions } from './share-file-request.dto'
 
 export class UpdateVcQueryRequestDto {
@@ -19,6 +19,11 @@ export class UpdateVcRequestDto {
   @IsString({ message: 'remarks must be a string' })
   @IsNotEmpty({ message: 'remarks cannot be empty' })
   readonly remarks: string
+
+  @ApiProperty({ description: 'Shared with entity', required: false })
+  @IsString({ message: 'sharedWithEntity must be a string' })
+  @IsOptional()
+  readonly sharedWithEntity: string
 
   @ApiProperty({ description: 'Restrictions for file access' })
   @IsNotEmpty({ message: 'restrictions cannot be empty' })

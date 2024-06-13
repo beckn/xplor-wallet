@@ -11,6 +11,7 @@ import { generateUrlUUID } from '../../utils/file.utils'
 import { generateCurrentIsoTime, getSecondsDifference } from '../../utils/vc.utils'
 import { CreateAccessControlDto } from '../../vc-access-control/dto/create-access-control.dto'
 import { VCAccessControl } from '../../vc-access-control/schemas/file-access-control.schema'
+import { UrlShortenerUtil } from '../../utils/url-shortner.util'
 
 @Injectable()
 export class VCAccessControlCreateService {
@@ -18,6 +19,7 @@ export class VCAccessControlCreateService {
     @InjectModel('VCAccessControl') private readonly vcAccessControlModel: Model<VCAccessControl>,
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
+    private readonly urlShortner: UrlShortenerUtil,
   ) {}
 
   /**
@@ -37,11 +39,13 @@ export class VCAccessControlCreateService {
       VcApiRoutes.VC_REQUEST +
       VcApiRoutes.VIEW_FILE_REQUESTS +
       restrictedKey
+
+    const shortRestrictedUrl = await this.urlShortner.createShortUrl(restrictedUrl)
     const accessModelDto = new CreateAccessControlDto(
       vcId,
       shareRequestId,
       restrictedKey,
-      restrictedUrl,
+      shortRestrictedUrl['data']['shortUrl'],
       expiresTimeStamp,
       viewOnce,
       true,

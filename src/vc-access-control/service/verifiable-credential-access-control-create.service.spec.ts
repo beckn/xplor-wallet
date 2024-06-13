@@ -23,6 +23,7 @@ import { WalletReadService } from '../../wallet/service/wallet-read.service'
 import { VCAccessControlReadService } from './verifiable-credential-access-control-read.service'
 import { VCAccessControlUpdateService } from './verifiable-credential-access-control-update.service'
 import { GrafanaLoggerService } from '../../grafana/service/grafana.service'
+import { UrlShortenerUtil } from '../../utils/url-shortner.util'
 describe('VCAccessControlCreateService', () => {
   let service: VCAccessControlCreateService
   let modelMock: Model<VCAccessControl>
@@ -154,6 +155,16 @@ describe('VCAccessControlCreateService', () => {
             getWalletDetails: jest.fn(),
           },
         },
+        {
+          provide: UrlShortenerUtil,
+          useValue: {
+            createShortUrl: jest.fn().mockReturnValue({
+              data: {
+                shortUrl: 'https://shorturl.com/',
+              },
+            }),
+          },
+        },
       ],
     }).compile()
 
@@ -188,6 +199,11 @@ describe('VCAccessControlCreateService', () => {
       jest.spyOn(configServiceMock, 'get').mockReturnValue('test_wallet_service_url')
       jest.spyOn(modelMock.prototype, 'save').mockReturnValue({ restrictedKey: 'key', _id: 'acl_id' } as any as any)
       jest.spyOn(redisServiceMock, 'setWithExpiry').mockResolvedValue({ restrictedKey: 'key', _id: 'acl_id' } as any)
+      jest.spyOn(service['urlShortner'], 'createShortUrl').mockReturnValue({
+        data: {
+          shortUrl: 'https://shorturl.com/',
+        },
+      } as any)
       const result = await service.createVcAccessControl(vcId, shareRequestId, expiresTimeStamp, viewOnce)
 
       expect(result).toBeDefined()
@@ -201,6 +217,11 @@ describe('VCAccessControlCreateService', () => {
       const viewOnce = true
 
       jest.spyOn(modelMock.prototype, 'save').mockRejectedValueOnce(new InternalServerErrorException())
+      jest.spyOn(service['urlShortner'], 'createShortUrl').mockReturnValue({
+        data: {
+          shortUrl: 'https://shorturl.com/',
+        },
+      } as any)
 
       await expect(
         service.createVcAccessControl(vcId, shareRequestId, expiresTimeStamp, viewOnce),
