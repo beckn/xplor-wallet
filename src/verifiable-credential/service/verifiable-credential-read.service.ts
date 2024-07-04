@@ -190,6 +190,10 @@ export class VerifiableCredentialReadService {
           )
           return
         }
+      } else if (vcDetails.data['type'] === VcType.RECEIVED_ISSUED) {
+        // Case: Where file is issued by organization but uploaded by user.
+        res.redirect(fileDetails['storedUrl'])
+        return
       } else {
         // Hit the Registry layer to Render VC
         if (viewType === 'preview') {

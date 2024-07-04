@@ -18,6 +18,7 @@ import { CreateFileRequestDto } from '../dto/create-file-request.dto'
 import { StandardWalletRequestDto } from '../dto/standard-wallet-request.dto'
 import { FileEntity } from '../entities/file.entity'
 import { FilesCreateService } from '../service/files-create.service'
+import { CreateFileWithUrlRequestDto } from '../dto/create-file-url-request.dto'
 @ApiTags('Files')
 @Controller('wallet/files')
 export class FilesController {
@@ -72,5 +73,16 @@ export class FilesController {
     await this.walletService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
 
     return this.fileCreateService.createFile(file, body)
+  }
+
+  @Post('/certificate')
+  async createFileWithUrl(@Body() body: CreateFileWithUrlRequestDto) {
+    if (!body.fileUrl) {
+      throw new BadRequestException('File Url is required')
+    }
+
+    await this.walletService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
+
+    return this.fileCreateService.createFile(null, body)
   }
 }
