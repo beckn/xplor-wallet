@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ArrayNotEmpty, ArrayUnique, IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { ArrayNotEmpty, ArrayUnique, IsArray, IsNotEmpty, IsString } from 'class-validator'
 
-export class CreateFileRequestDto {
+export class CreateFileWithUrlRequestDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'Wallet ID cannot be empty' })
   @IsString({ message: 'Wallet ID must be a string' })
@@ -25,6 +25,7 @@ export class CreateFileRequestDto {
   readonly name: string
 
   @ApiProperty()
-  @IsOptional()
-  readonly fileUrl?: string
+  @IsNotEmpty({ message: 'fileUrl cannot be empty' })
+  @IsString({ message: 'fileUrl must be a string' })
+  readonly fileUrl: string
 }

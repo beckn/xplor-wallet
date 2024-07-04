@@ -18,6 +18,7 @@ export enum FileShareType {
 
 export enum VcType {
   SELF_ISSUED = 'SELF_ISSUED',
+  RECEIVED_ISSUED = 'RECEIVED_ISSUED',
   RECEIVED = 'RECEIVED',
 }
 

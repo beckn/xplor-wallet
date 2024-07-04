@@ -21,6 +21,7 @@ import { CreateFileDto } from '../dto/create-file.dto'
 import { StandardWalletRequestDto } from '../dto/standard-wallet-request.dto'
 import { File } from '../schemas/files.schema'
 import { S3StorageService } from './s3-storage.service'
+import { CreateFileWithUrlRequestDto } from '../dto/create-file-url-request.dto'
 
 @Injectable()
 export class FilesCreateService {
@@ -38,21 +39,28 @@ export class FilesCreateService {
    * Signs the stored file and generates an ACL for it for 7 Days (Max)
    * Creates a file document and stores in the database
    */
-  async createFile(file: Express.Multer.File, body: CreateFileRequestDto): Promise<StandardMessageResponse | any> {
+  async createFile(
+    file: Express.Multer.File,
+    body: CreateFileRequestDto | CreateFileWithUrlRequestDto,
+  ): Promise<StandardMessageResponse | any> {
     // Upload file to Storage
     const wallet = await this.walletReadService.getWalletDetails(new StandardWalletRequestDto(null, body.walletId))
     if (!wallet['data']) {
       throw new NotFoundException(WalletErrors.WALLET_NOT_FOUND)
     }
 
-    const storeFileDetails = await this.storageService.uploadFile(file)
+    let storeFileDetails: any
+
+    if (body.fileUrl == null && file != null) {
+      storeFileDetails = await this.storageService.uploadFile(file)
+    }
+
     const createdFileModel = new CreateFileDto(
       body.walletId,
-      file.mimetype,
-      storeFileDetails['signedUrl'],
-      storeFileDetails['uploadedFile']['Key'],
+      body.fileUrl != null ? 'text/html' : file.mimetype,
+      body.fileUrl != null ? body.fileUrl : storeFileDetails['signedUrl'],
+      body.fileUrl != null ? body.fileUrl : storeFileDetails['uploadedFile']['Key'],
     )
-
     // Saved file to database
     const createdFileDocument = new this.fileModel(createdFileModel)
     const fileDocumentResult = await createdFileDocument.save()
@@ -63,7 +71,7 @@ export class FilesCreateService {
     const walletDetails = await this.walletReadService.findWalletByWalletId(body.walletId)
     const registryVCRequest = new CreateCredentialRequestDto(
       walletDetails['data']['userDid'],
-      new CredentialDto(storeFileDetails['uploadedFile']['Key'], body.tags),
+      new CredentialDto(body.fileUrl != null ? body.fileUrl : storeFileDetails['uploadedFile']['Key'], body.tags),
     )
 
     const vcResult = await this.apiClient.post(
@@ -78,7 +86,7 @@ export class FilesCreateService {
       vcResult['credential']['id'],
       fileDocumentResult['_id'].toString(),
       body.walletId,
-      VcType.SELF_ISSUED,
+      body.fileUrl != null ? VcType.RECEIVED_ISSUED : VcType.SELF_ISSUED,
       body.category,
       null,
       body.tags,
