@@ -2,29 +2,53 @@ stages:
   - stage
   - prod
 
-deploy:dev:
-  stage: dev
-  when: manual
+deploy-stage:
+  stage: stage
   tags:
     - gcp
-
   script:
     - docker image prune -af
     - docker builder prune -f
     - echo "Deployment on xplor-stage server."
     - Path=$(pwd)
-    - cd /home/ubuntu/script && ./env_script.sh dev Wallet-nest-backend-dev $VAULT_TOKEN && cd $Path
+    - cd /home/ubuntu/script && ./env_script.sh staging $CI_PROJECT_NAME-staging $VAULT_TOKEN && cd $Path
     - mv /home/ubuntu/script/.env $Path
     - |
       sshpass -p $XPLOR_STAGE_PASSWORD ssh $Xplor_Username@$XPLOR_STAGE_IP "
         if [[ -d "$CI_PROJECT_NAME" ]]; then
           cd /home/ubuntu/$CI_PROJECT_NAME
           docker-compose down
-          cd /home/ubuntu/ && sudo rm -rf Wallet-nest-backend
+          cd /home/ubuntu/ && sudo rm -rf $CI_PROJECT_NAME
         fi "
 
-    - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b feat/certificate-push https://user:'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/Wallet-nest-backend.git"
-    - sshpass -p $Xplor_Password scp .env $Xplor_Username@$Xplor_IP:/home/ubuntu/Wallet-nest-backend
-    - sshpass -p $Xplor_Password ssh -tt $Xplor_Username@$Xplor_IP  "
-        cd /home/ubuntu/Wallet-nest-backend && docker-compose up -d --build "
-    - echo "https://xplor-wallet-nest-dev.thewitslab.com"
+    - sshpass -p $XPLOR_STAGE_PASSWORD ssh $Xplor_Username@$XPLOR_STAGE_IP  "git clone -b main https://user:'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/'$CI_PROJECT_NAME'.git"
+    - sshpass -p $XPLOR_STAGE_PASSWORD scp .env $Xplor_Username@$XPLOR_STAGE_IP:/home/ubuntu/$CI_PROJECT_NAME
+    - sshpass -p $XPLOR_STAGE_PASSWORD ssh -tt $Xplor_Username@$XPLOR_STAGE_IP  "
+        cd /home/ubuntu/$CI_PROJECT_NAME && docker-compose up -d --build "
+    - echo "https://xplor-wallet-nest-stage.thewitslab.com" 
+
+.deploy-prod:
+  stage: prod
+  when: manual
+  tags:
+    - gcp
+  script:
+    - docker image prune -af
+    - docker builder prune -f
+    - echo "Deployment on xplor-prod Server."
+    - Path=$(pwd)
+    - cd /home/ubuntu/script && ./env_script.sh prod $CI_PROJECT_NAME-prod $VAULT_TOKEN && cd $Path
+    - mv /home/ubuntu/script/.env $Path
+    - |
+      sshpass -p $XPLOR_STAGE_PASSWORD ssh $Xplor_Username@$XPLOR_STAGE_IP "
+        if [[ -d "$CI_PROJECT_NAME" ]]; then
+          cd /home/ubuntu/$CI_PROJECT_NAME
+          docker-compose down
+          cd /home/ubuntu/ && sudo rm -rf $CI_PROJECT_NAME
+        fi "
+
+    - sshpass -p $XPLOR_STAGE_PASSWORD ssh $Xplor_Username@$XPLOR_STAGE_IP  "git clone -b main https://user:'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/'$CI_PROJECT_NAME'.git"
+    - sshpass -p $XPLOR_STAGE_PASSWORD scp .env $Xplor_Username@$XPLOR_STAGE_IP:/home/ubuntu/$CI_PROJECT_NAME
+    - sshpass -p $XPLOR_STAGE_PASSWORD ssh -tt $Xplor_Username@$XPLOR_STAGE_IP  "
+        cd /home/ubuntu/$CI_PROJECT_NAME && docker-compose up -d --build "
+    - echo "https://xplor-wallet-nest-prod.thewitslab.com"
