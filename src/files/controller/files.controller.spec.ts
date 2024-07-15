@@ -67,6 +67,7 @@ describe('FilesController', () => {
         category: 'Result',
         tags: ['Result', 'cbse'],
         name: 'Result',
+        fileUrl: null,
       }
 
       const result = await controller.createFile(file, body)
@@ -80,6 +81,7 @@ describe('FilesController', () => {
         category: 'Result',
         tags: ['Result', 'cbse'],
         name: 'Result',
+        fileUrl: null,
       }
 
       await expect(controller.createFile(undefined, body)).rejects.toThrow(BadRequestException)
@@ -104,6 +106,7 @@ describe('FilesController', () => {
         category: 'Result',
         tags: ['Result', 'cbse'],
         name: 'Result',
+        fileUrl: null,
       }
 
       jest
