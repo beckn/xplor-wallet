@@ -43,10 +43,9 @@ deploy-prod:
       sshpass -p $XPLOR_PROD_PASSWORD ssh $Xplor_Username@$XPLOR_PROD_HOST "
         if [[ -d "$CI_PROJECT_NAME" ]]; then
           cd /home/ubuntu/$CI_PROJECT_NAME
-          docker-compose -f docker-compose.production.yml down
+          docker-compose down
           cd /home/ubuntu/ && sudo rm -rf $CI_PROJECT_NAME
         fi "
-    - sleep 20
     - sshpass -p $XPLOR_PROD_PASSWORD ssh $Xplor_Username@$XPLOR_PROD_HOST "git clone -b main https://user:'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/'$CI_PROJECT_NAME'.git"
     - sshpass -p $XPLOR_PROD_PASSWORD scp -r .env $Xplor_Username@$XPLOR_PROD_HOST:/home/ubuntu/$CI_PROJECT_NAME
     - sshpass -p $XPLOR_PROD_PASSWORD ssh -tt $Xplor_Username@$XPLOR_PROD_HOST "
