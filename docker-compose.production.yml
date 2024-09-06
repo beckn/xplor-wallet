@@ -1,8 +1,53 @@
 version: '3'
 services:
-  backend:
+  xplor_wallet_backend_service:
     container_name: Wallet-nest-backend
     build: .
     ports:
-      - 1078:5438
+      - 1078:3000
     restart: always
+    depends_on:
+      - xplor_wallet_redis_service
+      - xplor_wallet_mongodb_service
+    environment:
+      - REGISTRY_SERVICE_URL=${REGISTRY_SERVICE_URL}
+      - MONGODB_URL=${MONGODB_URL}
+      - STORAGE_BUCKET_NAME=${STORAGE_BUCKET_NAME}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
+      - STORAGE_REGION=${STORAGE_REGION}
+      - WALLET_SERVICE_URL=${WALLET_SERVICE_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - GRAFANA_SERVICE_URL=${GRAFANA_SERVICE_URL}
+      - URL_SHORTNER_SERVICE_URL=${URL_SHORTNER_SERVICE_URL}
+    networks:
+      - xplor-network
+      
+  xplor_wallet_redis_service:
+    container_name: Wallet-redis-service
+    image: redis
+    restart: always
+    ports:
+      - '1093:6379'
+    volumes:
+      - /home/ubuntu/ALL_VOLUMES/Xplor-Wallet-nest-backend/redis-service/xplor_wallet_redis_service:/data
+    networks:
+      - xplor-network
+
+  xplor_wallet_mongodb_service:
+    image: mongo:6-jammy
+    # ports:
+    #   - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - xplor-network
+
+volumes:
+  xplor_wallet_redis_service:
+  dbdata6:
+
+networks:
+  xplor-network:
+    external: true
