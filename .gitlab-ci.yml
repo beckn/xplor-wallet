@@ -52,3 +52,4 @@ deploy-prod:
         cd /home/ubuntu/$CI_PROJECT_NAME && docker-compose -f docker-compose.production.yml up -d --build "
     - echo "HOSTED URL:- https://xplor-wallet-nest-prod.thewitslab.com"
     
+    
