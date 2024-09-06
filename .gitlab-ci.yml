@@ -2,7 +2,7 @@ stages:
   - stage
   - prod
 
-deploy-stage:
+.deploy-stage:
   stage: stage
   tags:
     - gcp
@@ -39,7 +39,8 @@ deploy-prod:
     - Path=$(pwd)
     - cd /home/ubuntu/script && ./env_script.sh staging $CI_PROJECT_NAME-staging $VAULT_TOKEN && cd $Path
     - mv /home/ubuntu/script/.env $Path
-    - sshpass -p $XPLOR_PROD_PASSWORD ssh $Xplor_Username@$XPLOR_PROD_HOST "
+    - |
+      sshpass -p $XPLOR_PROD_PASSWORD ssh $Xplor_Username@$XPLOR_PROD_HOST "
         if [[ -d "$CI_PROJECT_NAME" ]]; then
           cd /home/ubuntu/$CI_PROJECT_NAME
           docker-compose -f docker-compose.production.yml down
