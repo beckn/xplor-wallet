@@ -39,17 +39,16 @@ deploy-prod:
     - Path=$(pwd)
     - cd /home/ubuntu/script && ./env_script.sh staging $CI_PROJECT_NAME-staging $VAULT_TOKEN && cd $Path
     - mv /home/ubuntu/script/.env $Path
-    - |
-      sshpass -p $XPLOR_PROD_PASSWORD ssh $Xplor_Username@$XPLOR_PROD_HOST "
+    - sshpass -p $XPLOR_PROD_PASSWORD ssh $Xplor_Username@$XPLOR_PROD_HOST "
         if [[ -d "$CI_PROJECT_NAME" ]]; then
           cd /home/ubuntu/$CI_PROJECT_NAME
           docker-compose -f docker-compose.production.yml down
           cd /home/ubuntu/ && sudo rm -rf $CI_PROJECT_NAME
         fi "
-
+    - sleep 20
     - sshpass -p $XPLOR_PROD_PASSWORD ssh $Xplor_Username@$XPLOR_PROD_HOST "git clone -b main https://user:'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/'$CI_PROJECT_NAME'.git"
-    - sshpass -p $XPLOR_PROD_PASSWORD scp .env $Xplor_Username@$XPLOR_PROD_HOST:/home/ubuntu/$CI_PROJECT_NAME
+    - sshpass -p $XPLOR_PROD_PASSWORD scp -r .env $Xplor_Username@$XPLOR_PROD_HOST:/home/ubuntu/$CI_PROJECT_NAME
     - sshpass -p $XPLOR_PROD_PASSWORD ssh -tt $Xplor_Username@$XPLOR_PROD_HOST "
         cd /home/ubuntu/$CI_PROJECT_NAME && docker-compose -f docker-compose.production.yml up -d --build "
-    - echo "https://xplor-wallet-nest-prod.thewitslab.com"
+    - echo "HOSTED URL:- https://xplor-wallet-nest-prod.thewitslab.com"
     
