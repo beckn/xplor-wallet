@@ -15,7 +15,7 @@ deploy:dev:
     - cd /home/ubuntu/script && ./env_script.sh dev Wallet-nest-backend-dev $VAULT_TOKEN && cd $Path
     - mv /home/ubuntu/script/.env $Path
     - |
-      sshpass -p $XPLOR_STAGE_PASSWORD ssh $Xplor_Username@$XPLOR_STAGE_IP "
+      sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP "
         if [[ -d "$CI_PROJECT_NAME" ]]; then
           cd /home/ubuntu/$CI_PROJECT_NAME
           docker-compose down
