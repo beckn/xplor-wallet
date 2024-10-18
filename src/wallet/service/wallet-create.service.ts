@@ -45,7 +45,9 @@ export class WalletCreateService {
       throw new BadRequestException(WalletErrors.WALLET_BAD_REQUEST)
     }
 
-    const createWalletModel = new CreateWalletModelDto(request.userId, createRegistryUser[0]['id'])
+    console.log("REGISTRY::::",createRegistryUser)
+
+    const createWalletModel = new CreateWalletModelDto(request.userId, createRegistryUser[0]?.['id'])
     // Create a new wallet if it doesn't exist
     const createdWallet = await this.walletModel.create(createWalletModel)
     return getSuccessResponse(await createdWallet, HttpResponseMessage.OK)
