@@ -181,6 +181,10 @@ export const VC_RECEIVED_VIEW_HTML = `<!DOCTYPE html>
       height: 80vh; /* 80% of viewport height */
       display: block;
       margin: auto;
+
+      img{
+       width:100%;
+      }
   }
 
   .download-button {
