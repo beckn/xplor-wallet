@@ -89,6 +89,16 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
       .download-button {
           display: block;
       }
+
+       img,
+  object {
+      width: 80vw; /* 80% of viewport width */
+      height: 80vh; /* 80% of viewport height */
+      display: block;
+      margin: auto;
+      img{
+        width:100%;
+      }
   }
 </style>
 </head>
@@ -104,6 +114,22 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
 </body>
 
 <script>
+
+ document.addEventListener("DOMContentLoaded", function () {
+    const objectElement = document.querySelector("object");
+
+    objectElement.addEventListener("load", function () {
+      try {
+        const objDoc = objectElement.contentDocument || objectElement.contentWindow.document;
+        const imgElement = objDoc.querySelector("img");
+
+        if (imgElement) {
+          imgElement.style.width = "100%";
+        }
+      } catch (error) {
+        console.error("Unable to access embedded content:", error);
+      }
+    });
     // Function to trigger the file download
     function downloadFile(url) {
       const anchor = document.createElement('a');
