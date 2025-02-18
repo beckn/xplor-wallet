@@ -108,7 +108,7 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
     <div class="card">
       <h2>vc-name</h2><html lang="en">
       <object
-          type="image/jpeg"
+          type=""
           data="remote-url"
           style="width: 100%; height: auto"
         ></object>
