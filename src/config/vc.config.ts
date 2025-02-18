@@ -115,21 +115,22 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
 
 <script>
 
- document.addEventListener("DOMContentLoaded", function () {
-    const objectElement = document.querySelector("object");
-
-    objectElement.addEventListener("load", function () {
-      try {
-        const objDoc = objectElement.contentDocument || objectElement.contentWindow.document;
-        const imgElement = objDoc.querySelector("img");
-
-        if (imgElement) {
-          imgElement.style.width = "100%";
+    // function to Load image
+    document.addEventListener("DOMContentLoaded", function () {
+        function applyImageStylesForMobile() {
+            if (window.innerWidth <= 768) { // Adjust breakpoint for mobile view
+                document.querySelectorAll("img").forEach(img => {
+                    img.style.maxWidth = "100%";
+                    img.style.height = "auto";
+                    img.style.borderRadius = "10px"; // Example styling
+                });
+            }
         }
-      } catch (error) {
-        console.error("Unable to access embedded content:", error);
-      }
+
+        applyImageStylesForMobile();
+        window.addEventListener("resize", applyImageStylesForMobile);
     });
+   
     // Function to trigger the file download
     function downloadFile(url) {
       const anchor = document.createElement('a');
