@@ -108,9 +108,9 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
     <div class="card">
       <h2>vc-name</h2><html lang="en">
       <object
-          type=""
+          type="file-type"
           data="remote-url"
-          style="width: 100%; height: auto"
+          style="width: 100%; height: 100%"
         ></object>
       <a href="#" class="download-button">Download</a>
     </div>
