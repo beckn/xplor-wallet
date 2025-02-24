@@ -46,6 +46,7 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
       position: relative;
       z-index: 3; /* Ensure content is above the overlay */
       width: 100%;
+      height:80vh;
       display: flex;
       justify-content: center;
   }
