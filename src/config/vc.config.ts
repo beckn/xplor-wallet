@@ -55,17 +55,6 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
       font-weight: 600;
   }
 
-  img,
-  object {
-      width: 80vw; /* 80% of viewport width */
-      height: 80vh; /* 80% of viewport height */
-      display: block;
-      margin: auto;
-      img{
-        width:100%;
-      }
-  }
-
   .download-button {
       margin-top: 10px;
       display: none;
@@ -90,17 +79,12 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
       .download-button {
           display: block;
       }
-
-       img,
-  object {
-      width: 80vw; /* 80% of viewport width */
-      height: 80vh; /* 80% of viewport height */
-      display: block;
-      margin: auto;
-      img{
-        width:100%;
-      }
-  }
+          
+.image{
+  margin: 10px 10px;
+ 
+}
+  
 </style>
 </head>
 <body>
@@ -108,11 +92,13 @@ export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
   <div class="content">
     <div class="card">
       <h2>vc-name</h2><html lang="en">
+      <div class="image">
       <object
           type="file-type"
           data="remote-url"
-          style="width: 100%; height: 100%"
+          style="width: 100%; height: auto"
         ></object>
+        </div>
       <a href="#" class="download-button">Download</a>
     </div>
   </div>
