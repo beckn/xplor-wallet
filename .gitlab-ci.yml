@@ -1,7 +1,7 @@
 stages:
-  - dev
+  - stage
 
-.deploy-stage:
+deploy-stage:
   stage: stage
   tags:
     - gcp
