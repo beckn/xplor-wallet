@@ -1,156 +1,128 @@
 export const VC_SELF_ISSUED_VIEW_HTML = `<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <title>Xplor - View File</title>
-  <style>
-  body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: 'Poppins', sans-serif;
-      background-color: rgba(255, 255, 255, 0.8); /* White background with 80% opacity */
-  }
-
-  .card {
-      width: 80%;
-      height: 80%;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
-      padding: 20px;
-      text-align: center;
-      z-index: 1; /* Ensure the card stays below the overlay */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-  }
-
-  .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); /* Transparent black overlay */
-      z-index: 2; /* Overlay should be above the card */
-  }
-
-  .content {
-      position: relative;
-      z-index: 3; /* Ensure content is above the overlay */
-      width: 100%;
-      height:80vh;
-      display: flex;
-      justify-content: center;
-  }
-
-  h2 {
-      font-weight: 600;
-  }
-
-  img,
-  object {
-      width: 80vw; /* 80% of viewport width */
-      height: 80vh; /* 80% of viewport height */
-      display: block;
-      margin: auto;
-      img{
-        width:100%;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Xplor - View File</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
-  }
 
-  .download-button {
-      margin-top: 10px;
-      display: none;
-      background-color: blue;
-      width: 160px;
-      font-family: poppins;
-      text-decoration: none;
-      font-weight: 600;
-      padding: 12px 12px 12px 12px;
-      border-radius: 12px;
-      color: white;
-  }
-  
-  .download-button:hover {
-      transition: 250ms;
-        background-color: black;
-        color: white;
-  }
+      .content {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 24px;
+        max-width: 800px;
+        width: 100%;
+        margin: 20px;
+      }
 
-  @media only screen and (max-width: 768px) {
-      /* Show the button only on devices with a maximum width of 768px (typical tablets and phones) */
+      .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card h2 {
+        margin: 0 0 16px 0;
+        font-size: 24px;
+        color: #333;
+      }
+
+      .image {
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .image object {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
       .download-button {
-          display: block;
+        display: none;
+        margin-top: 20px;
+        background-color: #007bff;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        padding: 12px 24px;
+        border-radius: 12px;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.3s ease;
       }
 
-       img,
-  object {
-      width: 80vw; /* 80% of viewport width */
-      height: 80vh; /* 80% of viewport height */
-      display: block;
-      margin: auto;
-      img{
-        width:100%;
+      .download-button:hover {
+        background-color: #0056b3;
       }
-  }
-</style>
-</head>
-<body>
-  <div class="overlay"></div>
-  <div class="content">
-    <div class="card">
-      <h2>vc-name</h2><html lang="en">
-      <object
-          type="file-type"
-          data="remote-url"
-          style="width: 100%; height: 100%"
-        ></object>
-      <a href="#" class="download-button">Download</a>
-    </div>
-  </div>
-</body>
 
-<script>
-
-    // function to Load image
-    document.addEventListener("DOMContentLoaded", function () {
-        function applyImageStylesForMobile() {
-            if (window.innerWidth <= 768) { // Adjust breakpoint for mobile view
-                document.querySelectorAll("img").forEach(img => {
-                    img.style.maxWidth = "100%";
-                    img.style.height = "auto";
-                    img.style.borderRadius = "10px"; // Example styling
-                });
-            }
+      @media only screen and (max-width: 768px) {
+        .content {
+          margin: 10px;
+          padding: 16px;
         }
 
-        applyImageStylesForMobile();
-        window.addEventListener("resize", applyImageStylesForMobile);
-    });
-   
-    // Function to trigger the file download
-    function downloadFile(url) {
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = 'certificate.pdf'; // Change the filename if needed
-      anchor.click();
-    }
+        .card h2 {
+          font-size: 20px;
+        }
 
-    // Document listener for the download button
-    document.querySelector('.download-button').addEventListener('click', function(event) {
-      event.preventDefault(); // Prevent default anchor behavior
-      const fileUrl = 'remote-url';
-      downloadFile(fileUrl);
-    });
-</script>
+        .download-button {
+          display: block;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <div class="card">
+        <h2>vc-name</h2>
+        <div class="image">
+          <object
+            type="file-type"
+            data="remote-url"
+            style="width: 100%; height: auto"
+          ></object>
+        </div>
+        <a href="#" class="download-button">Download</a>
+      </div>
+    </div>
+
+    <script>
+      // Function to trigger the file download
+      function downloadFile(url) {
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "certificate.pdf"; // Change the filename if needed
+        anchor.click();
+      }
+
+      // Document listener for the download button
+      document
+        .querySelector(".download-button")
+        .addEventListener("click", function (event) {
+          event.preventDefault(); // Prevent default anchor behavior
+          const fileUrl = "remote-url";
+          downloadFile(fileUrl);
+        });
+    </script>
+  </body>
 </html>
 `
 
