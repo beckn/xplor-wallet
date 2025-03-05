@@ -1,6 +1,5 @@
 stages:
-  - stage
-  - prod
+  - dev
 
 .deploy-stage:
   stage: stage
@@ -32,10 +31,11 @@ deploy-prod:
   when: manual
   tags:
     - gcp
+
   script:
     - docker image prune -af
     - docker builder prune -f
-    - echo "Deployment on xplor-prod Server."
+    - echo "Deployment on xplor-dev server."
     - Path=$(pwd)
     - cd /home/ubuntu/script && ./env_script.sh staging $CI_PROJECT_NAME-staging $VAULT_TOKEN && cd $Path
     - mv /home/ubuntu/script/.env $Path

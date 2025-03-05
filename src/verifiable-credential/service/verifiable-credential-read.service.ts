@@ -185,7 +185,7 @@ export class VerifiableCredentialReadService {
             VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replaceAll(
               'vc-name',
               vcDetails.data['name'],
-            ),
+            ).replaceAll('file-type', fileDetails['fileType']),
             res,
           )
           return
@@ -252,7 +252,7 @@ export class VerifiableCredentialReadService {
               VC_SELF_ISSUED_VIEW_HTML.replaceAll('remote-url', fileDetails['storedUrl']).replaceAll(
                 'vc-name',
                 vcDetails.data['name'],
-              ),
+              ).replaceAll,
               res,
             )
             return
